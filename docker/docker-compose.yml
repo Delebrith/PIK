@@ -1,0 +1,7 @@
+pik:
+  container_name: pik
+  build: .
+  dockerfile: Dockerfile
+  ports:
+    - "8080:8080"
+  restart: always
