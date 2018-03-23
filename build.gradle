@@ -43,9 +43,6 @@ artifacts {
 uploadArchives {
 	def username = findProperty("nexusUsername")
 	def password = findProperty("nexusPassword")
-
-	println(username + " " + password)
-
 	repositories {
 		mavenDeployer {
 			repository(url: nexus.repositoryUrl) {
