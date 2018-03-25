@@ -3,26 +3,57 @@ buildscript {
 		springBootVersion = '2.0.0.RELEASE'
 	}
 	repositories {
-		mavenCentral()
+		maven {
+			url "http://localhost:8081/nexus/content/repositories/central/"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath 'com.bmuschko:gradle-nexus-plugin:2.3'
 	}
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.bmuschko.nexus'
+apply plugin: 'maven'
 
 group = 'edu.pw.eiti'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+	maven {
+		url "http://localhost:8081/nexus/content/repositories/central/"
+	}
 }
 
+nexus {
+	sign = false
+	repositoryUrl = 'http://localhost:8081/nexus/content/repositories/releases/'
+	snapshotRepositoryUrl = 'http://localhost:8081/nexus/content/repositories/snapshots/'
+}
+
+artifacts {
+	archives war
+}
+
+uploadArchives {
+	def username = findProperty("nexusUsername")
+	def password = findProperty("nexusPassword")
+	repositories {
+		mavenDeployer {
+			repository(url: nexus.repositoryUrl) {
+				authentication(userName: username, password: password)
+			}
+			snapshotRepository(url: nexus.snapshotRepositoryUrl) {
+				authentication(userName: username, password: password)
+			}
+		}
+	}
+}
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
@@ -30,3 +61,4 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
 }
+
