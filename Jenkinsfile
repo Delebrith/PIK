@@ -19,17 +19,19 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            when { branch 'master'}
-            steps {
-                sh './gradlew war'
-                echo 'Deploying ${env.BRANCH_NAME} to releases...'
-                sh './gradlew uploadArchives'
-            }
+        stage('Deploy snaphot'){
             when { branch 'develop'}
             steps {
                 sh './gradlew war'
                 echo 'Deploying ${env.BRANCH_NAME} to snapshots...'
+                sh './gradlew uploadArchives'
+            }
+        }
+        stage('Release') {
+            when { branch 'master'}
+            steps {
+                sh './gradlew war'
+                echo 'Deploying ${env.BRANCH_NAME} to releases...'
                 sh './gradlew uploadArchives'
             }
         }
