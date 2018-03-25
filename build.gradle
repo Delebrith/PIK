@@ -42,8 +42,8 @@ artifacts {
 
 uploadArchives {
 	//environmental variables need to be created and filled with correct credentials
-	def username = System.getenv("NEXUS_USERNAME")
-	def password = System.getenv("NEXUS_PASSWORD")
+	def username = findProperty("nexusUsername") 
+	def password = findProperty("nexusPassword")
 	repositories {
 		mavenDeployer {
 			repository(url: nexus.repositoryUrl) {
