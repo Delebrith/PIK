@@ -20,10 +20,16 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when { branch 'master' || branch 'develop'}
+            when { branch 'master'}
             steps {
                 sh './gradlew war'
-                echo 'Deploying ${env.BRANCH_NAME} ...'
+                echo 'Deploying ${env.BRANCH_NAME} to releases...'
+                sh './gradlew uploadArchives'
+            }
+            when { branch 'develop'}
+            steps {
+                sh './gradlew war'
+                echo 'Deploying ${env.BRANCH_NAME} to snapshots...'
                 sh './gradlew uploadArchives'
             }
         }
