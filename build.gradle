@@ -41,8 +41,7 @@ artifacts {
 }
 
 uploadArchives {
-	//environmental variables need to be created and filled with correct credentials
-	def username = findProperty("nexusUsername") 
+	def username = findProperty("nexusUsername")
 	def password = findProperty("nexusPassword")
 	repositories {
 		mavenDeployer {
