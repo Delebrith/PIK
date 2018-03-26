@@ -1,0 +1,17 @@
+{
+  "name": "pik-karma-tests",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "jasmine-core": "^3.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma": "^2.0.0",
+    "karma-jasmine": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"XD\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
