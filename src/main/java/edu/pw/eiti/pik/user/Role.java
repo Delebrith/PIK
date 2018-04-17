@@ -1,13 +1,11 @@
-package edu.pw.eiti.pik.model;
+package edu.pw.eiti.pik.user;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,6 +21,9 @@ public class Role {
 
     @NotBlank
     private String displayName;
+
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 
 
 }
