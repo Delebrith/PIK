@@ -28,7 +28,6 @@ public class User {
     @NotBlank
     private String name;
 
-    @NotNull
     private String phoneNo;
 
 
