@@ -67,5 +67,6 @@ dependencies {
 	testCompile('org.springframework.security:spring-security-test')
 	compileOnly 'org.projectlombok:lombok:1.16.20'
 	apt "org.projectlombok:lombok:1.16.20"
+	compile("com.h2database:h2")
 }
 
