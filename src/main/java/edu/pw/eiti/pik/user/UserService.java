@@ -8,6 +8,4 @@ interface UserService {
     Optional<User> findByEmail(String email);
     String generateToken(User user);
     Optional<User> authenticate(String email, String password);
-
-    User create();
 }
