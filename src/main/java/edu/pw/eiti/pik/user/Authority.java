@@ -2,6 +2,7 @@ package edu.pw.eiti.pik.user;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @EqualsAndHashCode
-public class Role {
+class Authority implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,8 +23,12 @@ public class Role {
     @NotBlank
     private String displayName;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "authorities")
     private List<User> users;
 
 
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 }
