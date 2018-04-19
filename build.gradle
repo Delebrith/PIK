@@ -15,6 +15,7 @@ buildscript {
 
 plugins {
     id 'net.ltgt.apt' version '0.13'
+    id 'net.ltgt.apt-eclipse' version '0.13'
 }
 
 apply plugin: 'java'
