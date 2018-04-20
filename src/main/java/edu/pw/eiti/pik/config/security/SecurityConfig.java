@@ -16,7 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] PUBLIC_ANT_PATTERNS = {
-            "/login", "/", "/create",
+            "/user/login", "/", "/user/create"
             "/index.html", "/loginPanel.html", "/js/login.js", "/js/main.js"
     };
 
