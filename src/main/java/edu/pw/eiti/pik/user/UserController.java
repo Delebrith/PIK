@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("/user")
 class UserController {
 
     private final UserService userService;
@@ -36,7 +36,7 @@ class UserController {
         return new AuthorizationTokenDto(userService.generateToken(user));
     }
 
-    @ApiOperation(value = "Log in as existing user", notes = "Logs in existing user")
+    @ApiOperation(value = "Log in as existing user", notes = "Returns information on currently logged in user")
     @ApiResponses({
             @ApiResponse(code = 200, message = "If user was successfully logged in"),
             @ApiResponse(code = 403, message = "If user did not log in previously", response = ErrorDto.class)

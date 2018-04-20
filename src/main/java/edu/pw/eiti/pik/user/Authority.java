@@ -1,7 +1,9 @@
 package edu.pw.eiti.pik.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 class Authority implements GrantedAuthority {
 
@@ -22,10 +26,6 @@ class Authority implements GrantedAuthority {
 
     @NotBlank
     private String displayName;
-
-    @ManyToMany(mappedBy = "authorities")
-    private List<User> users;
-
 
     @Override
     public String getAuthority() {
