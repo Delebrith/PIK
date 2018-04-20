@@ -13,7 +13,7 @@ pipeline {
                 echo 'Testing...'
                 sh './gradlew check'
                 sh 'npm install'
-                karma start
+                sh 'karma start'
             }
             post {
                 always {
