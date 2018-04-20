@@ -12,6 +12,8 @@ pipeline {
             steps {
                 echo 'Testing...'
                 sh './gradlew check'
+                sh 'npm install'
+                karma start
             }
             post {
                 always {
@@ -38,12 +40,12 @@ pipeline {
     }
     post {
         unstable {
-            mail to: "pszwed@mion.elka.pw.edu.pl, llepak@mion.elka.pw.edu.pl, jjakobcz@mion.elka.pw.edu.pl",
+            mail to: "llepak@mion.elka.pw.edu.pl",
                     subject: "Unstable Pipeline: ${currentBuild.fullDisplayName}",
                     body: "Something is not yes with ${env.BUILD_URL}"
         }
         failure {
-            mail to: "pszwed@mion.elka.pw.edu.pl, llepak@mion.elka.pw.edu.pl, jjakobcz@mion.elka.pw.edu.pl",
+            mail to: "llepak@mion.elka.pw.edu.pl",
                     subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
                     body: "Something is not yes with ${env.BUILD_URL}"
         }
