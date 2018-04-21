@@ -26,7 +26,7 @@ class UserController {
             @ApiResponse(code = 200, message = "If user successfully logs in with valid credentials"),
             @ApiResponse(code = 404, message = "If user provided invalid credentials", response = ErrorDto.class)
     })
-    @PostMapping(path = "/login")
+    @PostMapping(path = "/user/login")
     AuthorizationTokenDto login(
             @ApiParam(value = "User's credentials", required = true)
             @RequestBody UserCredentialsDto userCredentialsDto) {
@@ -41,7 +41,7 @@ class UserController {
             @ApiResponse(code = 200, message = "If user was successfully logged in"),
             @ApiResponse(code = 403, message = "If user did not log in previously", response = ErrorDto.class)
     })
-    @GetMapping(path = "/me")
+    @GetMapping(path = "/user/me")
     UserDto me() {
         User user = userService.getAuthenticatedUser();
         return userMapper.toDto(user);

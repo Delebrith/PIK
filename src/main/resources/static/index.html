@@ -3,17 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <title>Index.html</title>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
 </head>
-<body ng-app="app" ng-controller="main">
+<body ng-app="app" ng-controller="appController">
 
-<div ng-include="'loginPanel.html'"></div>
+<div id="logged-as" ng-if="isLogged()">Zalogowano jako: {{context.user.name}}</div>
+
+<ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
+<ng-include ng-if="isLogged()" src="'logoutPanel.html'"></ng-include>
 
 <script>
-app = angular.module("app",[]);
+app = angular.module("app", ["ngCookies"]);
 </script>
-<script src="js/main.js"></script>
+<script src="js/appController.js"></script>
 <script src="js/login.js"></script>
+<script src="js/logout.js"></script>
 
 </body>
 </html>

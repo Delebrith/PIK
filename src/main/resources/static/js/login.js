@@ -1,19 +1,20 @@
-function invalidEmail()
-{
-	alert('Niepoprawny adres email!');
-}
+app.controller('loginController', function($scope, $http, $cookies, $window) {
+	function invalidEmail()
+	{
+		alert('Niepoprawny adres email!');
+	}
 
-function failedLogin(response)
-{
-	alert('Nieudane logowanie!');
-}
+	function failedLogin(response)
+	{
+		alert('Nieudane logowanie!');
+	}
 
-function succesfulLogin(response)
-{
-	alert('Udane logowanie');
-}
+	function succesfulLogin(response)
+	{
+		$cookies.put('token', response.data.token)
+		$window.location.reload()
+	}
 
-app.controller('loginController', function($scope, $http) {
 	$scope.submit = function()	{
 		var userCredentialsDto = {
 			email: $scope.email,
@@ -25,13 +26,13 @@ app.controller('loginController', function($scope, $http) {
 			return;
 		}
 		
-	    var response = $http.post("login", userCredentialsDto);
-	    $scope.myWelcome = response.then(
-	    		function(response) {
-					succesfulLogin(response);
-	    		},
-	    		function(response){
-					failedLogin(response);	
-	    		});
+	    var response = $http.post("/user/login", userCredentialsDto);
+	    response.then(
+	    	function(response) {
+				succesfulLogin(response);
+	    	},
+	    	function(response){
+				failedLogin(response);	
+    		});
 	}
 });
