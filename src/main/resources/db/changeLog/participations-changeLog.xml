@@ -1,7 +1,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet author="liquidbase" id="003">
         <createTable tableName="participation">
@@ -21,6 +21,13 @@
                           incrementBy="1"
                           startWith="100"
                           tableName="participation"/>
+        <loadData encoding="UTF-8"
+                  file="db/data/participation.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="participation">
+        </loadData>
 
         <createTable tableName="users_participations">
             <column name="user_id" type="BIGINT(19)">
@@ -28,6 +35,13 @@
             <column name="participation_id" type="BIGINT(19)">
             </column>
         </createTable>
+        <loadData encoding="UTF-8"
+                  file="db/data/users_participations.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="users_participations">
+        </loadData>
 
         <addForeignKeyConstraint baseTableName="users_participations"
                                  baseColumnNames="user_id" constraintName="users_fk"
