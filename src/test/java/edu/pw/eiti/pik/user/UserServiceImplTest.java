@@ -36,7 +36,7 @@ public class UserServiceImplTest {
     @Before
     public void init() {
         List<Authority> authorities = new ArrayList<>();
-        authorities.add(Authority.builder().name("EMPLOYER").build());
+        authorities.add(Authority.builder().name(Authorities.EMPLOYER).build());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         mockUser = User.builder()
                 .email("user@mail.com")
