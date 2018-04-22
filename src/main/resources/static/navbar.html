@@ -10,19 +10,19 @@
                 <a class="nav-link" href="#">Strona główna<span class="sr-only">(current)</span></a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" ng-if="isLogged()">
                 <a class="nav-link" href="#">Mój profil</a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" ng-if="isUserStudent() || isUserEmployer()">
                 <a class="nav-link" href="#">Moje projekty</a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" ng-if="isUserEmployer()">
                 <a class="nav-link" href="#">Dodaj projekt</a>
             </li>
 
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" ng-if="isUserAdministrator()">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Administrator
                 </a>

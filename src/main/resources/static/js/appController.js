@@ -20,6 +20,38 @@ app.controller("appController", function($scope, $http, $cookies) {
 		return $scope.context.user != null
 	}
 	
+	function hasRole(role)
+	{
+		if (!$scope.isLogged())
+			return false;
+		
+		for (index in $scope.context.user.authorities)
+			if ($scope.context.user.authorities[index].name == role)
+				return true;
+		
+		return false;
+	}
+	
+	$scope.isUserAdministrator = function() {
+		return hasRole("ADMIN");
+	}
+
+	$scope.isUserStudent = function() {
+		return hasRole("STUDENT");
+	}
+
+	$scope.isUserEmployer = function() {
+		return hasRole("EMPLOYER");
+	}
+	
+	$scope.isUser3rdParty = function() {
+		return hasRole("3RD_PARTY");
+	}
+	
+	$scope.isUserTeacher = function() {
+		return hasRole("TEACHER");
+	}
+	
 	if ($cookies.get('token') != undefined) {
 		$http.get("/user/me").then(function(response){
 			$scope.context.user = response.data
