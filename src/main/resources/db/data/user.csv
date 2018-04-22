@@ -1,6 +1,0 @@
-id,email,password,name,phone_no
-1,student1@mail.com,'$2a$04$2DUl1v0fTpUYOKqk.dSi6eGwiwAAOKxQvhoNfU69kGdE7qcigsMre',Student1,
-2,student2@mail.com,'$2a$04$0xU9Medug6hlJQHEqWBgAO/N5WlWuNKPLwf6Kv0SK8EILWuDxRS1a',Student2,123456789
-3,wykladowca@mail.com,'$2a$04$J6UnP9q4Ny8BFwxfFaHYQOcs.x5/SdhXInOR1f162Lrmoc50UF.V.',Wykladowca,987654321
-4,firma@mail.com,'$2a$04$ArmTALGan9b6SB2UumvYQ.EpTPIB8o0r7WAKG2MYEWYDdgi3nUpgy',Firma,111222333
-5,admin@mail.com,'$2a$04$sB2gr62gSzGreCWDLQOIaes8aq.7A4gd3C1t5sJ0SAGIC.Mn94OEK',Admin,999888777
