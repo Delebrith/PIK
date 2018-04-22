@@ -1,6 +1,9 @@
 package edu.pw.eiti.pik.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -9,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -17,16 +19,16 @@ class Authority implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
-    @NotBlank
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private Authorities name;
 
     @NotBlank
     private String displayName;
 
     @Override
     public String getAuthority() {
-        return name;
+        return name.toString();
     }
 }

@@ -1,0 +1,36 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="liquidbase" id="003">
+        <createTable tableName="participations">
+            <column name="id" type="BIGINT(19)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="status" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+        <addAutoIncrement columnDataType="BIGINT"
+                          columnName="id"
+                          incrementBy="1"
+                          startWith="100"
+                          tableName="participations"/>
+
+        <createTable tableName="users_participations">
+            <column name="user_id" type="BIGINT(19)">
+            </column>
+            <column name="participations_id" type="BIGINT(19)">
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="users_participations"
+                                 baseColumnNames="users_id" constraintName="users_fk"
+                                 referencedTableName="user" referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="users_participations"
+                                 baseColumnNames="participations_id" constraintName="participations_fk"
+                                 referencedTableName="participations" referencedColumnNames="id" />
+    </changeSet>
+</databaseChangeLog>
