@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#"><b>WEiTI projekty</b></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Strona główna<span class="sr-only">(current)</span></a>
+            </li>
+
+            <li class="nav-item" ng-if="isLogged()">
+                <a class="nav-link" href="#">Mój profil</a>
+            </li>
+
+            <li class="nav-item" ng-if="isUserStudent() || isUserEmployer()">
+                <a class="nav-link" href="#">Moje projekty</a>
+            </li>
+
+            <li class="nav-item" ng-if="isUserEmployer()">
+                <a class="nav-link" href="#">Dodaj projekt</a>
+            </li>
+
+            <li class="nav-item dropdown" ng-if="isUserAdministrator()">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Administrator
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Utwórz użytkowników</a>
+                    <a class="dropdown-item" href="#">Zarządzaj użytkownikami</a>
+                </div>
+            </li>
+
+        </ul>
+        <ng-include ng-if="isLogged()" src="'logoutPanel.html'"></ng-include>
+    </div>
+</nav>
