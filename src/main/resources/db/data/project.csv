@@ -7,5 +7,5 @@ id,name,description,is_paid,is_graduate_work,number_of_participants,status
 6,Projekt szósty,Opis szóstego płatnego projektu niebędącego pracą dyplomową,true,false,1,FINISHED
 7,Projekt siódmy,Opis siódmego niepłatnego projektu niebędącego pracą dyplomową,false,false,1,OVERDUE
 8,Projekt ósmy,Opis ósmego płatnego projektu będącego pracą dyplomową,true,true,3,SUSPENDED_REPORTED
-9,Projekt dziewiąty,Opis dziewiątego niepłatnego projektu niebędącego pracą dyplomową,false,false,4,CANCELED
+9,Projekt dziewiąty,Opis dziewiątego niepłatnego projektu niebędącego pracą dyplomową o statusie canceled,false,false,4,CANCELED
 
