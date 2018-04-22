@@ -23,7 +23,3 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-
-### Eclipse ###
-bin/
-.apt_generated/
