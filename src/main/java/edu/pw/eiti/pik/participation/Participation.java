@@ -1,11 +1,11 @@
 package edu.pw.eiti.pik.participation;
 
 import edu.pw.eiti.pik.project.Project;
+import edu.pw.eiti.pik.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.h2.engine.User;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,19 +25,13 @@ public class Participation {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user",
+            name = "users_projects",
             joinColumns = @JoinColumn(
                     name = "participation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "user_id", referencedColumnName = "id"))
     private List<User> users;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "project",
-            joinColumns = @JoinColumn(
-                    name = "participation_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "project_id", referencedColumnName = "id"))
-    private List<Project> projects;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Project project;
 }
