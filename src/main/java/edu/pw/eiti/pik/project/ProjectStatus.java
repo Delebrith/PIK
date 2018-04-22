@@ -1,0 +1,13 @@
+package edu.pw.eiti.pik.project;
+
+enum ProjectStatus {
+    CREATED,
+    WAITING_FOR_STUDENTS,
+    STARTED,
+    SUSPENDED_MISSING_TEACHER,
+    SUSPENDED_MISSING_PARTICIPANTS,
+    FINISHED,
+    OVERDUE,
+    SUSPENDED_REPORTED,
+    CANCELED,
+}

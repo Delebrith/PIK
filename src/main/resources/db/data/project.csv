@@ -1,0 +1,11 @@
+id,name,description,is_paid,is_graduate_work,number_of_participants,status
+1,Projekt pierwszy,Opis pierwszego niepłatnego projektu niebędącego pracą dyplomową,false,false,6,CREATED
+2,Projekt drugi,Opis drugiego płatnego projektu niebędącego pracą dyplomową,true,false,5,WAITING_FOR_STUDENTS
+3,Projekt trzeci,Opis trzeciego niepłatnego projektu będącego pracą dyplomową,false,true,1,STARTED
+4,Projekt czwarty,Opis czwartego płatnego projektu niebędącego pracą dyplomową,true,false,2,SUSPENDED_MISSING_TEACHER
+5,Projekt piąty,Opis piątego niepłatnego projektu będącego pracą dyplomową,false,true,2,SUSPENDED_MISSING_PARTICIPANTS
+6,Projekt szósty,Opis szóstego płatnego projektu niebędącego pracą dyplomową,true,false,1,FINISHED
+7,Projekt siódmy,Opis siódmego niepłatnego projektu niebędącego pracą dyplomową,false,false,1,OVERDUE
+8,Projekt ósmy,Opis ósmego płatnego projektu będącego pracą dyplomową,true,true,3,SUSPENDED_REPORTED
+9,Projekt dziewiąty,Opis dziewiątego niepłatnego projektu niebędącego pracą dyplomową,false,false,4,CANCELED
+

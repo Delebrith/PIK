@@ -5,5 +5,9 @@
 
     <include file="user-changeLog.xml"
              relativeToChangelogFile="true" />
+    <include file="project-changeLog.xml"
+             relativeToChangelogFile="true" />
+    <include file="participations-changeLog.xml"
+             relativeToChangelogFile="true" />
 
 </databaseChangeLog>

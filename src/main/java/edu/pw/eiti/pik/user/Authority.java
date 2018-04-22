@@ -17,16 +17,16 @@ class Authority implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
-    @NotBlank
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private Authorities name;
 
     @NotBlank
     private String displayName;
 
     @Override
     public String getAuthority() {
-        return name;
+        return name.toString();
     }
 }

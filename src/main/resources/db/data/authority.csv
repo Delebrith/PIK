@@ -2,6 +2,6 @@ id,name,display_name
 1,STUDENT,Student
 2,ADMIN,Administrator
 3,EMPLOYER,Zleceniodawca
-4,3RD_PARTY,Firma zewnętrzna
+4,THIRD_PARTY,Firma zewnętrzna
 5,TEACHER,Pracownik naukowy
 
