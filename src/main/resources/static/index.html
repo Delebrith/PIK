@@ -3,22 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <title>Index.html</title>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+            crossorigin="anonymous"></script>
 </head>
 <body ng-app="app" ng-controller="appController">
 
-<div id="logged-as" ng-if="isLogged()">Zalogowano jako: {{context.user.name}}</div>
+    <div id="toolbar">
+        <nav class="navbar navbar-toggleable-md navbar-inverse bg-success">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="#"><h2 style="padding-left: 25%; letter-spacing: 2px; font-weight: bold;">PlatON</h2></a>
+            <div class="collapse navbar-collapse  justify-content-end" id="navbarNavDropdown" style='float: right'>
+                <ul class="navbar-nav" >
+                    <li class="nav-item active" >
+                        <a class="nav-link dropdown btn btn-primary" href="/home">
+                            <div class='fa fa-home'></div>
+                            Strona domowa<span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="AdminDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Administrator
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="AdminDropdownMenuLink">
+                            <a class="dropdown-item" href="/admin/addUser" method="GET">Dodaj użytkownika</a>
+                            <a class="dropdown-item" href="/admin/accountManagement">Zarządzaj kontami</a>
+                            <a class="dropdown-item" href="#">Utwórz powiadomienie</a>
+                            <a class="dropdown-item" href="/admin/reports">Raporty</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="AuthorityDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Władze
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="AuthorityDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Zapytania oczekujące</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="AdministrationDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Administracja
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="AdministrationDropdownMenuLink">
+                            <a class="dropdown-item" href="/office/changeEnrollments">Zapisy na przedmioty</a>
+                            <a class="dropdown-item" href="#">Harmonogramy</a>
+                            <a class="dropdown-item" href="/office/financialObligation/find">Opłaty i stypendia</a>
+                            <a class="dropdown-item" href="#">Przedmioty</a>
+                            <a class="dropdown-item" href="#">Rygory studiów</a>
+                            <a class="dropdown-item" href="#">Kierunki</a>
+                            <a class="dropdown-item" href="#">Wyniki studentów</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="TeacherDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Wykładowca
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="TeacherDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Moje przedmioty</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="StudentDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Student
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="StudentDropdownMenuLink">
+                            <a class="dropdown-item" href="/student/subjects">Moje przedmioty</a>
+                            <a class="dropdown-item" href="/student/myFinances">Moje finanse</a>
+                            <a class="dropdown-item" href="/student/enrollments">Rejestracja na przedmioty</a>
+                            <a class="dropdown-item" href="#">Moje postępy</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="GuestDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Informacje
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="GuestDropdownMenuLink">
+                            <a class="dropdown-item" href="/annonymousUser/subjectInfo">Informacje o przedmiotach</a>
+                            <a class="dropdown-item" href="#">Plany modelowe</a>
+                            <a class="dropdown-item" href="/annonymousUser/usefullLinks">Przydatne linki</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="/login">
+                            <div class='fa fa-user'></div>
+                            Zaloguj się
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="/logout">
+                            <div class='fa fa-sign-out'></div>
+                            Wyloguj się
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
 
-<ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
-<ng-include ng-if="isLogged()" src="'logoutPanel.html'"></ng-include>
+    <div id="logged-as" ng-if="isLogged()">
+        Zalogowano jako: {{context.user.name}}
+    </div>
 
-<script>
-app = angular.module("app", ["ngCookies"]);
-</script>
-<script src="js/appController.js"></script>
-<script src="js/login.js"></script>
-<script src="js/logout.js"></script>
+    <ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
+    <ng-include ng-if="isLogged()" src="'logoutPanel.html'"></ng-include>
+
+    <script>
+        app = angular.module("app", ["ngCookies"]);
+    </script>
+    <script src="js/appController.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/logout.js"></script>
+
+
+
+
 
 </body>
 </html>
