@@ -11,8 +11,6 @@ app.config(function($httpProvider) {
 	});
 });
 
-var t;
-
 app.controller("appController", function($scope, $http, $cookies) {
 	$scope.context = {
 			user: null
@@ -53,8 +51,6 @@ app.controller("appController", function($scope, $http, $cookies) {
 	$scope.isUserTeacher = function() {
 		return hasRole("TEACHER");
 	}
-	
-	t = $scope.context
 	
 	if ($cookies.get('token') != undefined) {
 		$http.get("/user/me").then(function(response){
