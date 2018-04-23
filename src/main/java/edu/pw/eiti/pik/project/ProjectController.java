@@ -1,6 +1,7 @@
 package edu.pw.eiti.pik.project;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,10 +15,8 @@ public class ProjectController
     private ProjectService projectService;
 
     @PostMapping(path = "/project/add")
-    ProjectDto addProject(@RequestBody ProjectDto projectDto) {
+    void addProject(@RequestBody ProjectDto projectDto) {
         Project project = projectMapper.fromDto(projectDto);
         projectService.createProject(project);
-
-        return projectMapper.toDto(project);
     }
 }
