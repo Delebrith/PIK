@@ -1,6 +1,7 @@
 package edu.pw.eiti.pik.project;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -10,7 +11,9 @@ public interface ProjectMapper {
         return Mappers.getMapper(ProjectMapper.class);
     }
 
+    @Mapping(target = "id", source = "id", ignore = true)
     Project fromDto(ProjectDto dto);
 
     ProjectDto toDto(Project entity);
 }
+
