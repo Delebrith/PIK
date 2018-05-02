@@ -23,15 +23,9 @@ public class Participation {
     @Enumerated(EnumType.STRING)
     private ParticipationStatus status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_projects",
-            joinColumns = @JoinColumn(
-                    name = "participation_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"))
-    private List<User> users;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Project project;
 }

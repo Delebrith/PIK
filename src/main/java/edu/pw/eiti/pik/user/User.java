@@ -2,12 +2,12 @@ package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.participation.Participation;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,17 +43,13 @@ public class User implements UserDetails {
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities;
+    @Builder.Default
+    private List<Authority> authorities = new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_participations",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "participation_id", referencedColumnName = "id"))
-    private List<Participation> participations;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @Builder.Default
+    private List<Participation> participations = new ArrayList<>();
 
     @Override
     public Collection<Authority> getAuthorities() {
