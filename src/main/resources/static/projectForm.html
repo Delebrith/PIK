@@ -32,6 +32,12 @@
                             <div class="invalid-feedback">Wprowadź opis!</div>
                         </div>
 
+                        <!-- visible for 3rd party - list of teachers should be provided by user controller (see task PIK-49) -->
+                        <div class="form-group justify-content-around">
+                            <label>Opiekun projektu</label>
+                            <input type="text" class="autocomplete form-control form-control-md rounded-0" ng-model="manager" value="-- dowolny --">
+                        </div>
+
                         <!-- visible only for teachers -->
                         <div class="form-check form-control-lg col form-control-md" style="margin-left: 3%">
                             <input type="checkbox" class="form-check-input" id="isGraduateWork">
