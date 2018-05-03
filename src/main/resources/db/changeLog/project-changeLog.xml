@@ -11,7 +11,7 @@
             <column name="name" type="nvarchar(200)">
                 <constraints nullable="false" />
             </column>
-            <column name="description" type="nvarchar(1000)">
+            <column name="description" type="nvarchar(1023)">
                 <constraints nullable="false" />
             </column>
             <column name="is_paid" type="boolean">

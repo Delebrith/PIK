@@ -24,6 +24,7 @@ public class Project {
     private String name;
 
     @NotBlank
+    @Column(length = 1023)
     private String description;
 
     @NotNull

@@ -1,0 +1,84 @@
+<div id="projectFormPanel" ng-controller="">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+
+            <!-- form card login -->
+            <div class="card rounded-0 card" style="margin-top: 40px">
+                <div class="card-header">
+                    <h3 class="mb-0">Wprowadź dane projektu</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" role="form" autocomplete="off" id="formProject" method="POST">
+
+
+                        <div class="row">
+                            <div class="form-group col-md-9">
+                                <label>Nazwa</label>
+                                <input type="text" class="form-control form-control-md rounded-0" ng-model="name" placeholder="Nazwa projektu">
+                                <div class="invalid-feedback">Wprowadź nazwę!</div>
+                            </div>
+
+                            <div class="form-group col">
+                                <label>Liczba uczestników</label>
+                                <input type="number" class="form-control form-control-md rounded-0" ng-model="participants" value="1">
+                                <div class="invalid-feedback">Wprowadź liczbę uczestników!</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Opis</label>
+                            <textarea type="text" class="form-control form-control-md rounded-0" rows="4" ng-model="description"
+                                      placeholder="Wprowadż opis projektu (do 1000 znaków)." maxlength="1000"></textarea>
+                            <div class="invalid-feedback">Wprowadź opis!</div>
+                        </div>
+
+                        <!-- visible for 3rd party - list of teachers should be provided by user controller (see task PIK-49) -->
+                        <div class="form-group justify-content-around">
+                            <label>Opiekun projektu</label>
+                            <input type="text" class="autocomplete form-control form-control-md rounded-0" ng-model="manager" value="-- dowolny --">
+                        </div>
+
+                        <!-- visible only for teachers -->
+                        <div class="form-check form-control-lg col form-control-md" style="margin-left: 3%">
+                            <input type="checkbox" class="form-check-input" id="isGraduateWork">
+                            <label class="form-check-label" for="isGraduateWork">Praca dyplomowa</label>
+                        </div>
+
+                        <hr>
+
+                        <div class="row justify-content-around">
+                            <!-- visible only for teachers -->
+                            <div class="form-group col">
+                                <label>ECTS</label>
+                                <input type="number" class="form-control form-control-md rounded-0" ng-model="ects" value="0">
+                                <div class="invalid-feedback">Wprowadź ilość ECTS!</div>
+                            </div>
+
+                            <!-- visible only for all employers -->
+                            <div class="form-group col">
+                                <label>Minimalna proponowana kwota</label>
+                                <input type="number" class="form-control form-control-md rounded-0" ng-model="minimumPay" value="0">
+                                <div class="invalid-feedback">Wprowadź kwotę!</div>
+                            </div>
+
+                            <!-- visible only for all employers -->
+                            <!-- shpuld be validated if is not bigger than minimum pay -->
+                            <div class="form-group col">
+                                <label>Maksymalna proponowana kwota</label>
+                                <input type="number" class="form-control form-control-md rounded-0" ng-model="maximumPay" value="0">
+                                <div class="invalid-feedback">Wprowadź kwotę!</div>
+                            </div>
+                        </div>
+                        <br>
+                        <button class="btn btn-outline-primary my-2 my-sm-0 float-right" id="btnSubmitProject" ng-click="submit()">
+                            Zatwierdź
+                        </button>
+                    </form>
+                </div>
+                <!--/card-block-->
+            </div>
+            <!-- /form card login -->
+
+        </div>
+    </div>
+</div>
