@@ -1,0 +1,106 @@
+<div id="myProjects" ng-controller="" class="col-md-10 mx-auto">
+
+    <br>
+    <h2>Moje projekty</h2>
+    <br><hr>
+
+    <div class="row justify-content-around" id="status_filters">
+        <div class="col-md-2"> <h5> Filtruj status: </h5> </div>
+        <div id="status_labels" class="col-md-10 row justify-content-around">
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Oczekujący na opiekuna
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Oczekujący na uczestników
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Rozpoczęty
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Zawieszony - brak opiekuna
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Zawieszony - brak uczestników
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Zakończony
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Przekroczono czas
+            </label>
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Zawieszony - zgłoszony
+            </label>
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Anulowany
+            </label>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row justify-content-around" id="participation_filters">
+        <div class="col-md-2"> <h5> Filtruj role: </h5> </div>
+        <div id="participation_labels" class="col-md-10 row justify-content-around">
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Uczestnik
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Opiekun
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Właściciel
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Zaproszenie oczekujące
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Oczekujący na przyjęcie
+            </label>
+        </div>
+    </div>
+
+    <br><br><br>
+    <div id="projects" class="card">
+        <table class="table">
+            <thead>
+            <th class="col-md-4">Nazwa</th>
+            <th>Status uczestnictwa</th>
+            <th>Status projektu</th>
+            <th class="col-md-5">Akcje</th>
+            </thead>
+            <tr>
+                <td>
+                    Przykładowy projekt
+                </td>
+                <td>
+                    Opiekun
+                </td>
+                <td>
+                    Rozpoczęty
+                </td>
+                <td>
+                    <div class="col-md-12 row justify-content-around row justify-content-around">
+                        <!-- visible if owner of manager -->
+                        <button type="button" class="btn btn-outline-primary my-2 my-sm-0">
+                            Zarządzaj
+                        </button>
+                        <!-- visible if participant of manager -->
+                        <button type="button" class="btn btn-outline-danger my-2 my-sm-0">
+                            Opuść projekt
+                        </button>
+                        <!-- visible if pending invitation -->
+                        <button type="button" class="btn btn-outline-success my-2 my-sm-0">
+                            Zaakceptuj
+                        </button>
+                        <!-- visible if pending invitation -->
+                        <button type="button" class="btn btn-outline-warning my-2 my-sm-0">
+                            Odrzuć
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
