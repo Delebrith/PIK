@@ -1,10 +1,13 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.participation.Participation;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -34,5 +37,10 @@ public class Project {
     private Integer numberOfParticipants;
 
     @Enumerated(EnumType.STRING)
-    private ProjectStatus status;
+    @Builder.Default
+    private ProjectStatus status = ProjectStatus.CREATED;
+
+    @OneToMany(mappedBy = "project")
+    @Builder.Default
+    private List<Participation> participations = new ArrayList<>();
 }
