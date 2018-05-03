@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @ApiModel("Participations")
 @Data
 @AllArgsConstructor
@@ -16,6 +14,6 @@ import java.util.List;
 public class ParticipationDto {
     private Long id;
     private ParticipationStatus status;
-    private List<UserDto> users;
-    private List<ProjectDto> projects;
+    private UserDto user;
+    private ProjectDto project;
 }
