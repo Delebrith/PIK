@@ -11,9 +11,35 @@ app.config(function($httpProvider) {
 	});
 });
 
-app.controller("appController", function($scope, $http, $cookies) {
+app.controller("appController", function($scope, $http, $cookies, $location) {
 	$scope.context = {
 			user: null
+	}
+
+	$scope.pages = {
+			projectForm: "project-form"
+	}
+	
+	$scope.isPage = function (page) {
+		if ($location.hash().indexOf(page) == 0)
+		{
+			remaining = $location.hash().substring(page.length);
+			
+			if (remaining.length == 0)
+				return true;
+			
+			return ["/", "\\"].indexOf(remaining) > -1;
+		}
+		
+		return false;
+	}
+	
+	$scope.isAnyPage = function() {
+		for (p in $scope.pages)
+			if ($scope.pages.hasOwnProperty(p) && $scope.isPage($scope.pages[p]))
+				return true;
+		
+		return false;
 	}
 	
 	$scope.isLogged = function () {
