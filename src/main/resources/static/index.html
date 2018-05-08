@@ -15,9 +15,10 @@
 
 
     <ng-include src="'navbar.html'"></ng-include>
+    
 
     <div class="container col-md-12">
-        <div id="logged-as" ng-if="isLogged()">
+        <div id="logged-as" ng-if="isLogged() && !isAnyPage()">
 
             <div class="row">
 
@@ -51,7 +52,9 @@
 
         </div>
 
-
+    
+    	<ng-include ng-if="isLogged() && isPage(pages.projectForm)" src="'projectForm.html'"></ng-include>
+    
         <ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
     </div>
 
