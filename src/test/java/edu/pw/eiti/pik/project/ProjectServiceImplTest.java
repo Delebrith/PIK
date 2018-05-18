@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -29,15 +30,17 @@ public class ProjectServiceImplTest {
 
     @Before
     public void init() {
-        mockProject.builder().name("Projekt testowy")
+        mockProject = Project.builder().name("Projekt testowy")
                 .description("jakiś opis")
                 .isPaid(false)
                 .isGraduateWork(false)
                 .numberOfParticipants(1)
-                .status(ProjectStatus.CREATED);
+                .status(ProjectStatus.CREATED)
+                .build();
     }
 
     @Test
+    @WithMockUser(username = "firma@mail.com", roles = "EMPLOYER")
     public void addProject(){
         projectService.createProject(mockProject);
         assertEquals(mockProject, projectRepository.findByName("Projekt testowy"));
