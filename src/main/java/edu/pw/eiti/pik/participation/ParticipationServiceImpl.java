@@ -17,6 +17,7 @@ public class ParticipationServiceImpl {
     private UserRepository userRepository;
 
     @EventListener
+    @Transactional
     public void setProjectOwner(ProjectCreationEvent event) {
         Participation participation = new Participation();
         participation.setProject(event.getProject());
