@@ -1,7 +1,6 @@
-package edu.pw.eiti.pik.event;
+package edu.pw.eiti.pik.base.event;
 
 import edu.pw.eiti.pik.project.Project;
-import edu.pw.eiti.pik.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package edu.pw.eiti.pik.project;
 
-import edu.pw.eiti.pik.event.ProjectCreationEvent;
+import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;

@@ -47,9 +47,9 @@ public class ProjectServiceImplTest {
     ProjectServiceImpl projectService;
 
     private Project mockProject;
-    Authentication authentication = Mockito.mock(Authentication.class);
-    // Mockito.whens() for your authorization object
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    private Authentication authentication = Mockito.mock(Authentication.class);
+    private SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+
     @Before
     public void init() {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);

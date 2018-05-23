@@ -1,7 +1,7 @@
 package edu.pw.eiti.pik.user;
 
-import edu.pw.eiti.pik.config.security.AuthorizationTokenDto;
-import edu.pw.eiti.pik.config.web.ErrorDto;
+import edu.pw.eiti.pik.base.config.security.AuthorizationTokenDto;
+import edu.pw.eiti.pik.base.config.web.ErrorDto;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;

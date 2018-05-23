@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.config.web;
+package edu.pw.eiti.pik.base.config.web;
 
 import edu.pw.eiti.pik.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;

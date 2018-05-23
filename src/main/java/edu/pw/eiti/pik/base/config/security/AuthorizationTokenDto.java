@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.config.security;
+package edu.pw.eiti.pik.base.config.security;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
