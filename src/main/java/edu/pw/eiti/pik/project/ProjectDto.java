@@ -14,7 +14,6 @@ public class ProjectDto {
     private Long id;
     private String name;
     private String description;
-    private Boolean isPaid;
     private Boolean isGraduateWork;
     private Integer numberOfParticipants;
     private ProjectStatus status;
