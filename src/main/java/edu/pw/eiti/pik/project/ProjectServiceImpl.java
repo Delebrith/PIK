@@ -3,9 +3,6 @@ package edu.pw.eiti.pik.project;
 import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +16,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
     @Override
     public Project getProjectInfo() {
         return null;
@@ -43,9 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void createProject(Project project) {
         Project savedProject = projectRepository.save(project);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User userDetails = (User) auth.getPrincipal();
-        publisher.publishEvent(new ProjectCreationEvent(savedProject, userDetails.getUsername()));
+        publisher.publishEvent(new ProjectCreationEvent(savedProject));
     }
 
     @Override

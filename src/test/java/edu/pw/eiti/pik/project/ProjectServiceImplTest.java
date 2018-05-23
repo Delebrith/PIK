@@ -52,9 +52,6 @@ public class ProjectServiceImplTest {
 
     @Before
     public void init() {
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        Mockito.when(authentication.getPrincipal()).thenReturn(new User("username",
-                "password", new ArrayList<>()));
         SecurityContextHolder.setContext(securityContext);
         mockProject = Project.builder().name("Projekt testowy")
                 .description("jakiś opis")

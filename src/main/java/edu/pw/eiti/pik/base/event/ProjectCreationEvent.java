@@ -7,8 +7,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ProjectCreationEvent {
-
     private final Project project;
-    private final String email;
-
 }
