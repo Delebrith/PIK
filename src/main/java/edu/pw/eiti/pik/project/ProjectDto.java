@@ -18,4 +18,7 @@ public class ProjectDto {
     private Boolean isGraduateWork;
     private Integer numberOfParticipants;
     private ProjectStatus status;
+    private Integer ects;
+    private Integer minimumPay;
+    private Integer maximumPay;
 }
