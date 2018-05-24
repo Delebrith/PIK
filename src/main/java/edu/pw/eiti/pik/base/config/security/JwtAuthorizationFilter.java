@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.config.security;
+package edu.pw.eiti.pik.base.config.security;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.http.HttpHeaders;

@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.config.security;
+package edu.pw.eiti.pik.base.config.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

@@ -1,7 +1,10 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,10 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
     @Override
     public Project getProjectInfo() {
         return null;
@@ -31,8 +38,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional
     public void createProject(Project project) {
-        projectRepository.save(project);
+        Project savedProject = projectRepository.save(project);
+        publisher.publishEvent(new ProjectCreationEvent(savedProject));
     }
 
     @Override
