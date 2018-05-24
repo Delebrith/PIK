@@ -31,7 +31,9 @@ public class ProjectServiceImplTest {
     public void init() {
         mockProject.builder().name("Projekt testowy")
                 .description("jakiś opis")
-                .isPaid(false)
+                .ects(0)
+                .minimumPay(0)
+                .maximumPay(0)
                 .isGraduateWork(false)
                 .numberOfParticipants(1)
                 .status(ProjectStatus.CREATED);
