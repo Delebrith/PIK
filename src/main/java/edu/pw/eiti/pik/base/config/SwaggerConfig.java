@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.config;
+package edu.pw.eiti.pik.base.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

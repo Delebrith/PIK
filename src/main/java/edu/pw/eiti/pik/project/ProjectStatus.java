@@ -1,6 +1,6 @@
 package edu.pw.eiti.pik.project;
 
-enum ProjectStatus {
+public enum ProjectStatus {
     CREATED,
     WAITING_FOR_STUDENTS,
     STARTED,

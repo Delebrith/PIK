@@ -1,7 +1,10 @@
 package edu.pw.eiti.pik.user;
 
+import edu.pw.eiti.pik.base.event.ParticipationCreationEvent;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.context.event.EventListener;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.Date;
@@ -60,5 +64,16 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         return findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+    @Override
+    @EventListener
+    @Transactional
+    public void saveUserWithParticipation(ParticipationCreationEvent event) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        User user = userRepository.findByEmail(email);
+        user.getParticipations().add(event.getParticipation());
+        userRepository.save(user);
     }
 }
