@@ -28,7 +28,13 @@ public class Project {
     private String description;
 
     @NotNull
-    private Boolean isPaid;
+    private Integer ects;
+
+    @NotNull
+    private Integer minimumPay;
+
+    @NotNull
+    private Integer maximumPay;
 
     @NotNull
     private Boolean isGraduateWork;
