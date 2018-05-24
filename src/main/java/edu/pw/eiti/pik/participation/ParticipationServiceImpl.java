@@ -1,6 +1,6 @@
 package edu.pw.eiti.pik.participation;
 
-import edu.pw.eiti.pik.base.event.ParticipationForUserCreationEvent;
+import edu.pw.eiti.pik.base.event.ParticipationCreationEvent;
 import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,6 +24,6 @@ public class ParticipationServiceImpl implements ParticipationService {
         Participation participation = new Participation();
         participation.setProject(event.getProject());
         participation.setStatus(ParticipationStatus.OWNER);
-        publisher.publishEvent(new ParticipationForUserCreationEvent(participation));
+        publisher.publishEvent(new ParticipationCreationEvent(participation));
     }
 }
