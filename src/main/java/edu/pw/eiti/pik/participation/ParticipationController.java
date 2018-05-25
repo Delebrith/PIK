@@ -47,7 +47,11 @@ public class ParticipationController {
             else if (status.equals("signup"))
                 participationService.addParticipation(authUsername, projectId, false);
         } else if (authority.getName() == Authorities.EMPLOYER) {
+            // accept_participant
+            // resign (cancel project?)
+            // invite teacher
         } else if (authority.getName() == Authorities.THIRD_PARTY) {
+            // ?
         } else if (authority.getName() == Authorities.TEACHER) {
             if (status.equals("resign"))
                 participationService.deleteParticipation(authUsername, projectId, true);
