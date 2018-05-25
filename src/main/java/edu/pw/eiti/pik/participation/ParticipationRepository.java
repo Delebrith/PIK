@@ -4,7 +4,9 @@ import edu.pw.eiti.pik.project.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
-    Collection<Participation> findByProject(Project project);
+    List<Participation> findByProject(Project project);
+    Participation findByUser_NameAndProject_Id(String username, Long projectId);
 }

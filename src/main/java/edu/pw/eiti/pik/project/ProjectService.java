@@ -1,5 +1,9 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.base.event.AddProjectToParticipationEvent;
+import edu.pw.eiti.pik.base.event.CheckParticipantsAfterDeletedEvent;
+import org.springframework.context.event.EventListener;
+
 import java.util.List;
 
 public interface ProjectService {
@@ -8,6 +12,10 @@ public interface ProjectService {
     List<Project> getWaitingForStudentsProjects();
     List<Project> getReportedProjects();
     void createProject(Project project);
+    @EventListener
+    void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event);
+    @EventListener
+    void addProjectToParticipation(AddProjectToParticipationEvent event);
     void deleteProject(long projectId);
     void changeStatus(long projectId, ProjectStatus projectStatus);
     void reportProject(long projectId);
