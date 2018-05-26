@@ -1,9 +1,6 @@
 package edu.pw.eiti.pik.project;
 
-import edu.pw.eiti.pik.base.event.AddProjectToParticipationEvent;
-import edu.pw.eiti.pik.base.event.CheckParticipantsAfterDeletedEvent;
-import edu.pw.eiti.pik.base.event.ParticipationCreationEvent;
-import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
+import edu.pw.eiti.pik.base.event.*;
 import edu.pw.eiti.pik.participation.Participation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -74,6 +71,18 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.isPresent()) {
             participation.setProject(project.get());
             publisher.publishEvent(new ParticipationCreationEvent(participation));
+        }
+    }
+
+    @Override
+    @EventListener
+    public void cancelProject(CancelProjectEvent event) {
+        Optional<Project> project = projectRepository.findById(event.getProjectId());
+        if (!project.isPresent())
+            throw new ProjectNotFoundException();
+        else {
+            project.get().setStatus(ProjectStatus.CANCELLED);
+            projectRepository.save(project.get());
         }
     }
 
