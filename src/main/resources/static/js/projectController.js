@@ -1,24 +1,27 @@
-app.controller('projectController', function($scope, $http, $cookies, $window) {
+app.controller('projectController', function($scope, $http, $cookies, $route) {
 	function validateProject() {
 		errors = ""
 			
-		if ($scope.name != undefined)
-			$scope.name = $scope.name.trim()
+		if ($scope.project.name != undefined)
+			$scope.project.name = $scope.project.name.trim()
 		
-		if ($scope.name == undefined || $scope.name.length == 0)
+		if ($scope.project.name == undefined || $scope.project.name.length == 0)
 			errors += "Nazwa projektu nie może być pusta!\n"
 		
-		if ($scope.description == undefined || $scope.description.length == 0)
+		if ($scope.project.description == undefined || $scope.project.description.length == 0)
 			errors += "Opis projektu nie może być pusty!\n"
 		
-		if ($scope.participants == undefined)
+		if ($scope.project.participants == undefined)
 			errors += "Projekt musi mieć ustawioną liczbę uczestników!\n"
 		
+		if ($scope.project.isGraduateWork == undefined)
+			$scope.project.isGraduateWork = false
+			
 		if ($scope.isUser3rdParty())
 		{
-			if ($scope.minimumPay != undefined &&
-				$scope.maximumPay != undefined &&
-				$scope.minimumPay > $scope.maximumPay)
+			if ($scope.project.minimumPay != undefined &&
+				$scope.project.maximumPay != undefined &&
+				$scope.project.minimumPay > $scope.project.maximumPay)
 				errors += "Kwota minimalna nie może być większa od maksymalnej!\n"
 		}
 		
@@ -29,8 +32,32 @@ app.controller('projectController', function($scope, $http, $cookies, $window) {
 		return false;
 	}
 	
-	$scope.submitAdd = function() {
+	function addToDto(dto, dtoField, scopeField = dtoField) {
+		if ($scope.project[scopeField] != undefined)
+			dto[dtoField] = $scope.project[scopeField]
+	} 
+	
+	$scope.submitCreateProject = function() {
 		if (!validateProject())
 			return;
+		
+		projectDto = {}
+
+		addToDto(projectDto, "name")
+		addToDto(projectDto, "numberOfParticipants", "participants")
+		addToDto(projectDto, "description")
+		addToDto(projectDto, "isGraduateWork")
+		addToDto(projectDto, "ects")
+		addToDto(projectDto, "minimumPay")
+		addToDto(projectDto, "maximumPay")
+		
+		var response = $http.post("/project/add", projectDto);
+	    response.then(
+	    	function(response) {
+				$route.reload()
+	    	},
+	    	function(response){
+	    		alert("Wystąpił błąd podczas dodawania projektu.")
+    		});
 	}
 })

@@ -9,6 +9,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
 
 </head>
 <body ng-app="app" ng-controller="appController">
@@ -59,7 +60,7 @@
     </div>
 
     <script>
-        app = angular.module("app", ["ngCookies"]);
+        app = angular.module("app", ["ngCookies", "ngRoute"]);
     </script>
     <script src="js/appController.js"></script>
     <script src="js/loginController.js"></script>
