@@ -24,6 +24,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         Participation participation = new Participation();
         participation.setProject(event.getProject());
         participation.setStatus(ParticipationStatus.OWNER);
+        event.getProject().getParticipations().add(participation);
         publisher.publishEvent(new ParticipationCreationEvent(participation));
     }
 }

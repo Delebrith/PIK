@@ -14,10 +14,16 @@
             <column name="description" type="nvarchar(1023)">
                 <constraints nullable="false" />
             </column>
-            <column name="is_paid" type="boolean">
+            <column name="is_graduate_work" type="boolean">
                 <constraints nullable="false" />
             </column>
-            <column name="is_graduate_work" type="boolean">
+            <column name="ects" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="minimum_pay" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="maximum_pay" type="int">
                 <constraints nullable="false" />
             </column>
             <column name="number_of_participants" type="int">

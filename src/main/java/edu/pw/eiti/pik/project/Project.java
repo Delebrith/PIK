@@ -50,7 +50,7 @@ public class Project {
     @Builder.Default
     private ProjectStatus status = ProjectStatus.CREATED;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Participation> participations = new ArrayList<>();
 }
