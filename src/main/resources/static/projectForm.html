@@ -22,7 +22,7 @@
                             <div class="form-group col">
                                 <label>Liczba uczestników</label>
                                 <input type="number" class="form-control form-control-md rounded-0" 
-                                		ng-model="participants" value="1">
+                                		ng-model="participants" value="1" min="1">
                                 <div class="invalid-feedback">Wprowadź liczbę uczestników!</div>
                             </div>
                         </div>
@@ -62,7 +62,8 @@
                             <!-- visible only for all 3rd party employers -->
                             <div class="form-group col" ng-if="isUser3rdParty()">
                                 <label>Minimalna proponowana kwota</label>
-                                <input type="number" class="form-control form-control-md rounded-0" ng-model="minimumPay" value="0">
+                                <input type="number" class="form-control form-control-md rounded-0" 
+                                		ng-model="minimumPay" value="0"  min="0">
                                 <div class="invalid-feedback">Wprowadź kwotę!</div>
                             </div>
 
@@ -70,7 +71,8 @@
                             <!-- shpuld be validated if is not bigger than minimum pay -->
                             <div class="form-group col" ng-if="isUser3rdParty()">
                                 <label>Maksymalna proponowana kwota</label>
-                                <input type="number" class="form-control form-control-md rounded-0" ng-model="maximumPay" value="0">
+                                <input type="number" class="form-control form-control-md rounded-0" 
+                                		ng-model="maximumPay" value="0"  min="0">
                                 <div class="invalid-feedback">Wprowadź kwotę!</div>
                             </div>
                         </div>

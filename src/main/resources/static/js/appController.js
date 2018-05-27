@@ -71,7 +71,7 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 	}
 	
 	$scope.isUser3rdParty = function() {
-		return hasRole("3RD_PARTY");
+		return hasRole("THIRD_PARTY");
 	}
 	
 	$scope.isUserTeacher = function() {
