@@ -14,10 +14,10 @@ public class ProjectDto {
     private Long id;
     private String name;
     private String description;
-    private Boolean isGraduateWork;
+    private Boolean isGraduateWork = false;
     private Integer numberOfParticipants;
-    private ProjectStatus status;
-    private Integer ects;
-    private Integer minimumPay;
-    private Integer maximumPay;
+    private ProjectStatus status = ProjectStatus.CREATED;
+    private Integer ects = 0;
+    private Integer minimumPay = 0;
+    private Integer maximumPay = 0;
 }

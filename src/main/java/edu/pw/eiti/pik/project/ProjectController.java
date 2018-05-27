@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+
 @RestController("/project")
 public class ProjectController
 {
@@ -22,6 +24,7 @@ public class ProjectController
     @ApiParam(value = "Project details", required = true)
     void addProject(@RequestBody ProjectDto projectDto) {
         Project project = projectMapper.fromDto(projectDto);
+        project.setParticipations(new ArrayList<>());
         projectService.createProject(project);
     }
 }
