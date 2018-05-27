@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,10 @@ import java.util.stream.Collectors;
 @RestController("/participation")
 public class ParticipationController {
 
+    public static final String TEACHER = "ROLE_TEACHER";
+    public static final String STUDENT = "ROLE_STUDENT";
+    public static final String THIRD_PARTY = "ROLE_THIRD_PARTY";
+    public static final String EMPLOYER = "ROLE_EMPLOYER";
     @Autowired
     private ParticipationService participationService;
 
@@ -31,40 +36,40 @@ public class ParticipationController {
                       @RequestBody String username) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
-        List<Authorities> authorities = auth.getAuthorities().stream().map(i -> ((Authority) i).getName()).collect(Collectors.toList());
+        List<String> authorities = auth.getAuthorities().stream().map(i -> ((SimpleGrantedAuthority) i).getAuthority()).collect(Collectors.toList());
         String authUsername = auth.getName();
         if ("resign".equals(status)) {
-            if (authorities.contains(Authorities.STUDENT) || authorities.contains(Authorities.EMPLOYER)
-                    || authorities.contains(Authorities.THIRD_PARTY))
+            if (authorities.contains(STUDENT) || authorities.contains(EMPLOYER)
+                    || authorities.contains(THIRD_PARTY))
                 participationService.deleteParticipation(authUsername, projectId, false);
-            else if (authorities.contains(Authorities.TEACHER))
+            else if (authorities.contains(TEACHER))
                 participationService.deleteParticipation(authUsername, projectId, true);
         } else if ("sign_up".equals(status)) {
-            if (authorities.contains(Authorities.STUDENT))
+            if (authorities.contains(STUDENT))
                 participationService.addParticipation(authUsername, projectId);
         } else if ("accept_participant".equals(status)) {
-            if (authorities.contains(Authorities.TEACHER) || authorities.contains(Authorities.EMPLOYER)
-                    || authorities.contains(Authorities.THIRD_PARTY))
+            if (authorities.contains(TEACHER) || authorities.contains(EMPLOYER)
+                    || authorities.contains(THIRD_PARTY))
                 participationService.acceptStudent(authUsername, username, projectId);
         } else if ("invite_teacher".equals(status)) {
-            if ((authorities.contains(Authorities.TEACHER) || authorities.contains(Authorities.EMPLOYER)
-                    || authorities.contains(Authorities.THIRD_PARTY)) && username != null) {
+            if ((authorities.contains(TEACHER) || authorities.contains(EMPLOYER)
+                    || authorities.contains(THIRD_PARTY)) && username != null) {
                 participationService.inviteUser(authUsername, username, projectId, true);
             }
         } else if ("invite_student".equals(status)) {
-            if ((authorities.contains(Authorities.TEACHER) || authorities.contains(Authorities.EMPLOYER)
-                    || authorities.contains(Authorities.THIRD_PARTY)) && username != null)
+            if ((authorities.contains(TEACHER) || authorities.contains(EMPLOYER)
+                    || authorities.contains(THIRD_PARTY)) && username != null)
                 participationService.inviteUser(authUsername, username, projectId, false);
         } else if ("reject_invitation".equals(status)) {
-            if (authorities.contains(Authorities.TEACHER))
+            if (authorities.contains(TEACHER))
                 participationService.deleteParticipation(authUsername, projectId, true);
-            else if (authorities.contains(Authorities.STUDENT) || authorities.contains(Authorities.EMPLOYER)
-                    || authorities.contains(Authorities.THIRD_PARTY))
+            else if (authorities.contains(STUDENT) || authorities.contains(EMPLOYER)
+                    || authorities.contains(THIRD_PARTY))
                 participationService.deleteParticipation(authUsername, projectId, false);
         } else if ("accept_invitation".equals(status)) {
-            if (authorities.contains(Authorities.STUDENT))
+            if (authorities.contains(STUDENT))
                 participationService.acceptInvitation(authUsername, projectId, false);
-            else if (authorities.contains(Authorities.TEACHER))
+            else if (authorities.contains(TEACHER))
                 participationService.acceptInvitation(authUsername, projectId, true);
         }
     }
