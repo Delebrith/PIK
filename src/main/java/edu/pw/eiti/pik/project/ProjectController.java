@@ -21,14 +21,14 @@ public class ProjectController
     @Autowired
     private ProjectService projectService;
 
-    @PreAuthorize("hasRole('EMPLOYER')")
     @ApiOperation(value = "Add new project", notes = "Adds project into database")
-    @PostMapping(path = "/project/add")
     @ApiParam(value = "Project details", required = true)
     @ApiResponses({
             @ApiResponse(code = 200, message = "If project was successfully added"),
             @ApiResponse(code = 403, message = "If user is not authorized to perform this operation", response = ErrorDto.class)
     })
+    @PreAuthorize("hasAuthority('EMPLOYER')")
+    @PostMapping(path = "/project/add")
     void addProject(@RequestBody ProjectDto projectDto) {
         Project project = projectMapper.fromDto(projectDto);
         project.setParticipations(new ArrayList<>());

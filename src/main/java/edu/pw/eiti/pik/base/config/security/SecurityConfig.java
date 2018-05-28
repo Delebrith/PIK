@@ -22,7 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] PUBLIC_ANT_PATTERNS = {
     		"/",
             "/user/login", "/user/me",
-            "/project/add",
             "/index.html", "/loginPanel.html", "/logoutPanel.html", "/navbar.html", "/myProjects.html",
             "/projectForm.html",
             "/js/loginController.js", "/js/appController.js", "/js/logoutController.js", "/js/projectController.js"
