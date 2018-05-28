@@ -2,13 +2,17 @@ package edu.pw.eiti.pik.base.config.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] SWAGGER_ANT_PATTERNS = {
@@ -20,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/user/login", "/user/me",
             "/index.html", "/loginPanel.html", "/logoutPanel.html", "/navbar.html", "/myProjects.html",
             "/projectForm.html",
-            "/js/loginController.js", "/js/appController.js", "/js/logoutController.js"
+            "/js/loginController.js", "/js/appController.js", "/js/logoutController.js", "/js/projectController.js"
     };
 
     private final UserDetailsService userDetailsService;
@@ -39,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(SWAGGER_ANT_PATTERNS).permitAll().and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), secretKey))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), secretKey, userDetailsService))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity

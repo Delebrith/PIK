@@ -11,11 +11,16 @@ import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
-    @Autowired
-    private ProjectRepository projectRepository;
+
+    private final ProjectRepository projectRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Autowired
-    private ApplicationEventPublisher publisher;
+    public ProjectServiceImpl(ProjectRepository projectRepository,
+                              ApplicationEventPublisher publisher) {
+        this.projectRepository = projectRepository;
+        this.publisher = publisher;
+    }
 
     @Override
     public Project getProjectInfo() {
@@ -40,8 +45,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void createProject(Project project) {
-        Project savedProject = projectRepository.save(project);
-        publisher.publishEvent(new ProjectCreationEvent(savedProject));
+        publisher.publishEvent(new ProjectCreationEvent(project));
     }
 
     @Override

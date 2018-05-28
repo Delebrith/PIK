@@ -28,16 +28,20 @@ public class Project {
     private String description;
 
     @NotNull
-    private Integer ects;
+    @Builder.Default
+    private Integer ects = 0;
 
     @NotNull
-    private Integer minimumPay;
+    @Builder.Default
+    private Integer minimumPay = 0;
 
     @NotNull
-    private Integer maximumPay;
+    @Builder.Default
+    private Integer maximumPay = 0;
 
     @NotNull
-    private Boolean isGraduateWork;
+    @Builder.Default
+    private Boolean isGraduateWork = false;
 
     @NotNull
     private Integer numberOfParticipants;
@@ -46,7 +50,7 @@ public class Project {
     @Builder.Default
     private ProjectStatus status = ProjectStatus.CREATED;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Participation> participations = new ArrayList<>();
 }
