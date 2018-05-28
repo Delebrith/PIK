@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(SWAGGER_ANT_PATTERNS).permitAll().and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), secretKey))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), secretKey, userDetailsService))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity
