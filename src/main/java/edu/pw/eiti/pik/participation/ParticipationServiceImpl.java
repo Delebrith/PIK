@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
 
@@ -23,6 +24,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         Participation participation = new Participation();
         participation.setProject(event.getProject());
         participation.setStatus(ParticipationStatus.OWNER);
+        event.getProject().getParticipations().add(participation);
         publisher.publishEvent(new ParticipationCreationEvent(participation));
     }
 

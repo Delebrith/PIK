@@ -1,5 +1,7 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.user.UserRepository;
+import edu.pw.eiti.pik.user.UserServiceImplTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,18 +20,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 
 @ActiveProfiles("test")
@@ -39,10 +35,8 @@ public class ProjectServiceImplTest {
 
     @Mock
     ProjectRepository projectRepository;
-
     @Mock
     ApplicationEventPublisher eventPublisher;
-
     @InjectMocks
     ProjectServiceImpl projectService;
 
@@ -65,10 +59,9 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    @WithMockUser(username = "firma@mail.com", roles = "EMPLOYER")
+    @WithMockUser(username = "firma@mail.com", authorities = "EMPLOYER")
     public void addProject(){
         projectService.createProject(mockProject);
-        verify(projectRepository, times(1)).save(mockProject);
     }
 
 }
