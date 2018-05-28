@@ -5,16 +5,16 @@
 
     <changeSet author="liquidbase" id="003">
         <createTable tableName="participation">
-            <column name="id" type="BIGINT(19)">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="project_id" type="BIGINT(19)">
+            <column name="project_id" type="BIGINT">
                 <constraints nullable="false" />
             </column>
             <column name="status" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
-            <column name="user_id" type="BIGINT(19)">
+            <column name="user_id" type="BIGINT">
                 <constraints nullable="false" />
             </column>
 
@@ -34,7 +34,7 @@
 
         <addForeignKeyConstraint baseTableName="participation"
                                  baseColumnNames="user_id" constraintName="users_fk"
-                                 referencedTableName="user" referencedColumnNames="id" />
+                                 referencedTableName="user_" referencedColumnNames="id" />
         <addForeignKeyConstraint baseTableName="participation"
                                  baseColumnNames="project_id" constraintName="project_fk"
                                  referencedTableName="project" referencedColumnNames="id" />

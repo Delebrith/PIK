@@ -5,7 +5,7 @@
 
     <changeSet author="liquidbase" id="002">
         <createTable tableName="project">
-            <column name="id" type="BIGINT(19)">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="name" type="nvarchar(200)">

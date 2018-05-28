@@ -71,6 +71,8 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok:1.16.20'
 	apt "org.projectlombok:lombok:1.16.20"
+	
+	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
 
 	compile("com.h2database:h2")
 	compile("org.liquibase:liquibase-core")

@@ -5,8 +5,8 @@
 
 
     <changeSet author="liquidbase" id="001">
-        <createTable tableName="user">
-            <column name="id" type="BIGINT(19)">
+        <createTable tableName="user_">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="email" type="varchar(50)">
@@ -24,17 +24,17 @@
                           columnName="id"
                           incrementBy="1"
                           startWith="100"
-                          tableName="user"/>
+                          tableName="user_"/>
         <loadData encoding="UTF-8"
                   file="db/data/user.csv"
                   quotchar="'"
                   schemaName="public"
                   separator=","
-                  tableName="user">
+                  tableName="user_">
         </loadData>
 
         <createTable tableName="authority">
-            <column name="id" type="BIGINT(19)">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="name" type="varchar(50)">
@@ -58,14 +58,14 @@
         </loadData>
 
         <createTable tableName="users_authorities">
-            <column name="user_id" type="BIGINT(19)">
+            <column name="user_id" type="BIGINT">
             </column>
-            <column name="authority_id" type="BIGINT(19)">
+            <column name="authority_id" type="BIGINT">
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="users_authorities"
                                  baseColumnNames="user_id" constraintName="user_fk"
-                                 referencedTableName="user" referencedColumnNames="id" />
+                                 referencedTableName="user_" referencedColumnNames="id" />
         <addForeignKeyConstraint baseTableName="users_authorities"
                                  baseColumnNames="authority_id" constraintName="authority_fk"
                                  referencedTableName="authority" referencedColumnNames="id" />
