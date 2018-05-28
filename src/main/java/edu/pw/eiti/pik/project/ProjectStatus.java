@@ -9,5 +9,5 @@ public enum ProjectStatus {
     FINISHED,
     OVERDUE,
     SUSPENDED_REPORTED,
-    CANCELLED,
+    CANCELED,
 }

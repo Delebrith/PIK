@@ -2,6 +2,7 @@ package edu.pw.eiti.pik.project;
 
 import edu.pw.eiti.pik.base.event.*;
 import edu.pw.eiti.pik.participation.Participation;
+import edu.pw.eiti.pik.participation.ParticipationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -61,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
         else {
             if (event.getIsTeacher())
                 project.get().setStatus(ProjectStatus.SUSPENDED_MISSING_TEACHER);
-            else if (project.get().getNumberOfParticipants() > project.get().getParticipations().size())
+            else if (project.get().getNumberOfParticipants() > project.get().getParticipations().stream().filter(p -> p.getStatus().equals(ParticipationStatus.PARTICIPANT)).count())
                 project.get().setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
             projectRepository.save(project.get());
         }
@@ -85,7 +86,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (!project.isPresent())
             throw new ProjectNotFoundException();
         else {
-            project.get().setStatus(ProjectStatus.CANCELLED);
+            project.get().setStatus(ProjectStatus.CANCELED);
             projectRepository.save(project.get());
         }
     }

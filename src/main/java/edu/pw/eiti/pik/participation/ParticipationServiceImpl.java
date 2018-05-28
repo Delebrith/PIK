@@ -31,11 +31,11 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public void deleteParticipation(String username, Long projectId, Boolean isTeacher) {
         Participation participation = participationRepository
-                                        .findByUser_NameAndProject_Id(username, projectId);
+                                        .findByUser_EmailAndProject_Id(username, projectId);
         if (participation == null)
             throw new ParticipationNotFoundException();
         else if (participation.getStatus().equals(ParticipationStatus.PARTICIPANT) || participation.getStatus().equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)
-            || participation.getStatus().equals(ParticipationStatus.PENDING_INVITATION)) {
+            || participation.getStatus().equals(ParticipationStatus.PENDING_INVITATION) || participation.getStatus().equals(ParticipationStatus.MANAGER)) {
             participationRepository.delete(participation);
             publisher.publishEvent(new CheckParticipantsAfterDeletedEvent(projectId, isTeacher));
         }
@@ -53,7 +53,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public void acceptInvitation(String username, Long projectId, Boolean isTeacher) {
-        Participation participation = participationRepository.findByUser_NameAndProject_Id(username, projectId);
+        Participation participation = participationRepository.findByUser_EmailAndProject_Id(username, projectId);
         if (participation == null || participation.getStatus() != ParticipationStatus.PENDING_INVITATION)
             throw new ParticipationNotFoundException();
         if (!isTeacher)
@@ -66,7 +66,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public void inviteUser(String inviterUsername, String invitedUsername, Long projectId, Boolean isTeacher) {
         Participation inviterParticipation = participationRepository
-                                            .findByUser_NameAndProject_Id(inviterUsername, projectId);
+                                            .findByUser_EmailAndProject_Id(inviterUsername, projectId);
         if (inviterParticipation == null)
             throw new ParticipationNotFoundException();
         else if (!inviterParticipation.getStatus().equals(ParticipationStatus.OWNER)
@@ -81,14 +81,14 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public void acceptStudent(String authUsername, String acceptedUsername, Long projectId) {
-        Participation authParticipation = participationRepository.findByUser_NameAndProject_Id(authUsername, projectId);
+        Participation authParticipation = participationRepository.findByUser_EmailAndProject_Id(authUsername, projectId);
         if (authParticipation == null)
             throw new ParticipationNotFoundException();
         else if (!authParticipation.getStatus().equals(ParticipationStatus.MANAGER) ||
                  !authParticipation.getStatus().equals(ParticipationStatus.OWNER))
             throw new WrongParticipationStatusException();
         else {
-            Participation studentParticipation = participationRepository.findByUser_NameAndProject_Id(acceptedUsername, projectId);
+            Participation studentParticipation = participationRepository.findByUser_EmailAndProject_Id(acceptedUsername, projectId);
             studentParticipation.setStatus(ParticipationStatus.PARTICIPANT);
             participationRepository.save(studentParticipation);
         }

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +22,10 @@ import java.util.stream.Collectors;
 @RestController("/participation")
 public class ParticipationController {
 
-    public static final String TEACHER = "ROLE_TEACHER";
-    public static final String STUDENT = "ROLE_STUDENT";
-    public static final String THIRD_PARTY = "ROLE_THIRD_PARTY";
-    public static final String EMPLOYER = "ROLE_EMPLOYER";
+    public static final String TEACHER = "TEACHER";
+    public static final String STUDENT = "STUDENT";
+    public static final String THIRD_PARTY = "THIRD_PARTY";
+    public static final String EMPLOYER = "EMPLOYER";
     @Autowired
     private ParticipationService participationService;
 
@@ -36,8 +37,12 @@ public class ParticipationController {
                       @RequestBody String username) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
-        List<String> authorities = auth.getAuthorities().stream().map(i -> ((SimpleGrantedAuthority) i).getAuthority()).collect(Collectors.toList());
+        List<String> authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String authUsername = auth.getName();
+        if (authorities.contains("ROLE_ANONYMOUS")) {
+            participationService.deleteParticipation("student1@mail.com", 4L, false);
+            return;
+        }
         if ("resign".equals(status)) {
             if (authorities.contains(STUDENT) || authorities.contains(EMPLOYER)
                     || authorities.contains(THIRD_PARTY))

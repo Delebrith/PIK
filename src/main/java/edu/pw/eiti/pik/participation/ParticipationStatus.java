@@ -1,6 +1,6 @@
 package edu.pw.eiti.pik.participation;
 
-enum ParticipationStatus {
+public enum ParticipationStatus {
     GRADUATE_WORK,
     PARTICIPANT,
     OWNER,
