@@ -22,7 +22,7 @@
         <addAutoIncrement columnDataType="BIGINT"
                           columnName="id"
                           incrementBy="1"
-                          startWith="100"
+                          startWith="1"
                           tableName="participation"/>
         <loadData encoding="UTF-8"
                   file="db/data/participation.csv"
