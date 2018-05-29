@@ -6,5 +6,6 @@ public enum ParticipationStatus {
     OWNER,
     MANAGER,
     PENDING_INVITATION,
-    WAITING_FOR_ACCEPTANCE
+    WAITING_FOR_ACCEPTANCE,
+    RESIGNED
 }

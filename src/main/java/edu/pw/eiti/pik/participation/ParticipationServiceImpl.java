@@ -40,7 +40,7 @@ class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public void changeStatus(ParticipationChangeStatus status, Long projectId, String username) {
+    public void changeStatus(ParticipationStatus status, Long projectId, String username) {
         final String TEACHER = "TEACHER";
         final String STUDENT = "STUDENT";
         final String EMPLOYER = "EMPLOYER";
@@ -48,29 +48,27 @@ class ParticipationServiceImpl implements ParticipationService {
         Authentication auth = context.getAuthentication();
         List<String> authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String authUsername = auth.getName();
-        if (status.equals(ParticipationChangeStatus.RESIGN)
-                || status.equals(ParticipationChangeStatus.REJECT_INVITATION)) {
+        if (status.equals(ParticipationStatus.RESIGNED)) {
             if (!authorities.contains(TEACHER))
                 deleteParticipation(authUsername, projectId, false);
             else
                 deleteParticipation(authUsername, projectId, true);
-        } else if (status.equals(ParticipationChangeStatus.SIGN_UP)) {
+        } else if (status.equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)) {
             if (authorities.contains(TEACHER) || authorities.contains(STUDENT))
                 addParticipation(authUsername, projectId);
-        } else if (status.equals(ParticipationChangeStatus.ACCEPT_STUDENT)) {
-            if (authorities.contains(EMPLOYER) && !username.equals("{}"))
-                acceptParticipant(authUsername, username, projectId, false);
-        } else if (status.equals(ParticipationChangeStatus.ACCEPT_TEACHER)) {
-            if (authorities.contains(EMPLOYER) && !username.equals("{}"))
-                acceptParticipant(authUsername, username, projectId, true);
-        } else if (status.equals(ParticipationChangeStatus.INVITE)) {
-            if (!authorities.contains(STUDENT) && !username.equals("{}"))
-                inviteUser(authUsername, username, projectId);
-        } else if (status.equals(ParticipationChangeStatus.ACCEPT_INVITATION)) {
+        } else if (status.equals(ParticipationStatus.PARTICIPANT)) {
             if (authorities.contains(STUDENT))
                 acceptInvitation(authUsername, projectId, false);
-            else if (authorities.contains(TEACHER))
+            else if (authorities.contains(EMPLOYER) && !username.equals("{}"))
+                acceptParticipant(authUsername, username, projectId, false);
+        } else if (status.equals(ParticipationStatus.MANAGER)) {
+            if (authorities.contains(TEACHER))
                 acceptInvitation(authUsername, projectId, true);
+            else if (authorities.contains(EMPLOYER) && !username.equals("{}"))
+                acceptParticipant(authUsername, username, projectId, true);
+        } else if (status.equals(ParticipationStatus.PENDING_INVITATION)) {
+            if (!authorities.contains(STUDENT) && !username.equals("{}"))
+                inviteUser(authUsername, username, projectId);
         }
     }
 

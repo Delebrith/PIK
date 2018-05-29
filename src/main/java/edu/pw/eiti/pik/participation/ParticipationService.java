@@ -7,7 +7,7 @@ public interface ParticipationService {
     @EventListener
     void setProjectOwner(ProjectCreationEvent event);
 
-    void changeStatus(ParticipationChangeStatus status, Long projectId, String username);
+    void changeStatus(ParticipationStatus status, Long projectId, String username);
 
     void deleteParticipation(String username, Long projectId, Boolean isTeacher);
 
