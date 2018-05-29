@@ -64,13 +64,13 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public void inviteUser(String inviterUsername, String invitedUsername, Long projectId, Boolean isTeacher) {
+    public void inviteUser(String inviterUsername, String invitedUsername, Long projectId) {
         Participation inviterParticipation = participationRepository
                                             .findByUser_EmailAndProject_Id(inviterUsername, projectId);
         if (inviterParticipation == null)
             throw new ParticipationNotFoundException();
-        else if (!inviterParticipation.getStatus().equals(ParticipationStatus.OWNER)
-                && !inviterParticipation.getStatus().equals(ParticipationStatus.MANAGER))
+        else if (!inviterParticipation.getStatus().equals(ParticipationStatus.OWNER) &&
+                 !inviterParticipation.getStatus().equals(ParticipationStatus.MANAGER))
             throw new WrongParticipationStatusException();
         else {
             Participation participation = new Participation();
@@ -84,7 +84,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         Participation authParticipation = participationRepository.findByUser_EmailAndProject_Id(authUsername, projectId);
         if (authParticipation == null)
             throw new ParticipationNotFoundException();
-        else if (!authParticipation.getStatus().equals(ParticipationStatus.MANAGER) ||
+        else if (!authParticipation.getStatus().equals(ParticipationStatus.MANAGER) &&
                  !authParticipation.getStatus().equals(ParticipationStatus.OWNER))
             throw new WrongParticipationStatusException();
         else {

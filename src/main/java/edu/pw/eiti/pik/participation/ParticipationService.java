@@ -13,7 +13,7 @@ public interface ParticipationService {
 
     void acceptInvitation(String username, Long projectId, Boolean isTeacher);
 
-    void inviteUser(String inviterUsername, String invitedUsername, Long projectId, Boolean isTeacher);
+    void inviteUser(String inviterUsername, String invitedUsername, Long projectId);
 
     void acceptStudent(String authUsername, String acceptedUsername, Long projectId);
 }

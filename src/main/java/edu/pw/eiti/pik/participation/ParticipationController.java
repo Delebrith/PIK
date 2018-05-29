@@ -22,10 +22,11 @@ import java.util.stream.Collectors;
 @RestController("/participation")
 public class ParticipationController {
 
-    public static final String TEACHER = "TEACHER";
-    public static final String STUDENT = "STUDENT";
-    public static final String THIRD_PARTY = "THIRD_PARTY";
-    public static final String EMPLOYER = "EMPLOYER";
+    private static final String TEACHER = "TEACHER";
+    private static final String STUDENT = "STUDENT";
+    private static final String THIRD_PARTY = "THIRD_PARTY";
+    private static final String EMPLOYER = "EMPLOYER";
+    private static final String ADMIN = "ADMIN";
     @Autowired
     private ParticipationService participationService;
 
@@ -39,44 +40,43 @@ public class ParticipationController {
         Authentication auth = context.getAuthentication();
         List<String> authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String authUsername = auth.getName();
-        if (authorities.contains("ROLE_ANONYMOUS")) {
-            participationService.deleteParticipation("student1@mail.com", 4L, false);
-            return;
-        }
-        if ("resign".equals(status)) {
-            if (authorities.contains(STUDENT) || authorities.contains(EMPLOYER)
-                    || authorities.contains(THIRD_PARTY))
+        if ("resign".equals(status) || "reject_invitation".equals(status)) {
+            if (!authorities.contains(ADMIN) && !authorities.contains(TEACHER))
                 participationService.deleteParticipation(authUsername, projectId, false);
-            else if (authorities.contains(TEACHER))
+            else if (!authorities.contains(ADMIN))
                 participationService.deleteParticipation(authUsername, projectId, true);
+            else
+                throw new IllegalStateException();
         } else if ("sign_up".equals(status)) {
             if (authorities.contains(STUDENT))
                 participationService.addParticipation(authUsername, projectId);
+            else
+                throw new IllegalStateException();
         } else if ("accept_participant".equals(status)) {
-            if (authorities.contains(TEACHER) || authorities.contains(EMPLOYER)
-                    || authorities.contains(THIRD_PARTY))
+            if (authorities.contains(EMPLOYER) && !username.equals("{}"))
                 participationService.acceptStudent(authUsername, username, projectId);
+            else
+                throw new IllegalStateException();
         } else if ("invite_teacher".equals(status)) {
-            if ((authorities.contains(TEACHER) || authorities.contains(EMPLOYER)
-                    || authorities.contains(THIRD_PARTY)) && username != null) {
-                participationService.inviteUser(authUsername, username, projectId, true);
-            }
+            if (!authorities.contains(ADMIN) && !authorities.contains(STUDENT) && !username.equals("{}"))
+                participationService.inviteUser(authUsername, username, projectId);
+            else
+                throw new IllegalStateException();
         } else if ("invite_student".equals(status)) {
-            if ((authorities.contains(TEACHER) || authorities.contains(EMPLOYER)
-                    || authorities.contains(THIRD_PARTY)) && username != null)
-                participationService.inviteUser(authUsername, username, projectId, false);
-        } else if ("reject_invitation".equals(status)) {
-            if (authorities.contains(TEACHER))
-                participationService.deleteParticipation(authUsername, projectId, true);
-            else if (authorities.contains(STUDENT) || authorities.contains(EMPLOYER)
-                    || authorities.contains(THIRD_PARTY))
-                participationService.deleteParticipation(authUsername, projectId, false);
+            if (!authorities.contains(ADMIN) && !authorities.contains(STUDENT) && !username.equals("{}"))
+                participationService.inviteUser(authUsername, username, projectId);
+            else
+                throw new IllegalStateException();
         } else if ("accept_invitation".equals(status)) {
-            if (authorities.contains(STUDENT))
+            if (authorities.contains(STUDENT) && !authorities.contains(ADMIN))
                 participationService.acceptInvitation(authUsername, projectId, false);
-            else if (authorities.contains(TEACHER))
+            else if (authorities.contains(TEACHER) && !authorities.contains(ADMIN))
                 participationService.acceptInvitation(authUsername, projectId, true);
+            else
+                throw new IllegalStateException();
         }
+        else
+            throw new IllegalStateException();
     }
 
     // resign, sign_up, accept_participant, invite_teacher, invite_student, reject_invitation

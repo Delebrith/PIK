@@ -75,6 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
         Optional<Project> project = projectRepository.findById(event.getProjectId());
         if (project.isPresent()) {
             participation.setProject(project.get());
+            project.get().getParticipations().add(participation);
             publisher.publishEvent(new ParticipationCreationEvent(participation));
         }
     }
