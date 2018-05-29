@@ -15,5 +15,5 @@ public interface ParticipationService {
 
     void inviteUser(String inviterUsername, String invitedUsername, Long projectId);
 
-    void acceptStudent(String authUsername, String acceptedUsername, Long projectId);
+    void acceptParticipant(String authUsername, String acceptedUsername, Long projectId, Boolean isTeacher);
 }

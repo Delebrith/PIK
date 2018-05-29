@@ -11,11 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
 
-    @Autowired
-    private ParticipationRepository participationRepository;
+    private final ParticipationRepository participationRepository;
+
+    private final ApplicationEventPublisher publisher;
 
     @Autowired
-    private ApplicationEventPublisher publisher;
+    public ParticipationServiceImpl(ParticipationRepository participationRepository, ApplicationEventPublisher publisher) {
+        this.participationRepository = participationRepository;
+        this.publisher = publisher;
+    }
 
     @EventListener
     @Transactional
@@ -80,7 +84,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public void acceptStudent(String authUsername, String acceptedUsername, Long projectId) {
+    public void acceptParticipant(String authUsername, String acceptedUsername, Long projectId, Boolean isTeacher) {
         Participation authParticipation = participationRepository.findByUser_EmailAndProject_Id(authUsername, projectId);
         if (authParticipation == null)
             throw new ParticipationNotFoundException();
@@ -88,9 +92,14 @@ public class ParticipationServiceImpl implements ParticipationService {
                  !authParticipation.getStatus().equals(ParticipationStatus.OWNER))
             throw new WrongParticipationStatusException();
         else {
-            Participation studentParticipation = participationRepository.findByUser_EmailAndProject_Id(acceptedUsername, projectId);
-            studentParticipation.setStatus(ParticipationStatus.PARTICIPANT);
-            participationRepository.save(studentParticipation);
+            Participation acceptedParticipation = participationRepository.findByUser_EmailAndProject_Id(acceptedUsername, projectId);
+            if (acceptedParticipation == null)
+                throw new ParticipationNotFoundException();
+            else if (!isTeacher)
+                acceptedParticipation.setStatus(ParticipationStatus.PARTICIPANT);
+            else
+                acceptedParticipation.setStatus(ParticipationStatus.MANAGER);
+            participationRepository.save(acceptedParticipation);
         }
     }
 }
