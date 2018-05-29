@@ -1,8 +1,8 @@
 package edu.pw.eiti.pik.participation;
 
-public class ParticipationNotFoundException extends RuntimeException {
+class ParticipationNotFoundException extends RuntimeException {
 
-    public ParticipationNotFoundException() {
-        super("No user found for given credentials");
+    ParticipationNotFoundException() {
+        super("No participation found with given arguments");
     }
 }

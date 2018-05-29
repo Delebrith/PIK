@@ -2,15 +2,13 @@ package edu.pw.eiti.pik.participation;
 
 import edu.pw.eiti.pik.project.Project;
 import edu.pw.eiti.pik.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
