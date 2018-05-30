@@ -47,7 +47,7 @@ public class User implements UserDetails {
     private List<Authority> authorities = new ArrayList<>();
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Participation> participations = new ArrayList<>();
 

@@ -1,6 +1,6 @@
 package edu.pw.eiti.pik.user;
 
-enum Authorities {
+public enum Authorities {
     ADMIN,
     STUDENT,
     EMPLOYER,
