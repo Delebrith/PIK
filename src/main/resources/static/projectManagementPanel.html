@@ -1,0 +1,258 @@
+
+<div id="projectManagementPanel" class="md-col-12">
+    <br>
+    <h2>
+        Nazwa Projektu
+    </h2>
+    <hr>
+    <div id="statusChange" class="row md-col-12">
+        <div class="md-col-8 mx-auto">
+        <h5>
+            Status projektu:
+            <!--status-->
+        </h5>
+        </div>
+        <div class="row mx-auto float-right">
+            <!--if started-->
+            <button type="button" class="btn btn-outline-success my-2 my-sm-0 float-right">
+                Zakończ
+            </button>
+            <button type="button" class="btn btn-outline-danger my-2 my-sm-0 float-right">
+                Anuluj
+            </button>
+            <!--if suspended => make created -->
+            <button type="button" class="btn btn-outline-primary my-2 my-sm-0 float-right">
+                Wznów
+            </button>
+        </div>
+    </div>
+    <br><br>
+    <div class="row mx-auto">
+
+        <div class=" col-md-7 mx-auto">
+            <div id="editDescription" class="card rounded-0">
+                <div class="card-header">
+                    <h4 class="mb-0">Opis projektu</h4>
+                </div>
+                <div class="card-body">
+                    <!--here place the description-->
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0 float-right" data-toggle="modal" data-target="#descriptionPanel">
+                        Modyfikuj
+                    </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="descriptionPanel" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edytuj opis</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea type="text" class="form-control form-control-md rounded-0" rows="4"
+                                          ng-model="project.description"
+                                          placeholder="Wprowadż opis projektu (do 1000 znaków)."
+                                          maxlength="1000"></textarea>
+                                <div class="invalid-feedback">Wprowadź opis!</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-4 mx-auto">
+            <div id="options" class="card rounded-0">
+
+                <div class="card-header">
+                    <h4 class="mb-0">Parametry</h4>
+                </div>
+
+                <div class="card-body">
+                <table class="table" style="text-align: center">
+                    <tr>
+                        <td>
+                            Liczba uczestników:
+                            <!--Place number of participants-->
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary float-right" data-toggle="modal" data-target="#participantsPanel">
+                                Modyfikuj
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!--visible for teachers-->
+                            Punkty ECTS:
+                            <!--here place number of ects points-->
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary   float-right " data-toggle="modal" data-target="#ectsPanel">
+                                Modyfikuj
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Wynagrodzenie:
+                            <!--here place minimum and maximum pay or only maximum of equal to minimum-->
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary   float-right" data-toggle="modal" data-target="#payPanel">
+                                Modyfikuj
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!--visible for teachers-->
+                                Praca dyplomowa:
+                                <!-- 'TAK'/'NIE' -->
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary   float-right">
+                                Zmień status
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="participantsPanel" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edytuj liczbę uczestników</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="number" class="form-control form-control-md rounded-0"
+                                       ng-model="project.participants"
+                                       value="1" min="1">
+                                <div class="invalid-feedback">Wprowadź liczbę uczestników!</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="ectsPanel" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edytuj liczbę ECTS</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="number" class="form-control form-control-md rounded-0" ng-model="project.ects" value="0">
+                                <div class="invalid-feedback">Wprowadź ilość ECTS!</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="payPanel" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edytuj wynagrodzenie</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <label>Minimalna proponowana kwota</label>
+                                <input type="number" class="form-control form-control-md rounded-0"
+                                       ng-model="project.minimumPay" value="0"  min="0">
+                                <div class="invalid-feedback">Wprowadź kwotę!</div>
+
+                                <label>Maksymalna proponowana kwota</label>
+                                <input type="number" class="form-control form-control-md rounded-0"
+                                       ng-model="project.maximumPay" value="0"  min="0">
+                                <div class="invalid-feedback">Wprowadź kwotę!</div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <br><br>
+
+    <div id="participants" class="col-md-12">
+        <!--All participant except currently logged in user-->
+        <h3>Uczestnicy</h3>
+        <table class="table" style="text-align: center">
+            <thead>
+            <th>
+                Uczestnik
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Akcje
+            </th>
+            </thead>
+            <!--for each participant-->
+            <tr>
+                <td>
+                    Imię Nazwisko
+                </td>
+                <td>
+                    Status
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-success my-2 my-sm-0">
+                        Zaakceptuj
+                    </button>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-warning my-2 my-sm-0">
+                        Odrzuć
+                    </button>
+                    <!--if any kind of participant or manager-->
+                    <button type="button" class="btn btn-outline-danger my-2 my-sm-0">
+                        Wyklucz
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
