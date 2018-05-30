@@ -1,0 +1,117 @@
+
+<div id="myProjects" ng-controller="" class="col-md-10 mx-auto">
+
+    <div class="row">
+
+        <div class="col-md-5">
+            <div class="card rounded-0 card-success" style="margin-top: 40px">
+                <div class="card-header">
+                    <h3 class="mb-0">Szukaj projektów</h3>
+                </div>
+                <div class="card-body">
+                    <form class="row col-md-12 form-inline my-lg-0">
+                        <input class="form-control col-md-9 mr-sm-2" type="search" placeholder="Znajdź projekt" aria-label="Search">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <h2>Dostępne projekty</h2>
+    <hr>
+
+    <div class="row justify-content-around" id="status_filters">
+        <div class="col-md-2"> <h5> Filtruj status: </h5> </div>
+        <div id="status_labels" class="col-md-10 row justify-content-around">
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Oczekujący na opiekuna
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Oczekujący na uczestników
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Rozpoczęty
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Zakończony
+            </label>
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Anulowany
+            </label>
+        </div>
+    </div>
+    <hr>
+
+    <div id="projects" class="card">
+        <table class="table" style="text-align: center">
+            <thead>
+            <th class="col-md-4">Nazwa</th>
+            <th>Status projektu</th>
+            <th class="col-md-5">Akcje</th>
+            </thead>
+            <!--wrap into ng-repeat-->
+            <tr>
+                <td>
+                    Przykładowy projekt
+                </td>
+                <td>
+                    Rozpoczęty
+                </td>
+                <td>
+                    <div class="col-md-12 justify-content-around row">
+                        <!-- visible if not involved in the project -->
+                        <!-- visible for teachers if waiting for teacher -->
+                        <!-- visible for students if waiting for student-->
+                        <button type="button" class="btn btn-outline-success">
+                            Zgłoś się
+                        </button>
+                        <button type="button" class="btn btn-outline-primary"
+                                data-toggle="modal" data-target="#projectInfo">
+                            Informacje
+                        </button>
+                        <button type="button" class="btn btn-outline-danger">
+                            Projekt nieodpowiedni
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- Modal -->
+            <div class="modal fade" id="projectInfo" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <!--name of the project-->
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Opis:
+                            <br>
+                            <!--descricption-->
+                            <hr>
+                            Liczba uczestników:
+                            <!--number of people-->
+                            <br>
+                            ECTS:
+                            <!--ects-->
+                            <br>
+                            Wynagrodzenie:
+                            <!--payment-->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary-outline" data-dismiss="modal">Zamknij</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </table>
+    </div>
+
+</div>
