@@ -2,7 +2,14 @@ package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.participation.Participation;
 import lombok.*;
+
+import org.springframework.data.elasticsearch.annotations.CompletionField;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,6 +25,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Document(indexName="users" )
 public class User implements UserDetails {
 
     @Id
@@ -26,6 +34,7 @@ public class User implements UserDetails {
 
     @NotBlank
     @Email
+    @CompletionField
     private String email;
 
     @NotBlank
@@ -44,6 +53,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(
                     name = "authority_id", referencedColumnName = "id"))
     @Builder.Default
+    @Field(type=FieldType.Nested)
     private List<Authority> authorities = new ArrayList<>();
 
 
