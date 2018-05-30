@@ -11,6 +11,8 @@ import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -25,10 +27,11 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity(name = "user_")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Document(indexName="users" )
+@Document(indexName="users")
 public class User implements UserDetails {
 
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -59,6 +62,7 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     @Builder.Default
+    @JsonIgnore
     private List<Participation> participations = new ArrayList<>();
 
     @Override
