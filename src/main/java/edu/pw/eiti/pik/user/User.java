@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-@Entity
+@Entity(name = "user_")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
 
@@ -47,7 +47,7 @@ public class User implements UserDetails {
     private List<Authority> authorities = new ArrayList<>();
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Participation> participations = new ArrayList<>();
 
