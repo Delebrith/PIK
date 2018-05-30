@@ -5,7 +5,7 @@
 
     <changeSet author="liquidbase" id="002">
         <createTable tableName="project">
-            <column name="id" type="BIGINT(19)">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="name" type="nvarchar(200)">
@@ -37,8 +37,9 @@
         <addAutoIncrement columnDataType="BIGINT"
                           columnName="id"
                           incrementBy="1"
-                          startWith="100"
+                          startWith="1"
                           tableName="project"/>
+		
         <loadData encoding="UTF-8"
                   file="db/data/project.csv"
                   quotchar="'"

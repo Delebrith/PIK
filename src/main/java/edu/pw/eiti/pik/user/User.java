@@ -23,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-@Entity
+@Entity(name = "user_")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Document(indexName="users" )
 public class User implements UserDetails {
