@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-@Entity
+@Entity(name = "user_")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
 
