@@ -36,7 +36,18 @@ class ParticipationServiceImpl implements ParticipationService {
         participation.setProject(event.getProject());
         participation.setStatus(ParticipationStatus.OWNER);
         event.getProject().getParticipations().add(participation);
-        publisher.publishEvent(new ParticipationCreationEvent(participation));
+        publisher.publishEvent(new OwnerParticipationCreationEvent(participation));
+    }
+
+    @EventListener
+    @Transactional
+    @Override
+    public void setTeacherAsManager(InviteTeacherEvent event) {
+        Participation participation = new Participation();
+        participation.setProject(event.getProject());
+        participation.setStatus(ParticipationStatus.MANAGER);
+        event.getProject().getParticipations().add(participation);
+        publisher.publishEvent(new ManagerParticipationCreationEvent(participation, event.getTeacherMail()));
     }
 
     @Override

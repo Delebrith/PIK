@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ParticipationCreationEvent {
+public class OwnerParticipationCreationEvent {
 
     private Participation participation;
 }

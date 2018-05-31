@@ -12,7 +12,7 @@ public interface ProjectService {
     List<Project> getProjects();
     List<Project> getWaitingForStudentsProjects();
     List<Project> getReportedProjects();
-    void createProject(Project project);
+    void createProject(Project project, String teacherMail);
     @EventListener
     void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event);
     @EventListener

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -29,9 +30,8 @@ public class ProjectController
     })
     @PreAuthorize("hasAuthority('EMPLOYER')")
     @PostMapping(path = "/project/add")
-    void addProject(@RequestBody ProjectDto projectDto) {
+    void addProject(@RequestBody ProjectDto projectDto, @RequestParam(required = false) String teacherMail) {
         Project project = projectMapper.fromDto(projectDto);
-        project.setParticipations(new ArrayList<>());
-        projectService.createProject(project);
+        projectService.createProject(project, teacherMail);
     }
 }

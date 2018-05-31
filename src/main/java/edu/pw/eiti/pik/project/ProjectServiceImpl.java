@@ -9,7 +9,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Part;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +48,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public void createProject(Project project) {
+    public void createProject(Project project, String teacherMail) {
         publisher.publishEvent(new ProjectCreationEvent(project));
+        if (teacherMail != null)
+            publisher.publishEvent(new InviteTeacherEvent(teacherMail, project));
     }
 
     @Override
@@ -76,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.isPresent()) {
             participation.setProject(project.get());
             project.get().getParticipations().add(participation);
-            publisher.publishEvent(new ParticipationCreationEvent(participation));
+            publisher.publishEvent(new OwnerParticipationCreationEvent(participation));
         }
     }
 
