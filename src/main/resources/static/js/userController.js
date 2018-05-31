@@ -1,4 +1,4 @@
-app.controller('loginController', function($scope, $http, $cookies, $window) {
+app.controller('userController', function($scope, $http, $cookies, $window) {
 	function invalidEmail()
 	{
 		alert('Niepoprawny adres email!');
@@ -34,5 +34,10 @@ app.controller('loginController', function($scope, $http, $cookies, $window) {
 	    	function(response){
 				failedLogin(response);	
     		});
+	}
+	
+	$scope.logout = function() {
+		$cookies.remove('token');
+		$window.location.reload();
 	}
 });
