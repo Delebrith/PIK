@@ -14,66 +14,75 @@
         </div>
         <div class="row mx-auto float-right">
             <!--if started-->
-            <button type="button" class="btn btn-outline-success my-2 my-sm-0 float-right">
+            <button type="button" class="btn btn-outline-success my-2 my-sm-2 float-right">
                 Zakończ
             </button>
-            <button type="button" class="btn btn-outline-danger my-2 my-sm-0 float-right">
+            <button type="button" class="btn btn-outline-danger my-2 my-sm-2 float-right">
                 Anuluj
             </button>
             <!--if suspended => make created -->
-            <button type="button" class="btn btn-outline-primary my-2 my-sm-0 float-right">
+            <button type="button" class="btn btn-outline-primary my-2 my-sm-2 float-right">
                 Wznów
             </button>
         </div>
     </div>
-    <br><br>
-    <div class="row mx-auto">
+    <hr>
+    <div class="row">
+        <h4 class="ml-3">Dane projektu</h4>
+        <button type="button" class="btn btn-info-outline"
+                data-toggle="collapse" data-target="#editProject" style="margin-left: 20px">
+            <i class="fas fa-caret-down"></i>
+        </button>
+    </div>
+    <br>
+    <div id="editProject" class="collapse show">
 
-        <div class=" col-md-7 mx-auto">
-            <div id="editDescription" class="card rounded-0">
-                <div class="card-header">
-                    <h4 class="mb-0">Opis projektu</h4>
-                </div>
-                <div class="card-body">
-                    <!--here place the description-->
-                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0 float-right" data-toggle="modal" data-target="#descriptionPanel">
-                        Modyfikuj
-                    </button>
-                </div>
-                <!-- Modal -->
-                <div class="modal fade" id="descriptionPanel" tabindex="-1" role="dialog"
-                     aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edytuj opis</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <textarea type="text" class="form-control form-control-md rounded-0" rows="4"
-                                          ng-model="project.description"
-                                          placeholder="Wprowadż opis projektu (do 1000 znaków)."
-                                          maxlength="1000"></textarea>
-                                <div class="invalid-feedback">Wprowadź opis!</div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+        <div class="row ">
+            <div class="col-md-7 mx-auto">
+                <div id="editDescription" class="card rounded-0">
+                    <div class="card-header">
+                        <h5 class="mb-0">Opis projektu</h5>
+                    </div>
+                    <div class="card-body">
+                        <!--here place the description-->
+                        <button type="button" class="btn btn-outline-primary my-2 my-sm-0 float-right" data-toggle="modal" data-target="#descriptionPanel">
+                            Modyfikuj
+                        </button>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="descriptionPanel" tabindex="-1" role="dialog"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edytuj opis</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <textarea type="text" class="form-control form-control-md rounded-0" rows="4"
+                                              ng-model="project.description"
+                                              placeholder="Wprowadż opis projektu (do 1000 znaków)."
+                                              maxlength="1000"></textarea>
+                                    <div class="invalid-feedback">Wprowadź opis!</div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                    <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
 
         <div class="col-md-4 mx-auto">
             <div id="options" class="card rounded-0">
 
                 <div class="card-header">
-                    <h4 class="mb-0">Parametry</h4>
+                    <h5 class="mb-0">Parametry</h5>
                 </div>
 
                 <div class="card-body">
@@ -145,7 +154,7 @@
                                 <div class="invalid-feedback">Wprowadź liczbę uczestników!</div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                                 <button type="button" class="btn btn-primary">Zapisz zmiany</button>
                             </div>
                         </div>
@@ -168,7 +177,7 @@
                                 <div class="invalid-feedback">Wprowadź ilość ECTS!</div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                                 <button type="button" class="btn btn-primary">Zapisz zmiany</button>
                             </div>
                         </div>
@@ -200,7 +209,7 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                                 <button type="button" class="btn btn-primary">Zapisz zmiany</button>
                             </div>
                         </div>
@@ -209,13 +218,22 @@
 
             </div>
         </div>
+
+        </div>
     </div>
 
-    <br><br>
+    <hr>
+    <div class="row">
+        <h4 class="ml-3">Uczestnicy</h4>
+        <button type="button" class="btn btn-info-outline"
+                data-toggle="collapse" data-target="#participants" style="margin-left: 20px">
+            <i class="fas fa-caret-down"></i>
+        </button>
+    </div>
+    <br>
 
-    <div id="participants" class="col-md-12">
+    <div id="participants" class="col-md-12 collapse hide">
         <!--All participant except currently logged in user-->
-        <h3>Uczestnicy</h3>
         <table class="table" style="text-align: center">
             <thead>
             <th>
@@ -253,6 +271,8 @@
             </tr>
         </table>
     </div>
+
+    <hr>
 </div>
 
 
