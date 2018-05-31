@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.elasticsearch;
+package edu.pw.eiti.pik.user.es;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

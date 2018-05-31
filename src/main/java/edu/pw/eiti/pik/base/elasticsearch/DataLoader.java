@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import edu.pw.eiti.pik.user.UserRepository;
+import edu.pw.eiti.pik.user.db.UserRepository;
 
 
 public abstract class DataLoader<T, ID extends Serializable> {

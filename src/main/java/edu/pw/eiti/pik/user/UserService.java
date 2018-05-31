@@ -14,5 +14,5 @@ interface UserService {
     String generateToken(User user);
     Optional<User> authenticate(String email, String password);
     void saveUserWithParticipation(ParticipationCreationEvent event);
-	public Page<User> findByNameAndAuthorityName(String name, String authority, Pageable pageable);
+	Page<User> findByNameAndAuthorityName(String name, String authority, Pageable pageable);
 }

@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -66,11 +66,8 @@ class UserController {
     {
     	Page<User> queryResult = userService.findByNameAndAuthorityName(
     			name.toLowerCase(), authority, PageRequest.of(0, number));
-	    ArrayList<UserDto> listToReturn = new ArrayList<>(); 
-    	for (User u : queryResult)
-    		listToReturn.add(userMapper.toDto(u));
     	
-    	return listToReturn;
+    	return queryResult.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
     
     private UserNotFoundException userNotFound() {

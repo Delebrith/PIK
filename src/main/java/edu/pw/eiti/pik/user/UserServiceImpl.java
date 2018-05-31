@@ -1,7 +1,8 @@
 package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.base.event.ParticipationCreationEvent;
-import edu.pw.eiti.pik.elasticsearch.UserESRepository;
+import edu.pw.eiti.pik.user.db.UserRepository;
+import edu.pw.eiti.pik.user.es.UserESRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.event.EventListener;
