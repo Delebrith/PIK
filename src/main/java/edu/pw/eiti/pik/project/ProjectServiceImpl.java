@@ -13,8 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-import javax.servlet.http.Part;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,12 +57,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public void createProject(Project project) {
-        publisher.publishEvent(new ProjectCreationEvent(project));
+    public void createProject(Project project, String teacherMail) {
+        if (project.getId() != null || project.getStatus() != ProjectStatus.CREATED)
+            throw new InvalidProjectDataException();
+        project.setParticipations(new ArrayList<>());
+        publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.OWNER, null));
+        if (teacherMail != null)
+            publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.MANAGER, teacherMail));
     }
 
     @Override
     @EventListener
+    @Transactional
     public void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event) {
         Optional<Project> project = projectRepository.findById(event.getProjectId());
         if (!project.isPresent())
@@ -84,7 +90,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.isPresent()) {
             participation.setProject(project.get());
             project.get().getParticipations().add(participation);
-            publisher.publishEvent(new ParticipationCreationEvent(participation));
+            publisher.publishEvent(new AuthenticatedParticipationCreationEvent(participation));
         }
     }
 

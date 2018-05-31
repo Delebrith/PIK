@@ -1,11 +1,11 @@
 package edu.pw.eiti.pik.participation;
 
+import edu.pw.eiti.pik.base.event.InviteTeacherEvent;
 import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
+import edu.pw.eiti.pik.base.event.UserAndProjectToParticipationEvent;
 import org.springframework.context.event.EventListener;
 
 public interface ParticipationService {
-    @EventListener
-    void setProjectOwner(ProjectCreationEvent event);
 
     void changeStatus(ParticipationStatus status, Long projectId, String username);
 
@@ -18,4 +18,7 @@ public interface ParticipationService {
     void inviteUser(String inviterUsername, String invitedUsername, Long projectId);
 
     void acceptParticipant(String authUsername, String acceptedUsername, Long projectId, Boolean isTeacher);
+
+    @EventListener
+    void addNewParticipation(UserAndProjectToParticipationEvent event);
 }

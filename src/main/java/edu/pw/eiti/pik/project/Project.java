@@ -4,6 +4,7 @@ import edu.pw.eiti.pik.participation.Participation;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -36,14 +37,17 @@ public class Project {
 
     @NotNull
     @Builder.Default
+    @Min(0)
     private Integer ects = 0;
 
     @NotNull
     @Builder.Default
+    @Min(0)
     private Integer minimumPay = 0;
 
     @NotNull
     @Builder.Default
+    @Min(0)
     private Integer maximumPay = 0;
 
     @NotNull
@@ -51,6 +55,7 @@ public class Project {
     private Boolean isGraduateWork = false;
 
     @NotNull
+    @Min(1)
     private Integer numberOfParticipants;
 
     @Enumerated(EnumType.STRING)
