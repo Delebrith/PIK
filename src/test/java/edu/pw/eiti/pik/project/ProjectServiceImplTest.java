@@ -62,7 +62,7 @@ public class ProjectServiceImplTest {
     @Test
     @WithMockUser(username = "firma@mail.com", authorities = "EMPLOYER")
     public void addProject(){
-        projectService.createProject(mockProject);
+        projectService.createProject(mockProject, null);
     }
 
 }
