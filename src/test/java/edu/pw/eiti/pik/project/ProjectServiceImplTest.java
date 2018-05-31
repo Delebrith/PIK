@@ -1,5 +1,6 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.project.db.ProjectRepository;
 import edu.pw.eiti.pik.user.UserServiceImplTest;
 import edu.pw.eiti.pik.user.db.UserRepository;
 

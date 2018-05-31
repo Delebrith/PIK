@@ -86,4 +86,13 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 			// Failed to retrieve user data, probably due to token being invalid 
 		})
 	}
+	
+	$scope.getUsersByRoleAndName = function(role, name, number, responseHandler) {
+		var response = $http.get(
+				"/user/" + encodeURIComponent(role) 
+				+ "/" + encodeURIComponent(name)
+				+ "/" + encodeURIComponent(number));
+		
+	    response.then(responseHandler);
+	}
 });

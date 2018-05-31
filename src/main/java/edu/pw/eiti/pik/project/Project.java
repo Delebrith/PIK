@@ -6,6 +6,11 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +20,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Document(indexName="projects")
 public class Project {
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -50,7 +57,8 @@ public class Project {
     @Builder.Default
     private ProjectStatus status = ProjectStatus.CREATED;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @Builder.Default
+    @Field(type=FieldType.Nested, ignoreFields={"project"})
     private List<Participation> participations = new ArrayList<>();
 }
