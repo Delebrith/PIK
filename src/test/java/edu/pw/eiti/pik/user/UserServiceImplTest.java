@@ -13,6 +13,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import edu.pw.eiti.pik.user.db.UserRepository;
+
 import java.util.*;
 
 import static org.junit.Assert.*;
