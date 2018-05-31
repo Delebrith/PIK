@@ -3,6 +3,7 @@ package edu.pw.eiti.pik.project;
 import edu.pw.eiti.pik.base.event.AddProjectToParticipationEvent;
 import edu.pw.eiti.pik.base.event.CancelProjectEvent;
 import edu.pw.eiti.pik.base.event.CheckParticipantsAfterDeletedEvent;
+import edu.pw.eiti.pik.base.event.CheckProjectStatusEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +28,6 @@ public interface ProjectService {
     void signUpForProject(long id);
 	Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable);
 	Page<Project> findProjectsByStatus(ProjectStatus phrase, Pageable pageable);
+	@EventListener
+    void checkProjectStatus(CheckProjectStatusEvent event);
 }
