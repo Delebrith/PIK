@@ -1,4 +1,24 @@
+var tresp
 app.controller('projectController', function($scope, $http, $cookies, $window) {
+	$scope.teachers = []
+	
+	$scope.getTeachers = function(typed) {
+		if (typed == undefined || typed == "")
+			return;
+		
+		$scope.getUsersByRoleAndName("TEACHER", typed, 5, function(response) {
+			if (response == undefined)
+				return
+				
+			tresp = response
+			teachers = []
+			for (var i = 0; i < response.data.length; i++)
+				teachers.push(response.data[i].name + " [" + response.data[i].email + "]")
+
+			$scope.teachers = teachers
+		})
+	}
+	
 	function validateProject() {
 		errors = ""
 			
@@ -23,7 +43,18 @@ app.controller('projectController', function($scope, $http, $cookies, $window) {
 				$scope.project.maximumPay != undefined &&
 				$scope.project.minimumPay > $scope.project.maximumPay)
 				errors += "Kwota minimalna nie może być większa od maksymalnej!\n"
+			
+			if ($scope.project.teacher != undefined)
+			{
+				emailBegin = $scope.project.teacher.indexOf('[')
+				emailEnd = $scope.project.teacher.lastIndexOf(']')
+				
+				if (emailBegin == -1 || emailEnd == -1 || emailBegin >= emailEnd)
+					errors += "Niepoprawny nauczyciel"
+				$scope.project.teachersMail = $scope.project.teacher.substr(emailBegin + 1, emailEnd - emailBegin - 1)
+			}
 		}
+		
 		
 		if (errors == "")
 			return true
@@ -40,6 +71,9 @@ app.controller('projectController', function($scope, $http, $cookies, $window) {
 	$scope.submitCreateProject = function() {
 		if (!validateProject())
 			return;
+		
+		alert($scope.project.teachersMail)
+		return;
 		
 		projectDto = {}
 

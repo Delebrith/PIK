@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories(
-		basePackages = {"edu.pw.eiti.pik.participation", "edu.pw.eiti.pik.user.db", "edu.pw.eiti.pik.project"})
-@EnableElasticsearchRepositories(basePackages="edu.pw.eiti.pik.user.es")
+		basePackages = {"edu.pw.eiti.pik.participation", "edu.pw.eiti.pik.user.db", "edu.pw.eiti.pik.project.db"})
+@EnableElasticsearchRepositories(
+		basePackages = {"edu.pw.eiti.pik.user.es", "edu.pw.eiti.pik.project.es"})
 public class PikApplication {
 
 	public static void main(String[] args) {

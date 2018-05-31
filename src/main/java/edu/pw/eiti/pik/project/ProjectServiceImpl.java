@@ -3,9 +3,14 @@ package edu.pw.eiti.pik.project;
 import edu.pw.eiti.pik.base.event.*;
 import edu.pw.eiti.pik.participation.Participation;
 import edu.pw.eiti.pik.participation.ParticipationStatus;
+import edu.pw.eiti.pik.project.db.ProjectRepository;
+import edu.pw.eiti.pik.project.es.ProjectESRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -19,11 +24,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ApplicationEventPublisher publisher;
+    private final ProjectESRepository projectESRepository;
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
-                              ApplicationEventPublisher publisher) {
+            					ProjectESRepository projectESRepository,
+            					ApplicationEventPublisher publisher) {
         this.projectRepository = projectRepository;
+        this.projectESRepository = projectESRepository;
         this.publisher = publisher;
     }
 
@@ -117,4 +125,14 @@ public class ProjectServiceImpl implements ProjectService {
     public void signUpForProject(long id) {
 
     }
+
+	@Override
+	public Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable) {
+		return projectESRepository.findProjectsByPhraseAndStatus(phrase, status, pageable);
+	}
+
+	@Override
+	public Page<Project> findProjectsByStatus(ProjectStatus status, Pageable pageable) {
+		return projectRepository.findByStatus(status, pageable);
+	}
 }
