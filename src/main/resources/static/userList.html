@@ -1,0 +1,87 @@
+
+<div id="myProjects" ng-controller="" class="col-md-10 mx-auto">
+
+    <div class="row">
+
+        <div class="col-md-5">
+            <div class="card rounded-0 card-success" style="margin-top: 40px">
+                <div class="card-header">
+                    <h3 class="mb-0">Szukaj użytkowników</h3>
+                </div>
+                <div class="card-body">
+                    <form class="row col-md-12 form-inline my-lg-0">
+                        <!--TODO add autocomplete-->
+                        <input class="form-control col-md-9 mr-sm-2" type="search" placeholder="Wprowadź użytkownika"
+                               aria-label="Search">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <h4>Użytkownicy</h4>
+    <hr>
+
+    <div class="row justify-content-around" id="status_filters">
+        <div class="col-md-2"> <h5> Filtruj uprawnienia: </h5> </div>
+        <div id="status_labels" class="col-md-10 row justify-content-around">
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Student
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Wykładowca
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Zleceniodawca
+            </label>
+            <label >
+                <input type="checkbox" checked autocomplete="off"> Instytucja zewnętrzna
+            </label>
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Moderator
+            </label>
+            <label>
+                <input type="checkbox" checked autocomplete="off"> Administrator
+            </label>
+        </div>
+    </div>
+    <hr>
+
+    <div id="projects" class="card">
+        <table class="table" style="text-align: center">
+            <thead>
+            <th class="col-md-4">Nazwa</th>
+            <th>Uprawnienia</th>
+            <!--if admin-->
+            <th class="col-md-5">Akcje</th>
+            </thead>
+            <!--wrap into ng-repeat-->
+            <tr>
+                <td>
+                    Użytkownik
+                    <!--username-->
+                    <!--this should be link to user's profile-->
+                </td>
+                <td>
+                    Student
+                    <!--authorities-->
+                </td>
+                <!--if admin-->
+                <td>
+                    <div class="col-md-12 justify-content-center row">
+                        <button type="button" class="btn btn-outline-primary" style="margin-left: 10px">
+                            Modyfikuj
+                            <!--go to user management screen-->
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" style="margin-left: 10px">
+                            Usuń
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
