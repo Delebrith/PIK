@@ -1,9 +1,12 @@
 package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.base.event.ParticipationCreationEvent;
+import edu.pw.eiti.pik.elasticsearch.UserESRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,11 +24,13 @@ import java.util.Optional;
 class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
+    private final UserESRepository userESRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final byte[] secretKey;
 
-    public UserServiceImpl(UserRepository userRepository, String secretKey) {
+    public UserServiceImpl(UserRepository userRepository, UserESRepository userESRepository, String secretKey) {
         this.userRepository = userRepository;
+        this.userESRepository = userESRepository;
         this.secretKey = secretKey.getBytes();
     }
 
@@ -74,4 +79,9 @@ class UserServiceImpl implements UserService, UserDetailsService {
         user.getParticipations().add(event.getParticipation());
         userRepository.save(user);
     }
+
+	@Override
+	public Page<User> findByNameAndAuthorityName(String name, String authority, Pageable pageable) {
+		return userESRepository.findByNameAndAuthorityName(name, authority, pageable);
+	}
 }

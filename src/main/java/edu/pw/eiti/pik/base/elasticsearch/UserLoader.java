@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.elasticsearch;
+package edu.pw.eiti.pik.base.elasticsearch;
 
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;

@@ -1,4 +1,4 @@
-package edu.pw.eiti.pik.elasticsearch;
+package edu.pw.eiti.pik.base.elasticsearch;
 
 import java.io.Serializable;
 import java.util.List;

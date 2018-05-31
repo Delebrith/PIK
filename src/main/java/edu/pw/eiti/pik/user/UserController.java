@@ -2,7 +2,6 @@ package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.base.config.security.AuthorizationTokenDto;
 import edu.pw.eiti.pik.base.config.web.ErrorDto;
-import edu.pw.eiti.pik.elasticsearch.UserESRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -24,11 +23,9 @@ class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper = UserMapper.getInstance();
-    private final UserESRepository userESRepository;
     
-    UserController(UserService userNotFound, UserESRepository userESRepository) {
+    UserController(UserService userNotFound) {
         this.userService = userNotFound;
-        this.userESRepository = userESRepository;
     }
 
     @ApiOperation(value = "Log in as existing user", notes = "Logs in existing user")
@@ -57,23 +54,23 @@ class UserController {
         return userMapper.toDto(user);
     }
 
-    @ApiOperation(value = "Get top n users by name who have given role")
+    @ApiOperation(value = "Get top users by name who have given role (up to number)")
     @ApiResponses({
     	@ApiResponse(code = 200, message = "Always")
     })
-    @GetMapping(path = "/user/{authority}/{name}/{n}")
+    @GetMapping(path = "/user/{authority}/{name}/{number}")
     List<UserDto> getUsersByRoleAndName(
     		@PathVariable String authority,
     		@PathVariable String name,
-    		@PathVariable int n)
+    		@PathVariable int number)
     {
-    	Page<User> res = userESRepository.findByNameAndAuthorityName(
-    			name.toLowerCase(), authority, PageRequest.of(0, n));
-	    ArrayList<UserDto> ret = new ArrayList<>(); 
-    	for (User u : res)
-    		ret.add(userMapper.toDto(u));
+    	Page<User> queryResult = userService.findByNameAndAuthorityName(
+    			name.toLowerCase(), authority, PageRequest.of(0, number));
+	    ArrayList<UserDto> listToReturn = new ArrayList<>(); 
+    	for (User u : queryResult)
+    		listToReturn.add(userMapper.toDto(u));
     	
-    	return ret;
+    	return listToReturn;
     }
     
     private UserNotFoundException userNotFound() {
