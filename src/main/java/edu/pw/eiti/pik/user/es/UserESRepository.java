@@ -18,5 +18,5 @@ public interface UserESRepository extends ElasticsearchRepository<User, Long>{
     			"\"match\": {\"authorities.name\": \"?1\"}" +
     		"}}}" +
     		"]}}")
-    public Page<User> findByNameAndAuthorityName(String name, String authority, Pageable pageable);
+    Page<User> findByNameAndAuthorityName(String name, String authority, Pageable pageable);
 }
