@@ -30,7 +30,7 @@ public class User implements UserDetails {
 
     @Id
     @org.springframework.data.annotation.Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank

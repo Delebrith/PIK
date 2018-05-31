@@ -49,9 +49,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void createProject(Project project, String teacherMail) {
-        publisher.publishEvent(new ProjectCreationEvent(project));
+        project.setParticipations(new ArrayList<>());
+        Project savedProject = projectRepository.save(project);
+        publisher.publishEvent(new ProjectCreationEvent(savedProject));
         if (teacherMail != null)
-            publisher.publishEvent(new InviteTeacherEvent(teacherMail, project));
+            publisher.publishEvent(new InviteTeacherEvent(teacherMail, savedProject));
     }
 
     @Override
