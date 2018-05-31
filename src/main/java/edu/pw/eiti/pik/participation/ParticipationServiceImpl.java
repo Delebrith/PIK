@@ -36,7 +36,7 @@ class ParticipationServiceImpl implements ParticipationService {
         participation.setProject(event.getProject());
         participation.setStatus(ParticipationStatus.OWNER);
         event.getProject().getParticipations().add(participation);
-        publisher.publishEvent(new OwnerParticipationCreationEvent(participation));
+        publisher.publishEvent(new AuthenticatedParticipationCreationEvent(participation));
     }
 
     @EventListener
@@ -47,7 +47,7 @@ class ParticipationServiceImpl implements ParticipationService {
         participation.setProject(event.getProject());
         participation.setStatus(ParticipationStatus.MANAGER);
         event.getProject().getParticipations().add(participation);
-        publisher.publishEvent(new ManagerParticipationCreationEvent(participation, event.getTeacherMail()));
+        publisher.publishEvent(new EmailParticipationCreationEvent(participation, event.getTeacherMail()));
     }
 
     @Override

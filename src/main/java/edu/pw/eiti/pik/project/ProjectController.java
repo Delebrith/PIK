@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,13 +27,14 @@ public class ProjectController
     @ApiOperation(value = "Add new project", notes = "Adds project into database")
     @ApiParam(value = "Project details", required = true)
     @ApiResponses({
-            @ApiResponse(code = 200, message = "If project was successfully added"),
+            @ApiResponse(code = 201, message = "If project was successfully added"),
             @ApiResponse(code = 403, message = "If user is not authorized to perform this operation", response = ErrorDto.class)
     })
     @PreAuthorize("hasAuthority('EMPLOYER')")
     @PostMapping(path = "/project/add")
-    void addProject(@RequestBody ProjectDto projectDto, @RequestParam(required = false) String teacherMail) {
+    ResponseEntity addProject(@RequestBody ProjectDto projectDto, @RequestParam(required = false) String teacherMail) {
         Project project = projectMapper.fromDto(projectDto);
         projectService.createProject(project, teacherMail);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

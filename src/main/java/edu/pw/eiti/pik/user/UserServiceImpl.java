@@ -1,7 +1,7 @@
 package edu.pw.eiti.pik.user;
 
-import edu.pw.eiti.pik.base.event.ManagerParticipationCreationEvent;
-import edu.pw.eiti.pik.base.event.OwnerParticipationCreationEvent;
+import edu.pw.eiti.pik.base.event.EmailParticipationCreationEvent;
+import edu.pw.eiti.pik.base.event.AuthenticatedParticipationCreationEvent;
 import edu.pw.eiti.pik.user.db.UserRepository;
 import edu.pw.eiti.pik.user.es.UserESRepository;
 import io.jsonwebtoken.Jwts;
@@ -75,7 +75,7 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @EventListener
     @Transactional
-    public void saveProjectOwner(OwnerParticipationCreationEvent event) {
+    public void saveAuthenticatedUserWithParticipation(AuthenticatedParticipationCreationEvent event) {
         User user = getAuthenticatedUser();
         event.getParticipation().setUser(user);
         user.getParticipations().add(event.getParticipation());
@@ -83,8 +83,8 @@ class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void saveProjectManager(ManagerParticipationCreationEvent event) {
-        User user = userRepository.findByEmail(event.getTeacherMail());
+    public void saveEmailUserWithParticipation(EmailParticipationCreationEvent event) {
+        User user = userRepository.findByEmail(event.getMail());
         event.getParticipation().setUser(user);
         user.getParticipations().add(event.getParticipation());
         userRepository.save(user);

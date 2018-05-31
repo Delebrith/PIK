@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ManagerParticipationCreationEvent {
+public class EmailParticipationCreationEvent {
 
     private final Participation participation;
-    private final String teacherMail;
+    private final String mail;
 
 }

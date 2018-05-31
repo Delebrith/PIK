@@ -56,6 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @EventListener
+    @Transactional
     public void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event) {
         Optional<Project> project = projectRepository.findById(event.getProjectId());
         if (!project.isPresent())
@@ -77,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.isPresent()) {
             participation.setProject(project.get());
             project.get().getParticipations().add(participation);
-            publisher.publishEvent(new OwnerParticipationCreationEvent(participation));
+            publisher.publishEvent(new AuthenticatedParticipationCreationEvent(participation));
         }
     }
 
