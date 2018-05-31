@@ -27,4 +27,5 @@ public interface ProjectService {
     void signUpForProject(long id);
 	Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable);
 	Page<Project> findProjectsByStatus(ProjectStatus phrase, Pageable pageable);
+	Page<Project> findMyProjects(Integer pageNumber, Integer pageSize);
 }

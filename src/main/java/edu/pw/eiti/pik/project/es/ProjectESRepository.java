@@ -20,4 +20,5 @@ public interface ProjectESRepository extends ElasticsearchRepository<Project, Lo
 			"\"minimum_should_match\": 1" +
 			"}}")
 	Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable);
+
 }

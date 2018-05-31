@@ -65,4 +65,13 @@ public class ProjectController
 
     	return queryResult.stream().map(projectMapper::toDto).collect(Collectors.toList());
     }
+
+    @ApiOperation(value = "Search for currently authentcated user's projects projects")
+    @ApiResponse(code = 200, message = "Always")
+    @GetMapping(path = "/project/my/{pageNumber}/{pageSize}")
+    List<ProjectDto> findMyProjects(@PathVariable Integer pageNumber,
+                                    @PathVariable Integer pageSize) {
+        return projectService.findMyProjects(pageNumber, pageSize)
+                .stream().map(projectMapper::toDto).collect(Collectors.toList());
+    }
 }

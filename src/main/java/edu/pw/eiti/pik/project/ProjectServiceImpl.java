@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +30,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
-            					ProjectESRepository projectESRepository,
-            					ApplicationEventPublisher publisher) {
+                              ProjectESRepository projectESRepository,
+                              ApplicationEventPublisher publisher) {
         this.projectRepository = projectRepository;
         this.projectESRepository = projectESRepository;
         this.publisher = publisher;
@@ -135,4 +137,12 @@ public class ProjectServiceImpl implements ProjectService {
 	public Page<Project> findProjectsByStatus(ProjectStatus status, Pageable pageable) {
 		return projectRepository.findByStatus(status, pageable);
 	}
+
+    @Override
+    public Page<Project> findMyProjects(Integer pageNumber, Integer pageSize) {
+        final String email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Principal::getName)
+                .orElseThrow(IllegalStateException::new);
+        return projectRepository.findByUser(email, PageRequest.of(pageNumber, pageSize));
+    }
 }
