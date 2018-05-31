@@ -1,5 +1,6 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.base.event.AddProjectToESEvent;
 import edu.pw.eiti.pik.base.event.AddProjectToParticipationEvent;
 import edu.pw.eiti.pik.base.event.CancelProjectEvent;
 import edu.pw.eiti.pik.base.event.CheckParticipantsAfterDeletedEvent;
@@ -25,6 +26,8 @@ public interface ProjectService {
     void changeStatus(long projectId, ProjectStatus projectStatus);
     void reportProject(long projectId);
     void signUpForProject(long id);
+    @EventListener
+    void addProjectToES(AddProjectToESEvent event);
 	Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable);
 	Page<Project> findProjectsByStatus(ProjectStatus phrase, Pageable pageable);
 	Page<Project> findMyProjects(Integer pageNumber, Integer pageSize);

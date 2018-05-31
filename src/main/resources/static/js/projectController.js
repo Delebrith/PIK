@@ -72,9 +72,6 @@ app.controller('projectController', function($scope, $http, $cookies, $window) {
 		if (!validateProject())
 			return;
 		
-		alert($scope.project.teachersMail)
-		return;
-		
 		projectDto = {}
 
 		addToDto(projectDto, "name")
