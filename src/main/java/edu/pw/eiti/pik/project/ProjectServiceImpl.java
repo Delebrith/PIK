@@ -3,13 +3,18 @@ package edu.pw.eiti.pik.project;
 import edu.pw.eiti.pik.base.event.*;
 import edu.pw.eiti.pik.participation.Participation;
 import edu.pw.eiti.pik.participation.ParticipationStatus;
+import edu.pw.eiti.pik.project.db.ProjectRepository;
+import edu.pw.eiti.pik.project.es.ProjectESRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-import javax.servlet.http.Part;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +24,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ApplicationEventPublisher publisher;
+    private final ProjectESRepository projectESRepository;
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
-                              ApplicationEventPublisher publisher) {
+            					ProjectESRepository projectESRepository,
+            					ApplicationEventPublisher publisher) {
         this.projectRepository = projectRepository;
+        this.projectESRepository = projectESRepository;
         this.publisher = publisher;
     }
 
@@ -49,12 +57,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public void createProject(Project project) {
-        publisher.publishEvent(new ProjectCreationEvent(project));
+    public void createProject(Project project, String teacherMail) {
+        if (project.getId() != null || project.getStatus() != ProjectStatus.CREATED)
+            throw new InvalidProjectDataException();
+        project.setParticipations(new ArrayList<>());
+        publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.OWNER, null));
+        if (teacherMail != null)
+            publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.MANAGER, teacherMail));
     }
 
     @Override
     @EventListener
+    @Transactional
     public void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event) {
         Optional<Project> project = projectRepository.findById(event.getProjectId());
         if (!project.isPresent())
@@ -76,7 +90,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.isPresent()) {
             participation.setProject(project.get());
             project.get().getParticipations().add(participation);
-            publisher.publishEvent(new ParticipationCreationEvent(participation));
+            publisher.publishEvent(new AuthenticatedParticipationCreationEvent(participation));
         }
     }
 
@@ -111,4 +125,14 @@ public class ProjectServiceImpl implements ProjectService {
     public void signUpForProject(long id) {
 
     }
+
+	@Override
+	public Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable) {
+		return projectESRepository.findProjectsByPhraseAndStatus(phrase, status, pageable);
+	}
+
+	@Override
+	public Page<Project> findProjectsByStatus(ProjectStatus status, Pageable pageable) {
+		return projectRepository.findByStatus(status, pageable);
+	}
 }

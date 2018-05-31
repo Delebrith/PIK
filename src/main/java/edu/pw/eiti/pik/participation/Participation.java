@@ -6,6 +6,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import org.springframework.data.elasticsearch.annotations.Field;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 @Builder
@@ -23,6 +27,7 @@ public class Participation {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private Project project;
 }

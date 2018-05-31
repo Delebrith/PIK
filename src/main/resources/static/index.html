@@ -7,10 +7,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 
+	<link rel="stylesheet" href="autocomplete/style/autocomplete.css">
+	
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
 
+	<script src="autocomplete/script/autocomplete.js"></script>
 </head>
 <body ng-app="app" ng-controller="appController">
 
@@ -24,20 +27,36 @@
 
             <div class="row">
 
-                <div class="col-md-4 mx-auto">
-                    <div class="card rounded-0 card-success" style="margin-top: 40px">
-                        <div class="card-header">
-                            <h3 class="mb-0">Szukaj projektów</h3>
-                        </div>
-                        <div class="card-body">
-                            <form class="form-inline my-2 my-lg-0">
-                                <input class="form-control mr-sm-2" type="search" placeholder="Znajdź projekt" aria-label="Search">
-                                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
-                            </form>
+                <div class="col-md-5 mx-auto">
+                    <div >
+                        <div class="card rounded-0 card-success" style="margin-top: 40px">
+                            <div class="card-header">
+                                <h3 class="mb-0">Szukaj projektów</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-inline my-2 my-lg-0">
+                                    <input class="form-control mr-sm-2" type="search" placeholder="Znajdź projekt" aria-label="Search">
+                                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                    <div>
+                        <div class="card rounded-0 card-success" style="margin-top: 40px">
+                            <div class="card-header">
+                                <h3 class="mb-0">Szukaj osób</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-inline my-2 my-lg-0">
+                                    <input class="form-control mr-sm-2" type="search" placeholder="Znajdź użytkownika" aria-label="Search">
+                                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
                 <div class="col-md-6 mx-auto">
                     <div class="card rounded-0 card-success" style="margin-top: 40px">
@@ -61,11 +80,10 @@
     </div>
 
     <script>
-        app = angular.module("app", ["ngCookies", "ngRoute"]);
+        app = angular.module("app", ["ngCookies", "ngRoute", "autocomplete"]);
     </script>
     <script src="js/appController.js"></script>
-    <script src="js/loginController.js"></script>
-    <script src="js/logoutController.js"></script>
+    <script src="js/userController.js"></script>
     <script src="js/projectController.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

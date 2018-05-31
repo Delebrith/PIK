@@ -35,11 +35,11 @@
                             <div class="invalid-feedback">Wprowadź opis!</div>
                         </div>
 
-                        <!-- visible for 3rd party - list of teachers should be provided by user controller (see task PIK-49) -->
-                        <div class="form-group justify-content-around">
+                           <!-- visible for 3rd party - list of teachers should be provided by user controller (see task PIK-49) -->
+                        <div class="form-group justify-content-around" ng-if="isUser3rdParty()">
                             <label>Opiekun projektu</label>
-                            <input type="text" class="autocomplete form-control form-control-md rounded-0" 
-                            ng-model="project.manager" value="-- dowolny --">
+                            <autocomplete type="text" class="autocomplete rounded-0" attr-placeholder="Podaj wykładowcę [opcjonalnie]" 
+                            ng-model="project.teacher" data="teachers" on-type="getTeachers" />
                         </div>
 
                         <!-- visible only for teachers -->
