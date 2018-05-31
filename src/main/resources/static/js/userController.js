@@ -35,4 +35,9 @@ app.controller('userController', function($scope, $http, $cookies, $window) {
 				failedLogin(response);	
     		});
 	}
+	
+	$scope.logout = function() {
+		$cookies.remove('token');
+		$window.location.reload();
+	}
 });
