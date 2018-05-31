@@ -1,7 +1,8 @@
 package edu.pw.eiti.pik.project;
 
-import edu.pw.eiti.pik.user.UserRepository;
 import edu.pw.eiti.pik.user.UserServiceImplTest;
+import edu.pw.eiti.pik.user.db.UserRepository;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

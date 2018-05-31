@@ -23,7 +23,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     		"/",
             "/user/login", "/user/me",
             "/index.html", "/loginPanel.html", "/logoutPanel.html", "/navbar.html", "/myProjects.html",
-            "/projectForm.html",
             "/js/loginController.js", "/js/appController.js", "/js/logoutController.js", "/js/projectController.js"
     };
 

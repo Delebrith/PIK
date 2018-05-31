@@ -1,4 +1,4 @@
-app.controller('projectController', function($scope, $http, $cookies, $route) {
+app.controller('projectController', function($scope, $http, $cookies, $window) {
 	function validateProject() {
 		errors = ""
 			
@@ -54,7 +54,7 @@ app.controller('projectController', function($scope, $http, $cookies, $route) {
 		var response = $http.post("/project/add", projectDto);
 	    response.then(
 	    	function(response) {
-				$route.reload()
+				$window.location.reload()
 	    	},
 	    	function(response){
 	    		alert("Wystąpił błąd podczas dodawania projektu.")

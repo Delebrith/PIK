@@ -6,7 +6,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +23,7 @@ class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper = UserMapper.getInstance();
-
+    
     UserController(UserService userNotFound) {
         this.userService = userNotFound;
     }
@@ -47,6 +54,22 @@ class UserController {
         return userMapper.toDto(user);
     }
 
+    @ApiOperation(value = "Get top users by name who have given role (up to number)")
+    @ApiResponses({
+    	@ApiResponse(code = 200, message = "Always")
+    })
+    @GetMapping(path = "/user/{authority}/{name}/{number}")
+    List<UserDto> getUsersByRoleAndName(
+    		@PathVariable String authority,
+    		@PathVariable String name,
+    		@PathVariable int number)
+    {
+    	Page<User> queryResult = userService.findByNameAndAuthorityName(
+    			name.toLowerCase(), authority, PageRequest.of(0, number));
+    	
+    	return queryResult.stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+    
     private UserNotFoundException userNotFound() {
         return new UserNotFoundException();
     }
