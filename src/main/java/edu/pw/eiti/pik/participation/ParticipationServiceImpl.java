@@ -141,6 +141,7 @@ class ParticipationServiceImpl implements ParticipationService {
         participation.setStatus(event.getStatus());
         participation.setUser(event.getUser());
         participation.setProject(event.getProject());
-        participationRepository.save(participation);
+        Participation savedParticipation = participationRepository.save(participation);
+        publisher.publishEvent(new AddProjectToESEvent(savedParticipation.getProject()));
     }
 }

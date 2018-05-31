@@ -67,6 +67,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @EventListener
+    public void addProjectToES(AddProjectToESEvent event) {
+        projectESRepository.save(event.getProject());
+    }
+
+    @Override
+    @EventListener
     @Transactional
     public void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event) {
         Optional<Project> project = projectRepository.findById(event.getProjectId());
