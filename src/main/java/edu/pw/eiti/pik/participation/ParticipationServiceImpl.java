@@ -1,6 +1,7 @@
 package edu.pw.eiti.pik.participation;
 
 import edu.pw.eiti.pik.base.event.*;
+import edu.pw.eiti.pik.user.Authorities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -29,33 +30,34 @@ class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public void changeStatus(ParticipationStatus status, Long projectId, String username) {
-        final String TEACHER = "TEACHER";
-        final String STUDENT = "STUDENT";
-        final String EMPLOYER = "EMPLOYER";
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
         List<String> authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String authUsername = auth.getName();
         if (status.equals(ParticipationStatus.RESIGNED)) {
-            if (!authorities.contains(TEACHER))
+            if (!authorities.contains(Authorities.TEACHER.toString()))
                 deleteParticipation(authUsername, projectId, false);
             else
                 deleteParticipation(authUsername, projectId, true);
-        } else if (status.equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)) {
-            if (authorities.contains(TEACHER) || authorities.contains(STUDENT))
+        }
+        else if (status.equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)) {
+            if (authorities.contains(Authorities.TEACHER.toString()) || authorities.contains(Authorities.STUDENT.toString()))
                 addParticipation(authUsername, projectId);
-        } else if (status.equals(ParticipationStatus.PARTICIPANT)) {
-            if (authorities.contains(STUDENT))
+        }
+        else if (status.equals(ParticipationStatus.PARTICIPANT)) {
+            if (authorities.contains(Authorities.STUDENT.toString()))
                 acceptInvitation(authUsername, projectId, false);
-            else if (authorities.contains(EMPLOYER) && !username.equals("{}"))
+            else if (authorities.contains(Authorities.EMPLOYER.toString()) && username != null)
                 acceptParticipant(authUsername, username, projectId, false);
-        } else if (status.equals(ParticipationStatus.MANAGER)) {
-            if (authorities.contains(TEACHER))
+        }
+        else if (status.equals(ParticipationStatus.MANAGER)) {
+            if (authorities.contains(Authorities.TEACHER.toString()))
                 acceptInvitation(authUsername, projectId, true);
-            else if (authorities.contains(EMPLOYER) && !username.equals("{}"))
+            else if (authorities.contains(Authorities.EMPLOYER.toString()) && username != null)
                 acceptParticipant(authUsername, username, projectId, true);
-        } else if (status.equals(ParticipationStatus.PENDING_INVITATION)) {
-            if (!authorities.contains(STUDENT) && !username.equals("{}"))
+        }
+        else if (status.equals(ParticipationStatus.PENDING_INVITATION)) {
+            if (!authorities.contains(Authorities.STUDENT.toString()) && username != null)
                 inviteUser(authUsername, username, projectId);
         }
     }

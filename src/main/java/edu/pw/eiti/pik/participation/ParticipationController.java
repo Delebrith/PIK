@@ -2,7 +2,6 @@ package edu.pw.eiti.pik.participation;
 
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,14 @@ public class ParticipationController {
 
     @ApiOperation(value = "Change participation status",
             notes = "Allow current user to change participation status in current project")
-    @PostMapping(path = "/participation/{status}/{projectId}")
+    @PostMapping(path = "/participation/change")
     @ApiResponses(
             @ApiResponse(code = 200, message = "When status was successfully changed")
     )
-    void changeStatus(@PathVariable ParticipationStatus status, @PathVariable Long projectId,
-                      @ApiParam(value = "User for whom we want to change status")
-                      @RequestBody String username) {
-        participationService.changeStatus(status, projectId, username);
+    void changeStatus(@RequestBody ParticipationChangeDto participationChange) {
+        participationService.changeStatus(participationChange.getStatus(),
+                participationChange.getProjectId(),
+                participationChange.getUsername());
     }
 
 

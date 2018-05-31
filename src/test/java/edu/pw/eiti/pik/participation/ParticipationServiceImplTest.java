@@ -2,7 +2,6 @@ package edu.pw.eiti.pik.participation;
 
 import edu.pw.eiti.pik.base.event.AddProjectToParticipationEvent;
 import edu.pw.eiti.pik.base.event.CheckParticipantsAfterDeletedEvent;
-import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
 import edu.pw.eiti.pik.project.Project;
 import edu.pw.eiti.pik.user.Authorities;
 import edu.pw.eiti.pik.user.Authority;
@@ -14,10 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,10 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,14 +36,17 @@ import static org.mockito.Mockito.when;
 @AutoConfigureDataJpa
 public class ParticipationServiceImplTest {
 
+    private SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    private Authentication authentication = Mockito.mock(Authentication.class);
+
     @Mock
-    ParticipationRepository participationRepository;
+    private ParticipationRepository participationRepository;
 
     @InjectMocks
     private ParticipationServiceImpl participationService;
 
     @Mock
-    ApplicationEventPublisher publisher;
+    private ApplicationEventPublisher publisher;
 
     private User teacher;
     private User student;
@@ -68,6 +64,11 @@ public class ParticipationServiceImplTest {
 
     @Before
     public void init() {
+
+        SecurityContextHolder.setContext(securityContext);
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
         Authority teacherAuth = Authority.builder().name(Authorities.TEACHER).build();
         Authority studentAuth = Authority.builder().name(Authorities.STUDENT).build();
         Authority employerAuth = Authority.builder().name(Authorities.EMPLOYER).build();
@@ -132,19 +133,32 @@ public class ParticipationServiceImplTest {
     }
 
     @Test
-    @WithMockUser(username = "student@mail.com", authorities = "STUDENT")
     public void deleteStudentParticipant() {
+        List auths = new ArrayList<SimpleGrantedAuthority>();
+        auths.add(new SimpleGrantedAuthority("STUDENT"));
+        when(authentication.getName()).thenReturn(student.getUsername());
         when(participationRepository.findByUser_EmailAndProject_Id(student.getUsername(), project.getId())).thenReturn(participantParticipation);
-        participationService.deleteParticipation(student.getUsername(), project.getId(), false);
+        when(authentication.getAuthorities()).thenReturn(auths);
+        ParticipationChangeDto dto = new ParticipationChangeDto();
+        dto.setStatus(ParticipationStatus.RESIGNED);
+        dto.setProjectId(project.getId());
+        participationService.changeStatus(dto.getStatus(), dto.getProjectId(), dto.getUsername());
         verify(participationRepository, times(1)).delete(participantParticipation);
         verify(publisher, times(1)).publishEvent(new CheckParticipantsAfterDeletedEvent(project.getId(), false));
     }
 
     @Test
-    @WithMockUser(username = "student@mail.com", authorities = "TEACHER")
     public void deleteTeacherParticipant() {
+        List auths = new ArrayList<SimpleGrantedAuthority>();
+        auths.add(new SimpleGrantedAuthority("TEACHER"));
+        auths.add(new SimpleGrantedAuthority("EMPLOYER"));
+        when(authentication.getName()).thenReturn(teacher.getUsername());
         when(participationRepository.findByUser_EmailAndProject_Id(teacher.getUsername(), project.getId())).thenReturn(managerParticipation);
-        participationService.deleteParticipation(teacher.getUsername(), project.getId(), true);
+        when(authentication.getAuthorities()).thenReturn(auths);
+        ParticipationChangeDto dto = new ParticipationChangeDto();
+        dto.setStatus(ParticipationStatus.RESIGNED);
+        dto.setProjectId(project.getId());
+        participationService.changeStatus(dto.getStatus(), dto.getProjectId(), dto.getUsername());
         verify(participationRepository, times(1)).delete(managerParticipation);
         verify(publisher, times(1)).publishEvent(new CheckParticipantsAfterDeletedEvent(project.getId(), true));
     }
@@ -152,7 +166,14 @@ public class ParticipationServiceImplTest {
     @Test
     @WithMockUser
     public void signUp() {
-        participationService.addParticipation(student.getUsername(), project.getId());
+        List auths = new ArrayList<SimpleGrantedAuthority>();
+        auths.add(new SimpleGrantedAuthority("STUDENT"));
+        when(authentication.getName()).thenReturn(student.getUsername());
+        when(authentication.getAuthorities()).thenReturn(auths);
+        ParticipationChangeDto dto = new ParticipationChangeDto();
+        dto.setStatus(ParticipationStatus.WAITING_FOR_ACCEPTANCE);
+        dto.setProjectId(project.getId());
+        participationService.changeStatus(dto.getStatus(), dto.getProjectId(), dto.getUsername());
         Participation participation = Participation.builder()
                 .status(ParticipationStatus.WAITING_FOR_ACCEPTANCE)
                 .build();
