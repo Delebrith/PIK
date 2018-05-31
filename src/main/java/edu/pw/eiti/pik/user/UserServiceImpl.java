@@ -2,10 +2,14 @@ package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.base.event.EmailParticipationCreationEvent;
 import edu.pw.eiti.pik.base.event.AuthenticatedParticipationCreationEvent;
+import edu.pw.eiti.pik.base.event.FindUserEvent;
+import edu.pw.eiti.pik.base.event.UserAndProjectToParticipationEvent;
 import edu.pw.eiti.pik.user.db.UserRepository;
 import edu.pw.eiti.pik.user.es.UserESRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.hibernate.mapping.Collection;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 class UserServiceImpl implements UserService, UserDetailsService {
@@ -29,11 +35,13 @@ class UserServiceImpl implements UserService, UserDetailsService {
     private final UserESRepository userESRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final byte[] secretKey;
+    private final ApplicationEventPublisher publisher;
 
-    public UserServiceImpl(UserRepository userRepository, UserESRepository userESRepository, String secretKey) {
+    public UserServiceImpl(UserRepository userRepository, UserESRepository userESRepository, String secretKey, ApplicationEventPublisher publisher) {
         this.userRepository = userRepository;
         this.userESRepository = userESRepository;
         this.secretKey = secretKey.getBytes();
+        this.publisher = publisher;
     }
 
     @Override
@@ -72,26 +80,24 @@ class UserServiceImpl implements UserService, UserDetailsService {
         return findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
-    @Override
-    @EventListener
-    @Transactional
-    public void saveAuthenticatedUserWithParticipation(AuthenticatedParticipationCreationEvent event) {
-        User user = getAuthenticatedUser();
-        event.getParticipation().setUser(user);
-        user.getParticipations().add(event.getParticipation());
-        userRepository.save(user);
-    }
-
-    @Override
-    public void saveEmailUserWithParticipation(EmailParticipationCreationEvent event) {
-        User user = userRepository.findByEmail(event.getMail());
-        event.getParticipation().setUser(user);
-        user.getParticipations().add(event.getParticipation());
-        userRepository.save(user);
-    }
-
 	@Override
 	public Page<User> findByNameAndAuthorityName(String name, String authority, Pageable pageable) {
 		return userESRepository.findByNameAndAuthorityName(name, authority, pageable);
 	}
+
+    @Override
+    @EventListener
+    public void addUser(FindUserEvent event) {
+        User user;
+        if (event.getUsername() == null)
+            user = getAuthenticatedUser();
+        else {
+            user = findByEmail(event.getUsername()).orElseThrow(UserNotFoundException::new);
+            if (!user.getAuthorities().stream().map(Authority::getName)
+                    .collect(Collectors.toList()).contains(Authorities.TEACHER))
+                throw new InvalidAuthorityException();
+        }
+        publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, event.getStatus()));
+
+    }
 }

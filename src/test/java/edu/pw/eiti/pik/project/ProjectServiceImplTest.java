@@ -1,5 +1,7 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.base.event.FindUserEvent;
+import edu.pw.eiti.pik.participation.ParticipationStatus;
 import edu.pw.eiti.pik.user.UserServiceImplTest;
 import edu.pw.eiti.pik.user.db.UserRepository;
 
@@ -61,8 +63,8 @@ public class ProjectServiceImplTest {
 
     @Test
     @WithMockUser(username = "firma@mail.com", authorities = "EMPLOYER")
-    public void addProject(){
+    public void addProject() {
         projectService.createProject(mockProject, null);
+        verify(eventPublisher, times(1)).publishEvent(new FindUserEvent(mockProject, ParticipationStatus.OWNER, null));
     }
-
 }

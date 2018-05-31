@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +50,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void createProject(Project project, String teacherMail) {
+        if (project.getId() != null || project.getStatus() != ProjectStatus.CREATED)
+            throw new InvalidProjectDataException();
         project.setParticipations(new ArrayList<>());
-        Project savedProject = projectRepository.save(project);
-        publisher.publishEvent(new ProjectCreationEvent(savedProject));
+        publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.OWNER, null));
         if (teacherMail != null)
-            publisher.publishEvent(new InviteTeacherEvent(teacherMail, savedProject));
+            publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.MANAGER, teacherMail));
     }
 
     @Override

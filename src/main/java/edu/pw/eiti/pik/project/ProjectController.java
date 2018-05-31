@@ -21,14 +21,20 @@ public class ProjectController
 {
 
     private final ProjectMapper projectMapper = ProjectMapper.getInstance();
+    private final ProjectService projectService;
+
     @Autowired
-    private ProjectService projectService;
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @ApiOperation(value = "Add new project", notes = "Adds project into database")
     @ApiParam(value = "Project details", required = true)
     @ApiResponses({
             @ApiResponse(code = 201, message = "If project was successfully added"),
-            @ApiResponse(code = 403, message = "If user is not authorized to perform this operation", response = ErrorDto.class)
+            @ApiResponse(code = 400, message = "If user provided user without TEACHER authority or project settings are incorrect"
+                    , response = ErrorDto.class),
+            @ApiResponse(code = 404, message = "If provided teacher was not found", response = ErrorDto.class)
     })
     @PreAuthorize("hasAuthority('EMPLOYER')")
     @PostMapping(path = "/project/add")

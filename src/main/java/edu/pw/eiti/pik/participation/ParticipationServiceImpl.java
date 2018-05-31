@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,28 +25,6 @@ class ParticipationServiceImpl implements ParticipationService {
     public ParticipationServiceImpl(ParticipationRepository participationRepository, ApplicationEventPublisher publisher) {
         this.participationRepository = participationRepository;
         this.publisher = publisher;
-    }
-
-    @EventListener
-    @Transactional
-    @Override
-    public void setProjectOwner(ProjectCreationEvent event) {
-        Participation participation = new Participation();
-        participation.setProject(event.getProject());
-        participation.setStatus(ParticipationStatus.OWNER);
-        event.getProject().getParticipations().add(participation);
-        publisher.publishEvent(new AuthenticatedParticipationCreationEvent(participation));
-    }
-
-    @EventListener
-    @Transactional
-    @Override
-    public void setTeacherAsManager(InviteTeacherEvent event) {
-        Participation participation = new Participation();
-        participation.setProject(event.getProject());
-        participation.setStatus(ParticipationStatus.MANAGER);
-        event.getProject().getParticipations().add(participation);
-        publisher.publishEvent(new EmailParticipationCreationEvent(participation, event.getTeacherMail()));
     }
 
     @Override
@@ -152,5 +129,15 @@ class ParticipationServiceImpl implements ParticipationService {
                 acceptedParticipation.setStatus(ParticipationStatus.MANAGER);
             participationRepository.save(acceptedParticipation);
         }
+    }
+
+    @Override
+    @EventListener
+    public void addNewParticipation(UserAndProjectToParticipationEvent event) {
+        Participation participation = new Participation();
+        participation.setStatus(event.getStatus());
+        participation.setUser(event.getUser());
+        participation.setProject(event.getProject());
+        participationRepository.save(participation);
     }
 }
