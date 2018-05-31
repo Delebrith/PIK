@@ -27,4 +27,6 @@ public interface ProjectService {
     void signUpForProject(long id);
 	Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable);
 	Page<Project> findProjectsByStatus(ProjectStatus phrase, Pageable pageable);
+    void changeSettings(Long projectId, String name, String description, Integer numOfParticipants, Integer minimumPay,
+                        Integer maximumPay, Integer ects, Boolean isGraduateWork);
 }
