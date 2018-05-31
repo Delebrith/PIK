@@ -2,7 +2,14 @@ package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.participation.Participation;
 import lombok.*;
+
+import org.springframework.data.elasticsearch.annotations.CompletionField;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,14 +25,17 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity(name = "user_")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Document(indexName="users")
 public class User implements UserDetails {
 
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank
     @Email
+    @CompletionField
     private String email;
 
     @NotBlank
@@ -44,11 +54,13 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(
                     name = "authority_id", referencedColumnName = "id"))
     @Builder.Default
+    @Field(type=FieldType.Nested)
     private List<Authority> authorities = new ArrayList<>();
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     @Builder.Default
+    @JsonIgnore
     private List<Participation> participations = new ArrayList<>();
 
     @Override

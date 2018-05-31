@@ -1,11 +1,11 @@
 id,name,description,is_graduate_work,ects,minimum_pay,maximum_pay,number_of_participants,status
--1,Projekt pierwszy,Opis pierwszego niepłatnego projektu niebędącego pracą dyplomową,false,2,0,0,6,CREATED
--2,Projekt drugi,Opis drugiego płatnego projektu niebędącego pracą dyplomową,true,3,1000,3000,5,WAITING_FOR_STUDENTS
--3,Projekt trzeci,Opis trzeciego niepłatnego projektu będącego pracą dyplomową,false,0,0,0,1,STARTED
--4,Projekt czwarty,Opis czwartego płatnego projektu niebędącego pracą dyplomową,true,5,0,0,2,SUSPENDED_MISSING_TEACHER
--5,Projekt piąty,Opis piątego niepłatnego projektu będącego pracą dyplomową,false,0,2000,2000,2,SUSPENDED_MISSING_PARTICIPANTS
--6,Projekt szósty,Opis szóstego płatnego projektu niebędącego pracą dyplomową,true,5,1500,2500,1,FINISHED
--7,Projekt siódmy,Opis siódmego niepłatnego projektu niebędącego pracą dyplomową,false,0,2000,2500,1,OVERDUE
--8,Projekt ósmy,Opis ósmego płatnego projektu będącego pracą dyplomową,true,0,0,0,3,SUSPENDED_REPORTED
--9,Projekt dziewiąty,Opis dziewiątego niepłatnego projektu niebędącego pracą dyplomową,false,3,700,900,4,CANCELED
+9223372036854775806,Projekt pierwszy,Opis pierwszego niepłatnego projektu niebędącego pracą dyplomową,false,2,0,0,6,CREATED
+9223372036854775805,Projekt drugi,Opis drugiego płatnego projektu niebędącego pracą dyplomową,true,3,1000,3000,5,WAITING_FOR_STUDENTS
+9223372036854775804,Projekt trzeci,Opis trzeciego niepłatnego projektu będącego pracą dyplomową,false,0,0,0,1,STARTED
+9223372036854775803,Projekt czwarty,Opis czwartego płatnego projektu niebędącego pracą dyplomową,true,5,0,0,2,SUSPENDED_MISSING_TEACHER
+9223372036854775802,Projekt piąty,Opis piątego niepłatnego projektu będącego pracą dyplomową,false,0,2000,2000,2,SUSPENDED_MISSING_PARTICIPANTS
+9223372036854775801,Projekt szósty,Opis szóstego płatnego projektu niebędącego pracą dyplomową,true,5,1500,2500,1,FINISHED
+9223372036854775800,Projekt siódmy,Opis siódmego niepłatnego projektu niebędącego pracą dyplomową,false,0,2000,2500,1,OVERDUE
+9223372036854775799,Projekt ósmy,Opis ósmego płatnego projektu będącego pracą dyplomową,true,0,0,0,3,SUSPENDED_REPORTED
+9223372036854775798,Projekt dziewiąty,Opis dziewiątego niepłatnego projektu niebędącego pracą dyplomową,false,3,700,900,4,CANCELED
 
