@@ -1,0 +1,145 @@
+<div id="projectManagementPanel" class="md-col-11">
+    <br>
+    <h2>
+        Użytkownik #
+        <!--user id-->
+    </h2>
+    <hr>
+    <br>
+
+    <div class="row">
+        <h4 class="ml-3">Dane użytkownika</h4>
+    </div>
+    <br>
+    <br>
+
+
+    <div id="userData" class="col-md-10 mx-auto">
+        <table class="table" style="text-align: center">
+            <tr>
+                <td>
+                    Nazwa użytkownika
+                </td>
+                <td>
+                    nazwa
+                    <!--username-->
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0"
+                            data-toggle="modal" data-target="#usernamePanel">
+                        Modyfikuj
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Email
+                </td>
+                <td>
+                    email@email.com
+                    <!--email-->
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0"
+                            data-toggle="modal" data-target="#emailPanel">
+                        Modyfikuj
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Numer telefonu
+                </td>
+                <td>
+                    123456789
+                    <!--phoneNo-->
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0"
+                            data-toggle="modal" data-target="#phoneNumberPanel">
+                        Modyfikuj
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="usernamePanel" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edytuj nazwę</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control form-control-md rounded-0">
+                        <div class="invalid-feedback">Wprowadź nazwę!</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="emailPanel" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edytuj email</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="number" class="form-control form-control-md rounded-0">
+                        <div class="invalid-feedback">Wprowadź email!</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="phoneNumberPanel" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edytuj numer telefonu</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label>Minimalna proponowana kwota</label>
+                        <input type="text" class="form-control form-control-md rounded-0">
+                        <div class="invalid-feedback">Wprowadź numer!</div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
