@@ -92,23 +92,18 @@ class UserController {
             @RequestParam(required = false) Boolean employer,
             @RequestParam(required = false) Boolean admin
             ) {
-        Page<User> queryResult = userService.findByNameAndAuthorityList(
-                name, getAuhorityList(student, teacher, thirdParty, authority, employer, admin),
-                PageRequest.of(pageNumber, pageSize));
+        List<Authorities> authorities = getAuhorityList(student, teacher, thirdParty,
+                authority, employer, admin);
+        Page<User> queryResult;
+        if (name != null && !name.isEmpty()) {
+            queryResult = userService.findByNameAndAuthorityList(
+                    name, authorities, PageRequest.of(pageNumber, pageSize));
+        } else {
+            queryResult = userService.findByAuthorityList(authorities, PageRequest.of(pageNumber, pageSize));
+        }
         return queryResult.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
-    private List<Authorities> getAuhorityList(Boolean student, Boolean teacher, Boolean thirdParty,
-                                              Boolean authority, Boolean employer, Boolean admin) {
-        List<Authorities> authorities = new ArrayList<>();
-        if (null != student && student) authorities.add(Authorities.STUDENT);
-        if (null != teacher && teacher) authorities.add(Authorities.TEACHER);
-        if (null != thirdParty && thirdParty) authorities.add(Authorities.THIRD_PARTY);
-        if (null != authority && authority) authorities.add(Authorities.AUTHORITY);
-        if (null != employer && employer) authorities.add(Authorities.EMPLOYER);
-        if (null != admin && admin) authorities.add(Authorities.ADMIN);
-        return authorities;
-    }
 
     @ApiOperation(value = "Create user", notes = "Returns information on created user's location")
     @ApiResponses({
@@ -158,6 +153,18 @@ class UserController {
     List<AuthorityDto> getAuthorities() {
         return userService.getAuthorities().stream()
                 .map(userMapper::toDto).collect(Collectors.toList());
+    }
+
+    private List<Authorities> getAuhorityList(Boolean student, Boolean teacher, Boolean thirdParty,
+                                              Boolean authority, Boolean employer, Boolean admin) {
+        List<Authorities> authorities = new ArrayList<>();
+        if (null != student && student) authorities.add(Authorities.STUDENT);
+        if (null != teacher && teacher) authorities.add(Authorities.TEACHER);
+        if (null != thirdParty && thirdParty) authorities.add(Authorities.THIRD_PARTY);
+        if (null != authority && authority) authorities.add(Authorities.AUTHORITY);
+        if (null != employer && employer) authorities.add(Authorities.EMPLOYER);
+        if (null != admin && admin) authorities.add(Authorities.ADMIN);
+        return authorities;
     }
 
     private UserNotFoundException userNotFound() {

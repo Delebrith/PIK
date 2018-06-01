@@ -10,6 +10,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -107,6 +108,13 @@ class UserServiceImpl implements UserService, UserDetailsService {
         String authoritiesString = String.join(" ", authorities.stream().map(Authorities::toString).collect(Collectors.toList()));
         return userESRepository.findByNameAndAuthorityList(name,
                 authoritiesString, pageable);
+    }
+
+    @Override
+    public Page<User> findByAuthorityList(List<Authorities> authorities, Pageable pageable) {
+        List<Authority> authorityList = authorityRepository.findAllByNameIn(authorities);
+        List<User> users = userRepository.findAllByAuthoritiesIn(authorityList);
+        return new PageImpl<>(users, pageable, users.size());
     }
 
     @Override
