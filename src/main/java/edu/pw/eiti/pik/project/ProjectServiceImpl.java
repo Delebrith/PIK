@@ -18,6 +18,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -127,12 +128,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
 	@Override
-	public Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable) {
-		return projectESRepository.findProjectsByPhraseAndStatus(phrase, status, pageable);
+	public Page<Project> findProjectsByPhraseAndStatus(String phrase, List<ProjectStatus> statuses,
+			int minEcts, int minPay, boolean onlyGraduateWork,
+			Pageable pageable) {
+
+		String statusesString = String.join(" ", statuses.stream().map(ProjectStatus::toString).collect(Collectors.toList()));
+		return projectESRepository.findProjectsByPhraseAndStatus(phrase, statusesString, minEcts, minPay, onlyGraduateWork, pageable);
 	}
 
 	@Override
-	public Page<Project> findProjectsByStatus(ProjectStatus status, Pageable pageable) {
-		return projectRepository.findByStatus(status, pageable);
+	public Page<Project> findProjectsWhereStatusInStatuses(List<ProjectStatus> statuses,
+			int minEcts, int minPay, boolean onlyGraduateWork, Pageable pageable) {
+		return projectRepository.findByStatus(statuses, minEcts, minPay, onlyGraduateWork, pageable);
 	}
 }

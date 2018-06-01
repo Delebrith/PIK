@@ -25,6 +25,10 @@ public interface ProjectService {
     void changeStatus(long projectId, ProjectStatus projectStatus);
     void reportProject(long projectId);
     void signUpForProject(long id);
-	Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable);
-	Page<Project> findProjectsByStatus(ProjectStatus phrase, Pageable pageable);
+	Page<Project> findProjectsByPhraseAndStatus(String phrase, List<ProjectStatus> statuses,
+			int minEcts, int minPay, boolean onlyGraduateWork,
+			Pageable pageable);
+	Page<Project> findProjectsWhereStatusInStatuses(List<ProjectStatus> statuses,
+			int minEcts, int minPay, boolean onlyGraduateWork,
+			Pageable pageable);
 }

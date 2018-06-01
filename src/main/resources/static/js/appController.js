@@ -1,4 +1,4 @@
-app.config(function($httpProvider) {
+app.config(function($httpProvider, $routeProvider) {
 	$httpProvider.interceptors.push(function($cookies) {
 		return {
 			'request': function(config) {
@@ -17,18 +17,20 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 	}
 
 	$scope.pages = {
-			projectForm: "project-form"
+			projectForm: "project-form",
+			projectSearchPanel: "project-search"
 	}
 	
 	$scope.isPage = function (page) {
 		if ($location.hash().indexOf(page) == 0)
 		{
 			remaining = $location.hash().substring(page.length);
-			
+
 			if (remaining.length == 0)
 				return true;
 			
 			return ["/", "\\"].indexOf(remaining) > -1;
+			
 		}
 		
 		return false;
@@ -95,4 +97,24 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 		
 	    response.then(responseHandler);
 	}
+	
+	paramsStr = location.search
+	if (paramsStr.length == 0)
+		return
+	
+	paramsStr = paramsStr.substr(1)
+	paramList = paramsStr.split("&")
+	
+	$scope.params = {}
+	for (i = 0; i < paramList.length; i++) {
+		kv = paramList[i].split("=")
+		if (kv.length > 1 && $scope.params[kv[0]] == undefined)
+			$scope.params[kv[0]] = kv[1]
+		else if (kv.length > 1 && Array.isArray($scope.params[kv[0]]))
+			$scope.params[kv[0]].push(kv[1])
+		else
+			$scope.params[kv[0]] = [$scope.params[kv[0]], kv[1]]
+			
+	}
+	
 });

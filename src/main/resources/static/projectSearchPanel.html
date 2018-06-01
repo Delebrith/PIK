@@ -1,0 +1,154 @@
+
+<div id="myProjects" ng-controller="projectController" class="col-md-10 mx-auto">
+
+    <div class="row">
+
+        <div class="col-md-5">
+            <div class="card rounded-0 card-success" style="margin-top: 40px">
+                <div class="card-header">
+                    <h3 class="mb-0">Szukaj projektów</h3>
+                </div>
+                <div class="card-body">
+                    <form class="row col-md-12 form-inline my-lg-0">
+                        <input class="form-control col-md-9 mr-sm-2" type="search" ng-model="projectSearchQuery" placeholder="Znajdź projekt" aria-label="Search">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="searchProjects()" type="submit">Szukaj</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <h2>Dostępne projekty</h2>
+    <hr>
+
+    <div class="col justify-content-around" id="status_filters">
+        <div id="status_labels" class="col-md-10 row justify-content-around">
+            <label>
+                <input type="checkbox" ng-model="projectSearchCreated" checked autocomplete="off"> Oczekujący na opiekuna
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchWaiting" checked autocomplete="off"> Oczekujący na uczestników
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchStarted" checked autocomplete="off"> Rozpoczęty
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchFinished" checked autocomplete="off"> Zakończony
+            </label>
+            <label>
+                <input type="checkbox" ng-model="projectSearchCanceled" autocomplete="off" > Anulowany
+            </label>
+            <label>
+                <input type="checkbox" ng-model="projectSearchReported" autocomplete="off" > Zgłoszony
+            </label>
+        </div>
+
+        <div id="properties_labels" class="col-md-10 row justify-content-around">
+            
+            <label>
+            	Minimalna liczba ECTS:
+                <input type="number" class="form-control form-control-md rounded-0" ng-model="projectSearchECTS" value="0" min="0">
+            </label>
+            <label >
+                Minimalna płaca:
+                <input type="number" class="form-control form-control-md rounded-0" ng-model="projectSearchMinPay" value="0" min="0">
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchGradWorkOnly" checked autocomplete="off"> Tylko prace dyplomowe
+            </label>
+            <button class="btn" type="button" 
+            	ng-disabled="!(projectSearchCreated || projectSearchWaiting || projectSearchStarted
+            		|| projectSearchFinished || projectSearchCanceled || projectSearchReported)" ng-click="filterProjects()">
+            	Filtruj
+            </button>
+        </div>
+    </div>
+    <hr>
+
+	<div class="row justify-content-around">
+		<a ng-if="params.page > 0" class="btn btn-outline-summary" ng-href="{{getPrevPage()}}">Poprzednie 20</a>
+		<a ng-if="projects.length == 20" class="btn btn-outline-summary" ng-href="{{getNextPage()}}">Następne 20</a>
+	</div>
+
+    <div id="projects" class="card">
+        <table class="table" style="text-align: center">
+            <thead>
+            <th class="col-md-4">Nazwa</th>
+            <th class="col-md-4">Status projektu</th>
+            <th class="col-md-5">Akcje</th>
+            </thead>
+            <!--wrap into ng-repeat-->
+            <tr ng-repeat="project in projects">
+                <td>
+                    {{ project.name }}
+                </td>
+                <td>
+                    {{ statusToString(project.status) }}
+                </td>
+                <td>
+                    <div class="col-md-12 justify-content-around row">
+                        <!-- visible if not involved in the project -->
+                        <!-- visible for teachers if waiting for teacher -->
+                        <!-- visible for students if waiting for student-->
+                        <button type="button" class="btn btn-outline-success">
+                            Zgłoś się
+                        </button>
+                        <button type="button" class="btn btn-outline-primary"
+                                data-toggle="modal" data-target="#projectInfo" ng-click="
+								setSelectedProject(project)
+                                ">
+                            Informacje
+                        </button>
+                        <button type="button" class="btn btn-outline-danger">
+                            Projekt nieodpowiedni
+                        </button>
+                    </div>
+                </td>
+	                
+            </tr>   
+	                         
+        </table>
+            <!-- Modal -->
+            <div class="modal fade" id="projectInfo" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <!--name of the project-->
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label> Opis: </label>
+                            <br>
+                            {{ selectedProject.description }}
+                            <hr>
+                            <label> Wymagana liczba uczestników: </label>
+                            {{ selectedProject.numberOfParticipants }}
+                            <br>
+                            <span ng-if="selectedProject.ects">
+	                            <label> ECTS: </label>
+	                            {{ selectedProject.ects }}
+                            </span>
+                            <br>
+                            <span ng-if="selectedProject.minPayment != 0 || selectedProject.maxPayment != 0">
+	                            <label> Wynagrodzenie: </label>
+	                            {{ selectedProject.minPayment }} - {{ selectedProject.maxPayment }}
+                            </span>
+                            <br>
+                            <label> Praca dyplomowa: </label>
+                            <span ng-if="selectedProject.isGraduateWork">TAK</span>
+                            <span ng-if="!selectedProject.isGraduateWork">NIE</span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary-outline" data-dismiss="modal">Zamknij</button>
+                        </div>
+                    </div>
+                </div>
+	        </div>
+    </div>
+
+</div>
