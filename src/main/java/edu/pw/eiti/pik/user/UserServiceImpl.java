@@ -1,17 +1,16 @@
 package edu.pw.eiti.pik.user;
 
-import edu.pw.eiti.pik.base.event.EmailParticipationCreationEvent;
-import edu.pw.eiti.pik.base.event.AuthenticatedParticipationCreationEvent;
 import edu.pw.eiti.pik.base.event.FindUserEvent;
 import edu.pw.eiti.pik.base.event.UserAndProjectToParticipationEvent;
+import edu.pw.eiti.pik.user.db.AuthorityRepository;
 import edu.pw.eiti.pik.user.db.UserRepository;
 import edu.pw.eiti.pik.user.es.UserESRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.hibernate.mapping.Collection;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,13 +33,15 @@ class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserESRepository userESRepository;
+    private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final byte[] secretKey;
     private final ApplicationEventPublisher publisher;
 
-    public UserServiceImpl(UserRepository userRepository, UserESRepository userESRepository, String secretKey, ApplicationEventPublisher publisher) {
+    public UserServiceImpl(UserRepository userRepository, UserESRepository userESRepository, AuthorityRepository authorityRepository, String secretKey, ApplicationEventPublisher publisher) {
         this.userRepository = userRepository;
         this.userESRepository = userESRepository;
+        this.authorityRepository = authorityRepository;
         this.secretKey = secretKey.getBytes();
         this.publisher = publisher;
     }
@@ -87,7 +89,7 @@ class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @EventListener
-    public void addUser(FindUserEvent event) {
+    public void addUserToProject(FindUserEvent event) {
         User user;
         if (event.getUsername() == null)
             user = getAuthenticatedUser();
@@ -99,5 +101,41 @@ class UserServiceImpl implements UserService, UserDetailsService {
         }
         publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, event.getStatus()));
 
+    }
+
+    @Override
+    public Page<User> findByNameAndAuthorityList(String name, List<Authorities> authorities, Pageable pageable) {
+        List<Authority> authorityList = authorityRepository.findAllByNameIn(authorities);
+        String authoritiesString = String.join(" ", authorities.stream().map(Authorities::toString).collect(Collectors.toList()));
+        return userESRepository.findByNameAndAuthorityList(name,
+                authoritiesString, pageable);
+    }
+
+    @Override
+    @Transactional
+    public User createUser(User user) {
+        user.setParticipations(new ArrayList<>());
+        user.setPassword(passwordEncoder.encode("password"));
+        userESRepository.save(user);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findUser(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(User user) {
+        try {
+            User updated = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+            user.setParticipations(updated.getParticipations());
+            user.setPassword(updated.getPassword());
+            userESRepository.save(user);
+            return userRepository.save(user);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidUserDataException();
+        }
     }
 }
