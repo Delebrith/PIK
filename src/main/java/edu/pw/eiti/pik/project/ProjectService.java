@@ -17,6 +17,8 @@ public interface ProjectService {
     List<Project> getReportedProjects();
     void createProject(Project project, String teacherMail);
     @EventListener
+    public void addProjectToES(AddProjectToESEvent event);
+    @EventListener
     void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event);
     @EventListener
     void addProjectToParticipation(AddProjectToParticipationEvent event);
