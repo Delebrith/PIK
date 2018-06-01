@@ -19,4 +19,5 @@ interface UserService {
     User createUser(User user);
     Optional<User> findUser(Long userId);
     User updateUser(User user);
+    List<Authority> getAuthorities();
 }

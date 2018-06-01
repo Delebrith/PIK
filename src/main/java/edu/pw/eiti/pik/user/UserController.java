@@ -148,6 +148,18 @@ class UserController {
         return userMapper.toDto(userService.findUser(userId).orElseThrow(this::userNotFound));
     }
 
+
+    @ApiOperation(value = "get authorities", notes = "Returns information on all authorities")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "If user was found"),
+            @ApiResponse(code = 403, message = "If user did not log in previously", response = ErrorDto.class)
+    })
+    @GetMapping(path = "/user/authorities")
+    List<AuthorityDto> getAuthorities() {
+        return userService.getAuthorities().stream()
+                .map(userMapper::toDto).collect(Collectors.toList());
+    }
+
     private UserNotFoundException userNotFound() {
         return new UserNotFoundException();
     }
