@@ -1,5 +1,6 @@
 package edu.pw.eiti.pik.project;
 
+import edu.pw.eiti.pik.base.event.AddProjectToESEvent;
 import edu.pw.eiti.pik.base.event.AddProjectToParticipationEvent;
 import edu.pw.eiti.pik.base.event.CancelProjectEvent;
 import edu.pw.eiti.pik.base.event.CheckParticipantsAfterDeletedEvent;
