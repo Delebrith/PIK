@@ -1,6 +1,8 @@
 package edu.pw.eiti.pik.base.config.web;
 
+import edu.pw.eiti.pik.project.InsufficientAuthorizationException;
 import edu.pw.eiti.pik.project.InvalidProjectDataException;
+import edu.pw.eiti.pik.project.InvalidProjectSettingsChangeException;
 import edu.pw.eiti.pik.user.InvalidAuthorityException;
 import edu.pw.eiti.pik.user.InvalidUserDataException;
 import edu.pw.eiti.pik.user.UserNotFoundException;
@@ -18,6 +20,13 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(UserNotFoundException.class)
     @ResponseBody
     ErrorDto handleResourceNotFound(final HttpServletRequest req, final Exception ex) {
+        return new ErrorDto(req.getRequestURL().toString(), ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @org.springframework.web.bind.annotation.ExceptionHandler(InsufficientAuthorizationException.class)
+    @ResponseBody
+    ErrorDto handleUnauthorized(final HttpServletRequest req, final Exception ex) {
         return new ErrorDto(req.getRequestURL().toString(), ex.getMessage());
     }
 

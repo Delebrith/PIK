@@ -82,7 +82,7 @@ class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(path = "/user/filterAndFind/{pageSize}/{pageNumber}")
     List<UserDto> getUsersByRolesAndName(
-            @RequestParam String name,
+            @RequestParam(required = false) String name,
             @PathVariable Integer pageNumber,
             @PathVariable Integer pageSize,
             @RequestParam(required = false) Boolean student,
@@ -129,6 +129,19 @@ class UserController {
     ResponseEntity modifyUser(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(userMapper.toDto(
                 userService.updateUser(userMapper.fromDto(userDto))));
+    }
+
+
+    @ApiOperation(value = "Delete user", notes = "Returns information on created user's location")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "If user was successfully created"),
+            @ApiResponse(code = 403, message = "If user did not log in previously", response = ErrorDto.class)
+    })
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(path = "/user/{id}/delete")
+    ResponseEntity deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
     }
 
 

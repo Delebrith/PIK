@@ -1,10 +1,7 @@
 package edu.pw.eiti.pik.project;
 
 import edu.pw.eiti.pik.base.config.web.ErrorDto;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,12 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +65,7 @@ public class ProjectController
 			statuses = new ArrayList<ProjectStatus>();
 			statuses.addAll(DEFAULT_PROJECT_STATUSES);
 		}
-		
+
     	Page<Project> queryResult;
     	if (phrase == null || phrase.isEmpty())
 			queryResult = projectService.findProjectsWhereStatusInStatuses(
@@ -84,6 +76,26 @@ public class ProjectController
 
 
     	return queryResult.stream().map(projectMapper::toDto).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "Modify project settings")
+    @PostMapping(path = "/project/change/{projectId}")
+    @ApiResponses({
+            @ApiResponse(code = 202, message = "When changes to project are accepted"),
+            @ApiResponse(code = 401, message = "When user is not authorized to make a change"),
+            @ApiResponse(code = 400, message = "When given projects setting are illogical or incorrect")
+    })
+    @PreAuthorize("hasAuthority('EMPLOYER')")
+    ResponseEntity changeProjectSettings(@PathVariable Long projectId,
+                                         @RequestParam(required = false) String name,
+                                         @RequestParam(required = false) String description,
+                                         @RequestParam(required = false) Integer numOfParticipants,
+                                         @RequestParam(required = false) Integer minimumPay,
+                                         @RequestParam(required = false) Integer maximumPay,
+                                         @RequestParam(required = false) Integer ects,
+                                         @RequestParam(required = false) Boolean isGraduateWork) {
+        projectService.changeSettings(projectId, name, description, numOfParticipants, minimumPay, maximumPay, ects, isGraduateWork);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "Search for currently authentcated user's projects projects")

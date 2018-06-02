@@ -37,4 +37,6 @@ public interface ProjectService {
 	Page<Project> findProjectsWhereStatusInStatuses(List<ProjectStatus> statuses,
 			int minEcts, int minPay, boolean onlyGraduateWork,
 			Pageable pageable);
+    void changeSettings(Long projectId, String name, String description, Integer numOfParticipants, Integer minimumPay,
+                        Integer maximumPay, Integer ects, Boolean isGraduateWork);
 }
