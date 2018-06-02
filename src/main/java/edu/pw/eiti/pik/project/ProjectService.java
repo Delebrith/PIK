@@ -17,8 +17,6 @@ public interface ProjectService {
     List<Project> getReportedProjects();
     void createProject(Project project, String teacherMail);
     @EventListener
-    public void addProjectToES(AddProjectToESEvent event);
-    @EventListener
     void checkParticipantsCount(CheckParticipantsAfterDeletedEvent event);
     @EventListener
     void addProjectToParticipation(AddProjectToParticipationEvent event);
@@ -28,10 +26,15 @@ public interface ProjectService {
     void changeStatus(long projectId, ProjectStatus projectStatus);
     void reportProject(long projectId);
     void signUpForProject(long id);
+    @EventListener
+    void addProjectToES(AddProjectToESEvent event);
+	Page<Project> findMyProjects(Integer pageNumber, Integer pageSize);
 	Page<Project> findProjectsByPhraseAndStatus(String phrase, List<ProjectStatus> statuses,
 			int minEcts, int minPay, boolean onlyGraduateWork,
 			Pageable pageable);
 	Page<Project> findProjectsWhereStatusInStatuses(List<ProjectStatus> statuses,
 			int minEcts, int minPay, boolean onlyGraduateWork,
 			Pageable pageable);
+    void changeSettings(Long projectId, String name, String description, Integer numOfParticipants, Integer minimumPay,
+                        Integer maximumPay, Integer ects, Boolean isGraduateWork);
 }
