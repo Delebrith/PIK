@@ -26,6 +26,15 @@ import java.util.stream.Collectors;
 @RestController("/project")
 public class ProjectController
 {
+	private final static List<ProjectStatus> DEFAULT_PROJECT_STATUSES = new ArrayList<ProjectStatus>(){{
+			add(ProjectStatus.CREATED);
+			add(ProjectStatus.WAITING_FOR_STUDENTS);
+			add(ProjectStatus.STARTED);
+			add(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
+			add(ProjectStatus.SUSPENDED_MISSING_TEACHER);
+			add(ProjectStatus.FINISHED);
+			add(ProjectStatus.OVERDUE);
+	}};
 
     private final ProjectMapper projectMapper = ProjectMapper.getInstance();
     private final ProjectService projectService;
@@ -62,13 +71,7 @@ public class ProjectController
     		@PathVariable int pageSize, @PathVariable int page) {
     	if (statuses == null) {
 			statuses = new ArrayList<ProjectStatus>();
-			statuses.add(ProjectStatus.CREATED);
-			statuses.add(ProjectStatus.WAITING_FOR_STUDENTS);
-			statuses.add(ProjectStatus.STARTED);
-			statuses.add(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
-			statuses.add(ProjectStatus.SUSPENDED_MISSING_TEACHER);
-			statuses.add(ProjectStatus.FINISHED);
-			statuses.add(ProjectStatus.OVERDUE);
+			statuses.addAll(DEFAULT_PROJECT_STATUSES);
 		}
 		
     	Page<Project> queryResult;
@@ -85,10 +88,17 @@ public class ProjectController
 
     @ApiOperation(value = "Search for currently authentcated user's projects projects")
     @ApiResponse(code = 200, message = "Always")
-    @GetMapping(path = "/project/my/{pageNumber}/{pageSize}")
-    List<ProjectDto> findMyProjects(@PathVariable Integer pageNumber,
-                                    @PathVariable Integer pageSize) {
-        return projectService.findMyProjects(pageNumber, pageSize)
+    @GetMapping(path = "/project/my/{pageSize}/{pageNumber}")
+    List<ProjectDto> findMyProjects(@PathVariable Integer pageSize,
+            						@PathVariable Integer pageNumber,
+                            		@RequestParam(name="status", required=false) List<ProjectStatus> statuses) {
+    	if (statuses == null) {
+			statuses = new ArrayList<ProjectStatus>();
+			statuses.addAll(DEFAULT_PROJECT_STATUSES);
+		}
+    	
+        return projectService.findMyProjects(pageNumber, pageSize, statuses)
                 .stream().map(projectMapper::toDto).collect(Collectors.toList());
     }
+    
 }
