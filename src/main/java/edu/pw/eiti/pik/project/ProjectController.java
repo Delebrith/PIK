@@ -76,7 +76,7 @@ public class ProjectController
     }
 
     @ApiOperation(value = "Modify project settings")
-    @PostMapping(path = "/change/{projectId}")
+    @PostMapping(path = "/project/change/{projectId}")
     @ApiResponses({
             @ApiResponse(code = 202, message = "When changes to project are accepted"),
             @ApiResponse(code = 401, message = "When user is not authorized to make a change"),
