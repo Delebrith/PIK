@@ -44,7 +44,7 @@
         <table class="table" style="text-align: center">
             <thead>
             <th class="col-md-4">Nazwa</th>
-            <th>Uprawnienia</th>
+            <th style="text-align: center">Uprawnienia</th>
             <!--if admin-->
             <th ng-if="isUserAdministrator()" class="col-md-5">Akcje</th>
             </thead>
@@ -54,7 +54,7 @@
                 </td>
                 <td class="row">
                     <span ng-repeat="authority in user.authorities">
-                        {{authority.displayName}}
+                        <span ng-if="authority != user.authorities[0]">, </span> {{authority.displayName}}
                     </span>
                 </td>
                 <td ng-if="isUserAdministrator()">

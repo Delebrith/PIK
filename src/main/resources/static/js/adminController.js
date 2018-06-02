@@ -6,27 +6,27 @@ app.controller('adminController', function($scope, $http, $cookies, $window, $lo
     $scope.authorities;
     $scope.checkedAuthorities = {};
 
-    $scope.getNextPage = function(project) {
+    $scope.getNextUsersPage = function(project) {
         return getSearchProjectsHref(
             $scope.params.query,
             parseInt($scope.params.page) + 1,
             $scope.params.status)
     }
 
-    $scope.getPrevPage = function(project) {
+    $scope.getPrevUsersPage = function(project) {
         return getSearchProjectsHref(
             $scope.params.query,
             parseInt($scope.params.page) - 1,
             $scope.params.status)
     }
 
-    function getSearchProjectsHref(query, page, minEcts, minPay, onlyGradWork, authList = undefined) {
+    function getSearchProjectsHref(name, page, minEcts, minPay, onlyGradWork, authList = undefined) {
         if (page == undefined)
             page = 0
-        if (query == undefined)
-            query = ""
+        if (name == undefined)
+            name = ""
 
-        href = "?page=" + page + "&query=" + encodeURIComponent(query)
+        href = "?page=" + page + "&name=" + encodeURIComponent(name)
 
         if (authList != undefined)
         {
@@ -51,12 +51,11 @@ app.controller('adminController', function($scope, $http, $cookies, $window, $lo
         }
 
         $window.location.href = getSearchProjectsHref(
-            $scope.params.query,
+            $scope.params.name,
             $scope.params.page,
             authList)
 
     }
-
 
     var authoritiesUrl = "/user/authorities";
     var response = $http.get(authoritiesUrl)
@@ -69,13 +68,11 @@ app.controller('adminController', function($scope, $http, $cookies, $window, $lo
                 alert("Wystąpił błąd podczas pobierania ról.")
         });
 
-    var usersUrl = "/user/findAnfFilter/20/";
-
+    var usersUrl = "/user/filterAndFind/20/";
+    alert($scope.isLogged() +", "+ $scope.isPage($scope.pages.userList) + ", " + $scope.context.user)
     if ($scope.isLogged() && $scope.isPage($scope.pages.userList)) {
-        if (!$scope.params.query)
-            $scope.params.query = ""
-
-        var href = usersUrl + $scope.params.page + "?query=" + $scope.params.query
+        alert(2)
+        var href = usersUrl + $scope.params.page
 
         if ($scope.params.authorities != undefined) {
             if (Array.isArray($scope.params.authorities))
@@ -85,8 +82,8 @@ app.controller('adminController', function($scope, $http, $cookies, $window, $lo
                 href += "&authorities=" + $scope.params.authorities
         }
         if ($scope.params['name'] != undefined)
-            href += "&names=" + $scope.params['name']
-
+            href += "&name=" + $scope.params['name']
+        alert(href)
         var response = $http.get(href)
         response.then(
             function (response) {
