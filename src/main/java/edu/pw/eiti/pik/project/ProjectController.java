@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController("/project")
-@RequestMapping("/project")
 public class ProjectController
 {
 
@@ -37,7 +36,7 @@ public class ProjectController
             @ApiResponse(code = 404, message = "If provided teacher was not found", response = ErrorDto.class)
     })
     @PreAuthorize("hasAuthority('EMPLOYER')")
-    @PostMapping(path = "/add")
+    @PostMapping(path = "/project/add")
     ResponseEntity addProject(@RequestBody ProjectDto projectDto, @RequestParam(required = false) String teacherMail) {
         Project project = projectMapper.fromDto(projectDto);
         projectService.createProject(project, teacherMail);
@@ -46,14 +45,31 @@ public class ProjectController
 
     @ApiOperation(value = "Search for projects")
     @ApiResponse(code = 200, message = "Always")
-    @GetMapping(path = "/find/{status}/{pageSize}/{page}")
+    @GetMapping(path = "/project/find/{pageSize}/{page}")
     List<ProjectDto> findProjects(@RequestParam(name="query", required=false) String phrase,
-    		@PathVariable ProjectStatus status, @PathVariable int pageSize, @PathVariable int page) {
+    		@RequestParam(name="status", required=false) List<ProjectStatus> statuses,
+    		@RequestParam(name="min-ects", required=false, defaultValue="0") int minEcts,
+    		@RequestParam(name="min-pay", required=false, defaultValue="0") int minPay,
+    		@RequestParam(name="only-grad-work", required=false, defaultValue="0") boolean onlyGraduateWork,
+    		@PathVariable int pageSize, @PathVariable int page) {
+    	if (statuses == null) {
+			statuses = new ArrayList<ProjectStatus>();
+			statuses.add(ProjectStatus.CREATED);
+			statuses.add(ProjectStatus.WAITING_FOR_STUDENTS);
+			statuses.add(ProjectStatus.STARTED);
+			statuses.add(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
+			statuses.add(ProjectStatus.SUSPENDED_MISSING_TEACHER);
+			statuses.add(ProjectStatus.FINISHED);
+			statuses.add(ProjectStatus.OVERDUE);
+		}
+
     	Page<Project> queryResult;
     	if (phrase == null || phrase.isEmpty())
-			queryResult = projectService.findProjectsByStatus(status, PageRequest.of(page, pageSize));
+			queryResult = projectService.findProjectsWhereStatusInStatuses(
+					statuses, minEcts, minPay, onlyGraduateWork, PageRequest.of(page, pageSize));
     	else
-    		queryResult = projectService.findProjectsByPhraseAndStatus(phrase, status, PageRequest.of(page, pageSize));
+    		queryResult = projectService.findProjectsByPhraseAndStatus(
+    				phrase, statuses, minEcts, minPay, onlyGraduateWork, PageRequest.of(page, pageSize));
 
 
     	return queryResult.stream().map(projectMapper::toDto).collect(Collectors.toList());
@@ -77,5 +93,14 @@ public class ProjectController
                                          @RequestParam(required = false) Boolean isGraduateWork) {
         projectService.changeSettings(projectId, name, description, numOfParticipants, minimumPay, maximumPay, ects, isGraduateWork);
         return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+
+    @ApiOperation(value = "Search for currently authentcated user's projects projects")
+    @ApiResponse(code = 200, message = "Always")
+    @GetMapping(path = "/project/my/{pageNumber}/{pageSize}")
+    List<ProjectDto> findMyProjects(@PathVariable Integer pageNumber,
+                                    @PathVariable Integer pageSize) {
+        return projectService.findMyProjects(pageNumber, pageSize)
+                .stream().map(projectMapper::toDto).collect(Collectors.toList());
     }
 }

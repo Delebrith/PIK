@@ -14,12 +14,6 @@ import edu.pw.eiti.pik.project.Project;
 @Profile("develop")
 @DependsOn("liquibase")
 public class ProjectLoader extends DataLoader<Project, Long> {
-
-	@Override
-	protected void initializeLazy(List<Project> values) 
-	{
-		//values.forEach(p -> Hibernate.initialize(p.getParticipations()));
-	}
 	
 	public ProjectLoader(JpaRepository<Project, Long> jpaRepository, ElasticsearchRepository<Project, Long> esRepository) {
 		super(jpaRepository, esRepository);
