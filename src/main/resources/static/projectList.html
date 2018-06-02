@@ -47,7 +47,8 @@
                    <!-- visible if owner of manager -->
                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0" 
                    	ng-if="hasParticipationStatus(project.participationStatus, 'OWNER') ||
-                   		hasParticipationStatus(project.participationStatus, 'MANAGER')">
+                   		hasParticipationStatus(project.participationStatus, 'MANAGER')"
+                   		ng-click="navigate('/?project=' + project.id + '#project-management')">
                        Zarządzaj
                    </button>
                    <!-- visible if participant of manager -->
