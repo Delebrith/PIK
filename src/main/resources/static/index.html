@@ -77,8 +77,8 @@
     	<ng-include ng-if="isLogged() && isPage(pages.projectForm)" src="'projectForm.html'"></ng-include>
     	<ng-include ng-if="isLogged() && isPage(pages.projectSearchPanel)" src="'projectSearchPanel.html'"></ng-include>
     	<ng-include ng-if="isLogged() && isPage(pages.myProjects)" src="'myProjects.html'"></ng-include>
-    {{isLogged() && isPage(pages.userList)}}
-        <ng-include ngif="isLogged() && isPage(pages.userList)" src="'userList.html'"></ng-include>
+    	<ng-include ng-if="isLogged() && isPage(pages.projectManagementPanel)" src="'projectManagementPanel.html'"></ng-include>
+        <ng-include ng-if="isLogged() && isPage(pages.userList)" src="'userList.html'"></ng-include>
 
         <ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
 

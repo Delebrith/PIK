@@ -11,16 +11,21 @@ app.config(function($httpProvider, $routeProvider) {
 	});
 });
 
-app.controller("appController", function($scope, $http, $cookies, $location) {
+app.controller("appController", function($scope, $http, $cookies, $location, $window) {
 	$scope.context = {
 			user: null
 	}
 
+	$scope.navigate = function(href) {
+		$window.location.href = href
+	}
+	
 	$scope.pages = {
 			projectForm: "project-form",
 			projectSearchPanel: "project-search",
-			userList: "user-list",
 			myProjects: "my-projects"
+			userList: "user-list",
+			projectManagementPanel: "project-management"
 	}
 	
 	$scope.isPage = function (page) {
@@ -85,6 +90,7 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 	if ($cookies.get('token') != undefined) {
 		$http.get("/user/me").then(function(response){
 			$scope.context.user = response.data
+			$scope.$broadcast('logged-in', '')
 		}, 
 		function(response){
 			// Failed to retrieve user data, probably due to token being invalid 
