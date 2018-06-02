@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParticipationDto {
-    private Long id;
+    private String id;
     private ParticipationStatus status;
     private UserDto user;
     private ProjectDto project;

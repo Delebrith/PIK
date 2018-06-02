@@ -85,7 +85,7 @@ class UserController {
             @ApiResponse(code = 200, message = "Always")
     })
     @GetMapping(path = "/user/filterAndFind/{pageSize}/{pageNumber}")
-    List<UserDto> filterAndFIndByNameAndRoles(
+    List<UserDto> filterAndFindByNameAndRoles(
             @RequestParam(required = false) String name,
             @PathVariable Integer pageNumber,
             @PathVariable Integer pageSize,
@@ -93,6 +93,8 @@ class UserController {
             ) {
         if (authorities == null) authorities = userService.getAuthorities().stream()
                 .map(Authority::getName).collect(Collectors.toList());
+        if (name != null)
+        	name = name.toLowerCase();
         Page<User> queryResult;
         if (name != null && !name.isEmpty()) {
             queryResult = userService.findByNameAndAuthorityList(
@@ -150,8 +152,8 @@ class UserController {
             @ApiResponse(code = 403, message = "If user did not log in previously", response = ErrorDto.class),
             @ApiResponse(code = 404, message = "If user was not found", response = ErrorDto.class)
     })
-    @GetMapping(path = "/user/{id}/find")
-    UserDto findUser(@PathVariable long userId) {
+    @GetMapping(path = "/user/{userId}/find")
+    UserDto findUser(@PathVariable Long userId) {
         return userMapper.toDto(userService.findUser(userId).orElseThrow(this::userNotFound));
     }
 

@@ -59,11 +59,13 @@
                 </td>
                 <td ng-if="isUserAdministrator()">
                     <div class="col-md-12 justify-content-center row">
-                        <button type="button" class="btn btn-outline-primary" style="margin-left: 10px">
+                        <button type="button" class="btn btn-outline-primary" style="margin-left: 10px"
+                        	ng-click="manageUser(user)">
                             Modyfikuj
                             <!--go to user management screen-->
                         </button>
-                        <button type="button" class="btn btn-outline-danger" style="margin-left: 10px">
+                        <button type="button" class="btn btn-outline-danger" style="margin-left: 10px"
+                        	ng-click="deleteUser(user)">
                             Usuń
                         </button>
                     </div>

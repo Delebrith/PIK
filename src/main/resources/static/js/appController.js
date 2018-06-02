@@ -23,9 +23,11 @@ app.controller("appController", function($scope, $http, $cookies, $location, $wi
 	$scope.pages = {
 			projectForm: "project-form",
 			projectSearchPanel: "project-search",
-			myProjects: "my-projects"
+			projectManagementPanel: "project-management",
+			myProjects: "my-projects",
 			userList: "user-list",
-			projectManagementPanel: "project-management"
+			userForm: "user-form",
+			userManagementPanel: "user-management"
 	}
 	
 	$scope.isPage = function (page) {

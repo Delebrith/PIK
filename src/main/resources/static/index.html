@@ -28,7 +28,7 @@
             <div class="row">
 
                 <div class="col-md-5 mx-auto">
-                    <div ng-if="isUserStudent() || isUserTeacher()" ng-controller="projectController">
+                    <div ng-if="isUserStudent() || isUserEmployer()" ng-controller="projectController">
                         <div class="card rounded-0 card-success" style="margin-top: 40px">
                             <div class="card-header">
                                 <h3 class="mb-0">Szukaj projektów</h3>
@@ -79,6 +79,8 @@
     	<ng-include ng-if="isLogged() && isPage(pages.myProjects)" src="'myProjects.html'"></ng-include>
     	<ng-include ng-if="isLogged() && isPage(pages.projectManagementPanel)" src="'projectManagementPanel.html'"></ng-include>
         <ng-include ng-if="isLogged() && isPage(pages.userList)" src="'userList.html'"></ng-include>
+        <ng-include ng-if="isLogged() && isPage(pages.userForm)" src="'userForm.html'"></ng-include>
+        <ng-include ng-if="isLogged() && isPage(pages.userManagementPanel)" src="'userManagementPanel.html'"></ng-include>
 
         <ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
 
