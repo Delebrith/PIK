@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,6 +36,13 @@ public class ProjectController
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
+
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.registerCustomEditor(ProjectStatus.class, new ProjectStatusConverter());
+    }
+
 
     @ApiOperation(value = "Add new project", notes = "Adds project into database")
     @ApiParam(value = "Project details", required = true)
@@ -112,5 +120,22 @@ public class ProjectController
         return projectService.findMyProjects(pageSize, pageNumber, statuses)
                 .stream().map(projectMapper::toDto).collect(Collectors.toList());
     }
-    
+
+
+    @ApiOperation(value = "Change status of project", notes = "updates project in database")
+    @ApiParam(value = "Project details", required = true)
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "If project was successfully updated"),
+            @ApiResponse(code = 400, message = "If user provided user without TEACHER authority or project settings are incorrect"
+                    , response = ErrorDto.class),
+            @ApiResponse(code = 404, message = "If provided teacher was not found", response = ErrorDto.class)
+    })
+    @PreAuthorize("hasAuthority('EMPLOYER')")
+    @PostMapping(path = "/project/{id}/changeStatus")
+    ProjectDto changeStatus(@PathVariable Long id,
+                                @RequestParam ProjectStatus status) {
+        Project updated = projectService.changeStatus(id, status);
+        return projectMapper.toDto(updated);
+    }
+
 }

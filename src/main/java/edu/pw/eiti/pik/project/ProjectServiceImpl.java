@@ -227,8 +227,60 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void changeStatus(long projectId, ProjectStatus projectStatus) {
+    public Project changeStatus(long projectId, ProjectStatus projectStatus) {
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Participation> participations = project.getParticipations().stream()
+                .filter(x -> x.getStatus().name().equals(username)).collect(Collectors.toList());
 
+        switch (projectStatus) {
+            case SUSPENDED_REPORTED:
+                project.setStatus(ProjectStatus.SUSPENDED_REPORTED);
+                break;
+            case CREATED:
+                if (participations.stream().noneMatch(x ->
+                    x.getStatus().equals(ParticipationStatus.OWNER) || x.getStatus().equals(ParticipationStatus.MANAGER)))
+                        throw new InsufficientAuthorizationException();
+                if (project.getStatus() != ProjectStatus.SUSPENDED_MISSING_TEACHER)
+                    throw new InvalidProjectDataException();
+                project.setStatus(ProjectStatus.CREATED);
+                break;
+            case WAITING_FOR_STUDENTS:
+                if (participations.stream().noneMatch(x ->
+                        x.getStatus().equals(ParticipationStatus.OWNER) || x.getStatus().equals(ParticipationStatus.MANAGER)))
+                    throw new InsufficientAuthorizationException();
+                if (project.getStatus() != ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS)
+                    throw new InvalidProjectDataException();
+                project.setStatus(ProjectStatus.WAITING_FOR_STUDENTS);
+                break;
+            case STARTED:
+                if (participations.stream().noneMatch(x ->
+                        x.getStatus().equals(ParticipationStatus.OWNER) || x.getStatus().equals(ParticipationStatus.MANAGER)))
+                    throw new InsufficientAuthorizationException();
+                if (project.getStatus() != ProjectStatus.WAITING_FOR_STUDENTS)
+                    throw new InvalidProjectDataException();
+                project.setStatus(ProjectStatus.STARTED);
+                break;
+            case CANCELED:
+                if (participations.stream().noneMatch(x ->
+                        x.getStatus().equals(ParticipationStatus.OWNER) || x.getStatus().equals(ParticipationStatus.MANAGER)))
+                    throw new InsufficientAuthorizationException();
+                project.setStatus(ProjectStatus.CANCELED);
+                break;
+            case FINISHED:
+                if (participations.stream().noneMatch(x ->
+                        x.getStatus().equals(ParticipationStatus.OWNER) || x.getStatus().equals(ParticipationStatus.MANAGER)))
+                    throw new InsufficientAuthorizationException();
+                if (project.getStatus() != ProjectStatus.STARTED)
+                    throw new InvalidProjectDataException();
+                project.setStatus(ProjectStatus.FINISHED);
+                break;
+            default:
+                throw new InvalidProjectDataException();
+        }
+        projectRepository.save(project);
+        projectESRepository.save(project);
+        return project;
     }
 
     @Override
@@ -238,7 +290,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void signUpForProject(long id) {
-
+        Project project = projectRepository.findById(id).orElseThrow(ProjectNotFoundException::new);
+        publisher.publishEvent(new SignUpEvent(project));
     }
 
 	@Override
