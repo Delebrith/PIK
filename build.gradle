@@ -63,16 +63,6 @@ uploadArchives {
 	}
 }
 
-
-sourceSets {
-	main {
-		java {
-			srcDir "${buildDir.absolutePath}/generated/source/apt/main"
-		}
-	}
-}
-
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')

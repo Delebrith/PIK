@@ -56,4 +56,13 @@ public class ParticipationController {
     	 return participationService.findByUser_EmailAndProject_Id(username, projectId)
     			 .stream().map(participationMapper::toDto).collect(Collectors.toList());
     }
+
+    @ApiOperation(value = "Search for currently authentcated user's projects projects")
+    @ApiResponses({@ApiResponse(code = 200, message = "If user is in project")})
+    @GetMapping(path = "/participation/project/{projectId}")
+    List<ParticipationDto> getParticipationsInProject(@PathVariable Long projectId) {
+
+        return participationService.findByProject(projectId)
+                .stream().map(participationMapper::toDto).collect(Collectors.toList());
+    }
 }
