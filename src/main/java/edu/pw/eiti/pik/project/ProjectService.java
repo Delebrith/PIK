@@ -29,8 +29,13 @@ public interface ProjectService {
     void signUpForProject(long id);
     @EventListener
     void addProjectToES(AddProjectToESEvent event);
-	Page<Project> findProjectsByPhraseAndStatus(String phrase, ProjectStatus status, Pageable pageable);
-	Page<Project> findProjectsByStatus(ProjectStatus phrase, Pageable pageable);
+	Page<Project> findMyProjects(Integer pageNumber, Integer pageSize);
+	Page<Project> findProjectsByPhraseAndStatus(String phrase, List<ProjectStatus> statuses,
+			int minEcts, int minPay, boolean onlyGraduateWork,
+			Pageable pageable);
+	Page<Project> findProjectsWhereStatusInStatuses(List<ProjectStatus> statuses,
+			int minEcts, int minPay, boolean onlyGraduateWork,
+			Pageable pageable);
 	@EventListener
     void checkProjectStatus(CheckProjectStatusEvent event);
 }
