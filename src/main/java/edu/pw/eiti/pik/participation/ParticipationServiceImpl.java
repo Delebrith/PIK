@@ -163,4 +163,9 @@ class ParticipationServiceImpl implements ParticipationService {
 	public List<Participation> findByUser_EmailAndProject_Id(String username, Long projectId) {
     	return participationRepository.findByUser_EmailAndProject_Id(username, projectId);
 	}
+
+    @Override
+    public List<Participation> findByProject(Long projectId) {
+        return participationRepository.findByProjectId(projectId);
+    }
 }
