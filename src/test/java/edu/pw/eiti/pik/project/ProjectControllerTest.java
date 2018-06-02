@@ -30,7 +30,6 @@ public class ProjectControllerTest {
     @Test(expected = ProjectNotFoundException.class)
     public void findNonExistingProject() {
         Long testId = 321L;
-        when(projectService.findProject(testId)).thenReturn(Optional.empty());
         assertEquals(projectController.findProject(testId).getId(), testId);
     }
 }
