@@ -26,7 +26,7 @@ public interface ProjectService {
     @EventListener
     void cancelProject(CancelProjectEvent event);
     void deleteProject(long projectId);
-    void changeStatus(long projectId, ProjectStatus projectStatus);
+    Project changeStatus(long projectId, ProjectStatus projectStatus);
     void reportProject(long projectId);
     void signUpForProject(long id);
     @EventListener

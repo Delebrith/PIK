@@ -2,6 +2,8 @@ package edu.pw.eiti.pik.user;
 
 import edu.pw.eiti.pik.base.event.FindUserEvent;
 import edu.pw.eiti.pik.base.event.UserAndProjectToParticipationEvent;
+import edu.pw.eiti.pik.base.event.SignUpEvent;
+import edu.pw.eiti.pik.participation.ParticipationStatus;
 import edu.pw.eiti.pik.user.db.AuthorityRepository;
 import edu.pw.eiti.pik.user.db.UserRepository;
 import edu.pw.eiti.pik.user.es.UserESRepository;
@@ -159,6 +161,13 @@ class UserServiceImpl implements UserService, UserDetailsService {
         User deleted = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         userRepository.delete(deleted);
         userESRepository.delete(deleted);
+    }
+
+    @EventListener
+    public void handleEvent(SignUpEvent event) {
+        User user = getAuthenticatedUser();
+        publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user,
+                ParticipationStatus.WAITING_FOR_ACCEPTANCE));
     }
 
     private String generatePassword() {
