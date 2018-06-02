@@ -97,5 +97,17 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public User copy() {
+        return User.builder()
+                .id(id)
+                .name(name)
+                .password(password)
+                .email(email)
+                .phoneNo(phoneNo)
+                .authorities(authorities)
+                .participations(participations)
+                .build();
+    }
 }
 
