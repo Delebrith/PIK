@@ -20,10 +20,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] PUBLIC_ANT_PATTERNS = {
-    		"/",
+    		"/", "/favicon.ico",
             "/user/login", "/user/me",
-            "/index.html", "/loginPanel.html", "/logoutPanel.html", "/navbar.html", "/myProjects.html",
-            "/js/userController.js", "/js/appController.js", "/js/projectController.js",
+            "/index.html", "/loginPanel.html", "/logoutPanel.html", "/navbar.html", "/myProjects.html", "/userList.html",
+            "/js/userController.js", "/js/appController.js", "/js/projectController.js", "/js/adminController.js",
     		"/autocomplete/script/autocomplete.js", "/autocomplete/style/autocomplete.css",
     };
 

@@ -19,6 +19,7 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 	$scope.pages = {
 			projectForm: "project-form",
 			projectSearchPanel: "project-search",
+			userList: "user-list",
 			myProjects: "my-projects"
 	}
 	
@@ -106,7 +107,7 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 	if (paramsStr.length > 0){
 		paramsStr = paramsStr.substr(1)
 		paramList = paramsStr.split("&")
-		
+
 		for (i = 0; i < paramList.length; i++) {
 			kv = paramList[i].split("=")
 			if (kv.length > 1 && $scope.params[kv[0]] == undefined)
@@ -115,7 +116,8 @@ app.controller("appController", function($scope, $http, $cookies, $location) {
 				$scope.params[kv[0]].push(kv[1])
 			else
 				$scope.params[kv[0]] = [$scope.params[kv[0]], kv[1]]
-				
+
 		}
 	}
+	
 });

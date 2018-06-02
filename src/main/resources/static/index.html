@@ -77,15 +77,18 @@
     	<ng-include ng-if="isLogged() && isPage(pages.projectForm)" src="'projectForm.html'"></ng-include>
     	<ng-include ng-if="isLogged() && isPage(pages.projectSearchPanel)" src="'projectSearchPanel.html'"></ng-include>
     	<ng-include ng-if="isLogged() && isPage(pages.myProjects)" src="'myProjects.html'"></ng-include>
-    
+
+        <ng-include ngif="isLogged() && isPage(pages.userList)" src="'userList.html'"></ng-include>
+
         <ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
-        
+
     </div>
 
     <script>
         app = angular.module("app", ["ngCookies", "ngRoute", "autocomplete"]);
     </script>
     <script src="js/appController.js"></script>
+    <script src="js/adminController.js"></script>
     <script src="js/userController.js"></script>
     <script src="js/projectController.js"></script>
 

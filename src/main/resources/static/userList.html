@@ -1,5 +1,5 @@
 
-<div id="myProjects" ng-controller="" class="col-md-10 mx-auto">
+<div id="myProjects" ng-controller="adminController" class="col-md-10 mx-auto">
 
     <div class="row">
 
@@ -10,10 +10,12 @@
                 </div>
                 <div class="card-body">
                     <form class="row col-md-12 form-inline my-lg-0">
-                        <!--TODO add autocomplete-->
-                        <input class="form-control col-md-9 mr-sm-2" type="search" placeholder="Wprowadź użytkownika"
-                               aria-label="Search">
-                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
+                        <form class="row col-md-12 form-inline my-lg-0">
+                            <input class="form-control col-md-9 mr-sm-2" type="search" ng-model="userSearchQuery"
+                                   placeholder="Znajdź użytkownika" aria-label="Search">
+                            <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="searchUsers()"
+                                    type="submit">Szukaj</button>
+                        </form>
                     </form>
                 </div>
             </div>
@@ -27,24 +29,13 @@
     <div class="row justify-content-around" id="status_filters">
         <div class="col-md-2"> <h5> Filtruj uprawnienia: </h5> </div>
         <div id="status_labels" class="col-md-10 row justify-content-around">
-            <label>
-                <input type="checkbox" checked autocomplete="off"> Student
+            <label ng-repeat="auth in authorities">
+                <input type="checkbox" checked autocomplete="off" ng-value="{{auth.name}}"
+                       ng-model="checkedAuthorities[auth.name]">
+                {{auth.displayName}}
             </label>
-            <label >
-                <input type="checkbox" checked autocomplete="off"> Wykładowca
-            </label>
-            <label >
-                <input type="checkbox" checked autocomplete="off"> Zleceniodawca
-            </label>
-            <label >
-                <input type="checkbox" checked autocomplete="off"> Instytucja zewnętrzna
-            </label>
-            <label>
-                <input type="checkbox" checked autocomplete="off"> Moderator
-            </label>
-            <label>
-                <input type="checkbox" checked autocomplete="off"> Administrator
-            </label>
+            <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="filterUsers()"
+                    type="submit">Filtruj</button>
         </div>
     </div>
     <hr>
@@ -55,21 +46,18 @@
             <th class="col-md-4">Nazwa</th>
             <th>Uprawnienia</th>
             <!--if admin-->
-            <th class="col-md-5">Akcje</th>
+            <th ng-if="isUserAdministrator()" class="col-md-5">Akcje</th>
             </thead>
-            <!--wrap into ng-repeat-->
-            <tr>
+            <tr ng-repeat="user in users">
                 <td>
-                    Użytkownik
-                    <!--username-->
-                    <!--this should be link to user's profile-->
+                    {{user.name}}
                 </td>
-                <td>
-                    Student
-                    <!--authorities-->
+                <td class="row">
+                    <span ng-repeat="authority in user.authorities">
+                        {{authority.displayName}}
+                    </span>
                 </td>
-                <!--if admin-->
-                <td>
+                <td ng-if="isUserAdministrator()">
                     <div class="col-md-12 justify-content-center row">
                         <button type="button" class="btn btn-outline-primary" style="margin-left: 10px">
                             Modyfikuj
