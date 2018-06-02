@@ -13,6 +13,13 @@ import edu.pw.eiti.pik.project.ProjectStatus;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     Project findByName(String name);
+    Page<Project> findByStatus(ProjectStatus status, Pageable pageable);
+
+    @Query("select p from Project p where p = " +
+            "some(select part.project from Participation part where part.user =" +
+            "some(select u from user_ u where u.email = :email) )")
+    Page<Project> findByUser(@Param("email") String email, Pageable pageable);
+
     @Query("Select p from Project p where"
     		+ " p.status in :statuses and"
     		+ " p.ects >= :minEcts and"
