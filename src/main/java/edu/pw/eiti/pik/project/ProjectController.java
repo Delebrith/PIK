@@ -112,5 +112,16 @@ public class ProjectController
         return projectService.findMyProjects(pageSize, pageNumber, statuses)
                 .stream().map(projectMapper::toDto).collect(Collectors.toList());
     }
+
+    @ApiOperation(value = "Search for project with given id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "When project found"),
+            @ApiResponse(code = 404, message = "When project not found")
+    })
+    @GetMapping(path = "/project/{id}")
+    ProjectDto findProject(@PathVariable Long id) {
+        Project project = projectService.findProject(id).orElseThrow(ProjectNotFoundException::new);
+        return projectMapper.toDto(project);
+    }
     
 }
