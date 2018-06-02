@@ -7,6 +7,7 @@ import edu.pw.eiti.pik.user.db.UserRepository;
 import edu.pw.eiti.pik.user.es.UserESRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
@@ -121,7 +122,10 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public User createUser(User user) {
         user.setParticipations(new ArrayList<>());
-        user.setPassword(passwordEncoder.encode("password"));
+        String password = generatePassword();
+        user.setPassword(password);
+        publisher.publishEvent(new UserCreatedEvent(user.copy()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userESRepository.save(user);
         return userRepository.save(user);
     }
@@ -148,5 +152,9 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<Authority> getAuthorities() {
         return authorityRepository.findAll();
+    }
+
+    private String generatePassword() {
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 }
