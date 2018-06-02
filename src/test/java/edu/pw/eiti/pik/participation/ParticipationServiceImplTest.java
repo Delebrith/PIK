@@ -55,7 +55,7 @@ public class ParticipationServiceImplTest {
     private Participation ownerParticipation;
     private Participation managerParticipation;
     private Participation pendingInviteParticipation;
-    private Participation participantParticipation;
+    private List<Participation> participantParticipation;
     private Participation waitingParticipation;
 
     private Project project;
@@ -119,11 +119,11 @@ public class ParticipationServiceImplTest {
                 .user(teacher)
                 .build();
 
-        participantParticipation = Participation.builder()
+        participantParticipation = Arrays.asList(Participation.builder()
                 .project(project)
                 .status(ParticipationStatus.PARTICIPANT)
                 .user(student)
-                .build();
+                .build());
 
         waitingParticipation = Participation.builder()
                 .project(project)
@@ -143,7 +143,7 @@ public class ParticipationServiceImplTest {
         dto.setStatus(ParticipationStatus.RESIGNED);
         dto.setProjectId(project.getId());
         participationService.changeStatus(dto.getStatus(), dto.getProjectId(), dto.getUsername());
-        verify(participationRepository, times(1)).delete(participantParticipation);
+        verify(participationRepository, times(1)).delete(participantParticipation.get(0));
         verify(publisher, times(1)).publishEvent(new CheckParticipantsAfterDeletedEvent(project.getId(), false));
     }
 
@@ -153,7 +153,7 @@ public class ParticipationServiceImplTest {
         auths.add(new SimpleGrantedAuthority("TEACHER"));
         auths.add(new SimpleGrantedAuthority("EMPLOYER"));
         when(authentication.getName()).thenReturn(teacher.getUsername());
-        when(participationRepository.findByUser_EmailAndProject_Id(teacher.getUsername(), project.getId())).thenReturn(managerParticipation);
+        when(participationRepository.findByUser_EmailAndProject_Id(teacher.getUsername(), project.getId())).thenReturn(Arrays.asList(managerParticipation));
         when(authentication.getAuthorities()).thenReturn(auths);
         ParticipationChangeDto dto = new ParticipationChangeDto();
         dto.setStatus(ParticipationStatus.RESIGNED);

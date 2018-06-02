@@ -1,3 +1,4 @@
+var t
 app.controller('projectController', function($scope, $http, $cookies, $window, $location) {
 	$scope.teachers = []
 	$scope.projects = []
@@ -21,6 +22,32 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 			return "Zgłoszony"
 		if (status.toUpperCase() == "CANCELED")
 			return "Anulowany"
+	}
+	$scope.participationStatusesToString = function(pstatuses) {
+		var ret = "";
+		if (pstatuses != undefined)
+			for (i = 0; i < pstatuses.length; i++)
+				ret += (ret == "" ? "" : ", ") + participationStatusToString(pstatuses[i])
+				
+		return ret
+	}
+	
+	function participationStatusToString(pstatus) {
+		pstatus = pstatus.status
+		if (pstatus == undefined)
+			return "Trwa ładowanie..."
+		if (pstatus.toUpperCase() == "GRADUATE_WORK")
+			return "Praca dyplomowa"
+		if (pstatus.toUpperCase() == "PARTICIPANT")
+			return "Uczestnik"
+		if (pstatus.toUpperCase() == "OWNER")
+			return "Właściciel"
+		if (pstatus.toUpperCase() == "MANAGER")
+			return "Opiekun"
+		if (pstatus.toUpperCase() == "PENDING_INVITATION")
+			return "Oczekuje zaproszenie"
+		if (pstatus.toUpperCase() == "WAITING_FOR_ACCEPTANCE")
+			return "Oczekuje na przyjęcie"
 	}
 	
 	$scope.getTeachers = function(typed) {
@@ -113,6 +140,22 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
     		});
 	}
 	
+	function getMyProjectsHref(page, statuses = undefined) {
+		href = "/?page=" + page
+		if (statuses != undefined)
+		{
+			if (Array.isArray(statuses))
+				for (i = 0; i < statuses.length; i++)
+					href += "&status=" + statuses[i]
+			else
+				href += "&status=" + statuses
+		}
+		
+		href += "#my-projects"
+			
+		return href
+	}
+	
 	function getSearchProjectsHref(query, page, minEcts, minPay, onlyGradWork, statuses = undefined) {
 		if (page == undefined)
 			page = 0
@@ -120,7 +163,7 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 			query = ""
 		if (onlyGradWork == undefined)
 			onlyGradWork = false
-		href = "?page=" + page + "&query=" + encodeURIComponent(query)
+		href = "/?page=" + page + "&query=" + encodeURIComponent(query)
 		if (statuses != undefined)
 		{
 			if (Array.isArray(statuses))
@@ -168,38 +211,115 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 				$scope.params['only-grad-work'],
 				$scope.params.status)
 	}
-	
-	if ($scope.isLogged() && $scope.isPage($scope.pages.projectSearchPanel)) {
-		if (!$scope.params.query)
-			$scope.params.query = ""
-				
-		var href = "/project/find/20/" + $scope.params.page + "?query=" + $scope.params.query
-
-		if ($scope.params.status != undefined)
-		{
-			if (Array.isArray($scope.params.status))
-				for (i = 0; i < $scope.params.status.length; i++)
-					href += "&status=" + $scope.params.status[i]
-			else
-				href += "&status=" + $scope.params.status
+		
+	$scope.filterProjects = function() {
+		var statuses = []
+		if ($scope.projectSearchCreated)
+			statuses.push("CREATED");
+		if ($scope.projectSearchWaiting)
+			statuses.push("WAITING_FOR_STUDENTS");
+		if ($scope.projectSearchAllStarted) {
+			statuses.push("STARTED");
+			statuses.push("SUSPENDED_MISSING_TEACHER");
+			statuses.push("SUSPENDED_MISSING_PARTICIPANTS");
+			statuses.push("OVERDUE");
 		}
-		if ($scope.params['min-ects'] != undefined)
-			href += "&min-ects=" + $scope.params['min-ects']
-		if ($scope.params['min-pay'] != undefined)
-			href += "&min-pay=" + $scope.params['min-pay']
-		if ($scope.params['only-grad-work'] != undefined)
-			href += "&only-grad-work=" + $scope.params['only-grad-work']
+		if ($scope.projectSearchStarted)
+			statuses.push("STARTED");
+		if ($scope.projectSearchMissingTeacher)
+			statuses.push("SUSPENDED_MISSING_TEACHER");
+		if ($scope.projectSearchMissingParticipants)
+			statuses.push("SUSPENDED_MISSING_PARTICIPANTS");
+		if ($scope.projectSearchOverdue)
+			statuses.push("OVERDUE");
+		if ($scope.projectSearchFinished)
+			statuses.push("FINISHED");
+		if ($scope.projectSearchCanceled)
+			statuses.push("CANCELED");
+		if ($scope.projectSearchReported)
+			statuses.push("SUSPENDED_REPORTED");
+
+		if ($scope.isPage($scope.pages.projectSearchPanel))
+			$window.location.href = getSearchProjectsHref(
+					$scope.params.query,
+					$scope.params.page,
+					$scope.projectSearchECTS,
+					$scope.projectSearchMinPay,
+					$scope.projectSearchGradWorkOnly,
+					statuses)
+		
+		else if ($scope.isPage($scope.pages.myProjects))
+			$window.location.href = getMyProjectsHref(
+					$scope.params.page,
+					statuses)
+	}
+
+	if ($scope.isLogged() && (
+			$scope.isPage($scope.pages.projectSearchPanel) ||
+			$scope.isPage($scope.pages.myProjects))) {
+		if (!$scope.params.page)
+			$scope.params.page = 0
+		
+		var href
+		if ($scope.isPage($scope.pages.projectSearchPanel)) {
+			if (!$scope.params.query)
+				$scope.params.query = ""
+					
+			href = "/project/find/20/" + $scope.params.page + "?query=" + $scope.params.query
+
+			if ($scope.params.status != undefined)
+			{
+				if (Array.isArray($scope.params.status))
+					for (i = 0; i < $scope.params.status.length; i++)
+						href += "&status=" + $scope.params.status[i]
+				else
+					href += "&status=" + $scope.params.status
+			}
+			if ($scope.params['min-ects'] != undefined)
+				href += "&min-ects=" + $scope.params['min-ects']
+			if ($scope.params['min-pay'] != undefined)
+				href += "&min-pay=" + $scope.params['min-pay']
+			if ($scope.params['only-grad-work'] != undefined)
+				href += "&only-grad-work=" + $scope.params['only-grad-work']
+		}
+		else {
+			href = "/project/my/20/" + $scope.params.page
+
+			if ($scope.params.status != undefined)
+			{
+				if (Array.isArray($scope.params.status))
+					for (i = 0; i < $scope.params.status.length; i++)
+						href += (i == 0 ? "?" : "&") + "status=" + $scope.params.status[i]
+				else
+					href += "?status=" + $scope.params.status
+			}			
+		}
 
 		var response = $http.get(href)
 		response.then(
 		    	function(response) {
 					$scope.projects = response.data
+					
+					var projectsById = {}
+					for (i = 0; i < $scope.projects.length; i++)
+						projectsById["_" + $scope.projects[i].id] = $scope.projects[i]
+					
+					t = projectsById
+					if ($scope.isPage($scope.pages.myProjects))
+						for (i = 0; i < $scope.projects.length; i++)
+						{
+							$http.get("/participation/project/" + $scope.projects[i].id + "/user/" + $scope.context.user.email)
+								.then(function(response) {
+									if (response.data.length > 0)
+										projectsById["_" + response.data[0].project.id].participationStatus = response.data
+								})
+						}
 		    	},
 		    	function(response){
 		    		alert("Wystąpił błąd podczas pobierania projektów.")
 	    		});
-		
 
+		
 		if ($scope.params.status != undefined)
 		{
 			if (!Array.isArray($scope.params.status))
@@ -210,14 +330,22 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 					$scope.projectSearchCreated = true
 				if ($scope.params.status[i].toUpperCase() == "WAITING_FOR_STUDENTS")
 					$scope.projectSearchWaiting = true
-				if ($scope.params.status[i].toUpperCase() == "STARTED")
-					$scope.projectSearchStarted = true
-				if ($scope.params.status[i].toUpperCase() == "SUSPENDED_MISSING_TEACHER")
-					$scope.projectSearchStarted = true
-				if ($scope.params.status[i].toUpperCase() == "SUSPENDED_MISSING_PARTICIPANTS")
-					$scope.projectSearchStarted = true
-				if ($scope.params.status[i].toUpperCase() == "OVERDUE")
-					$scope.projectSearchStarted = true
+				if ($scope.params.status[i].toUpperCase() == "STARTED") {
+					$scope.projectSearchAllStarted = $scope.isPage($scope.pages.projectSearchPanel)
+					$scope.projectSearchStarted = $scope.isPage($scope.pages.myProjects)
+				}
+				if ($scope.params.status[i].toUpperCase() == "SUSPENDED_MISSING_TEACHER") {
+					$scope.projectSearchAllStarted = $scope.isPage($scope.pages.projectSearchPanel)
+					$scope.projectSearchMissingTeacher = $scope.isPage($scope.pages.myProjects)
+				}
+				if ($scope.params.status[i].toUpperCase() == "SUSPENDED_MISSING_PARTICIPANTS") {
+					$scope.projectSearchAllStarted = $scope.isPage($scope.pages.projectSearchPanel)
+					$scope.projectSearchMissingParticipants= $scope.isPage($scope.pages.myProjects)
+				}
+				if ($scope.params.status[i].toUpperCase() == "OVERDUE") {
+					$scope.projectSearchAllStarted = $scope.isPage($scope.pages.projectSearchPanel)
+					$scope.projectSearchOverdue = $scope.isPage($scope.pages.myProjects)
+				}
 				if ($scope.params.status[i].toUpperCase() == "FINISHED")
 					$scope.projectSearchFinished = true
 				if ($scope.params.status[i].toUpperCase() == "CANCELED")
@@ -227,37 +355,20 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 			}
 		}
 
-		$scope.projectSearchQuery = $scope.params.query
+		$scope.projectSearchQuery = decodeURIComponent($scope.params.query)
 		$scope.projectSearchECTS = parseInt($scope.params['min-ects'])
 		$scope.projectSearchMinPay = parseInt($scope.params['min-pay'])
 		$scope.projectSearchGradWorkOnly = $scope.params['only-grad-work'] == "true"
 	}
-	
-	$scope.filterProjects = function() {
-		var statuses = []
-		if ($scope.projectSearchCreated)
-			statuses.push("CREATED");
-		if ($scope.projectSearchWaiting)
-			statuses.push("WAITING_FOR_STUDENTS");
-		if ($scope.projectSearchStarted) {
-			statuses.push("STARTED");
-			statuses.push("SUSPENDED_MISSING_TEACHER");
-			statuses.push("SUSPENDED_MISSING_PARTICIPANTS");
-			statuses.push("OVERDUE");
-		}
-		if ($scope.projectSearchFinished)
-			statuses.push("FINISHED");
-		if ($scope.projectSearchCanceled)
-			statuses.push("CANCELED");
-		if ($scope.projectSearchReported)
-			statuses.push("SUSPENDED_REPORTED");
 
-		$window.location.href = getSearchProjectsHref(
-				$scope.params.query,
-				$scope.params.page,
-				$scope.projectSearchECTS,
-				$scope.projectSearchMinPay,
-				$scope.projectSearchGradWorkOnly,
-				statuses)
+	$scope.hasParticipationStatus = function(participations, status) {
+		if (participations == undefined)
+			return false;
+			
+		for (var i = 0; i < participations.length; i++) {
+			if (participations[i].status == status)
+				return true;
+		}
+		return false;
 	}
 })

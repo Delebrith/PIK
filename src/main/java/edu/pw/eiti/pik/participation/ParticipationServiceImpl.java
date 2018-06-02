@@ -65,17 +65,19 @@ class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public void deleteParticipation(String username, Long projectId, Boolean isTeacher) {
-        Participation participation = participationRepository
+        List<Participation> participation = participationRepository
                                         .findByUser_EmailAndProject_Id(username, projectId);
-        if (participation == null)
+        if (participation.isEmpty())
             throw new ParticipationNotFoundException();
-        else if (participation.getStatus().equals(ParticipationStatus.PARTICIPANT) || participation.getStatus().equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)
-            || participation.getStatus().equals(ParticipationStatus.PENDING_INVITATION) || participation.getStatus().equals(ParticipationStatus.MANAGER)) {
-            participationRepository.delete(participation);
-            publisher.publishEvent(new CheckParticipantsAfterDeletedEvent(projectId, isTeacher));
-        }
-        else if (participation.getStatus().equals(ParticipationStatus.OWNER)) {
-            publisher.publishEvent(new CancelProjectEvent(projectId));
+        for (Participation p : participation) {
+	        if (p.getStatus().equals(ParticipationStatus.PARTICIPANT) || p.getStatus().equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)
+	            || p.getStatus().equals(ParticipationStatus.PENDING_INVITATION) || p.getStatus().equals(ParticipationStatus.MANAGER)) {
+	            participationRepository.delete(p);
+	            publisher.publishEvent(new CheckParticipantsAfterDeletedEvent(projectId, isTeacher));
+	        }
+	        else if (p.getStatus().equals(ParticipationStatus.OWNER)) {
+	            publisher.publishEvent(new CancelProjectEvent(projectId));
+	        }
         }
     }
 
@@ -88,25 +90,31 @@ class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public void acceptInvitation(String username, Long projectId, Boolean isTeacher) {
-        Participation participation = participationRepository.findByUser_EmailAndProject_Id(username, projectId);
-        if (participation == null || participation.getStatus() != ParticipationStatus.PENDING_INVITATION)
+        List<Participation> participation = participationRepository.findByUser_EmailAndProject_Id(username, projectId);
+        if (participation.isEmpty() || participation.get(0).getStatus() != ParticipationStatus.PENDING_INVITATION)
             throw new ParticipationNotFoundException();
         if (!isTeacher)
-            participation.setStatus(ParticipationStatus.PARTICIPANT);
+            participation.get(0).setStatus(ParticipationStatus.PARTICIPANT);
         else
-            participation.setStatus(ParticipationStatus.MANAGER);
-        participationRepository.save(participation);
+            participation.get(0).setStatus(ParticipationStatus.MANAGER);
+        participationRepository.saveAll(participation);
     }
 
     @Override
     public void inviteUser(String inviterUsername, String invitedUsername, Long projectId) {
-        Participation inviterParticipation = participationRepository
+        List<Participation> inviterParticipation = participationRepository
                                             .findByUser_EmailAndProject_Id(inviterUsername, projectId);
-        if (inviterParticipation == null)
+        if (inviterParticipation.isEmpty())
             throw new ParticipationNotFoundException();
-        else if (!inviterParticipation.getStatus().equals(ParticipationStatus.OWNER) &&
-                 !inviterParticipation.getStatus().equals(ParticipationStatus.MANAGER))
+        
+        boolean isAuthorizedToAccept = false;
+        for (Participation p : inviterParticipation)
+        	if (p.getStatus().equals(ParticipationStatus.MANAGER) ||
+                 p.getStatus().equals(ParticipationStatus.OWNER))
+        		isAuthorizedToAccept = true;
+        if (!isAuthorizedToAccept)
             throw new WrongParticipationStatusException();
+        
         else {
             Participation participation = new Participation();
             participation.setStatus(ParticipationStatus.PENDING_INVITATION);
@@ -116,21 +124,27 @@ class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public void acceptParticipant(String authUsername, String acceptedUsername, Long projectId, Boolean isTeacher) {
-        Participation authParticipation = participationRepository.findByUser_EmailAndProject_Id(authUsername, projectId);
+        List<Participation> authParticipation = participationRepository.findByUser_EmailAndProject_Id(authUsername, projectId);
         if (authParticipation == null)
             throw new ParticipationNotFoundException();
-        else if (!authParticipation.getStatus().equals(ParticipationStatus.MANAGER) &&
-                 !authParticipation.getStatus().equals(ParticipationStatus.OWNER))
+        boolean isAuthorizedToAccept = false;
+        for (Participation p : authParticipation)
+        	if (p.getStatus().equals(ParticipationStatus.MANAGER) ||
+                 p.getStatus().equals(ParticipationStatus.OWNER))
+        		isAuthorizedToAccept = true;
+        if (!isAuthorizedToAccept)
             throw new WrongParticipationStatusException();
         else {
-            Participation acceptedParticipation = participationRepository.findByUser_EmailAndProject_Id(acceptedUsername, projectId);
+            List<Participation> acceptedParticipation = participationRepository.findByUser_EmailAndProject_Id(acceptedUsername, projectId);
             if (acceptedParticipation == null)
                 throw new ParticipationNotFoundException();
-            else if (!isTeacher)
-                acceptedParticipation.setStatus(ParticipationStatus.PARTICIPANT);
-            else
-                acceptedParticipation.setStatus(ParticipationStatus.MANAGER);
-            participationRepository.save(acceptedParticipation);
+            for (Participation p : acceptedParticipation) {
+	            if (!isTeacher)
+	                p.setStatus(ParticipationStatus.PARTICIPANT);
+	            else
+	                p.setStatus(ParticipationStatus.MANAGER);
+            }
+            participationRepository.saveAll(acceptedParticipation);
         }
     }
 
@@ -144,4 +158,9 @@ class ParticipationServiceImpl implements ParticipationService {
         Participation savedParticipation = participationRepository.save(participation);
         publisher.publishEvent(new AddProjectToESEvent(savedParticipation.getProject()));
     }
+    
+    @Override
+	public List<Participation> findByUser_EmailAndProject_Id(String username, Long projectId) {
+    	return participationRepository.findByUser_EmailAndProject_Id(username, projectId);
+	}
 }
