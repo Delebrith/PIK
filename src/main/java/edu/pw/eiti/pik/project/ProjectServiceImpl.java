@@ -207,6 +207,11 @@ public class ProjectServiceImpl implements ProjectService {
         projectESRepository.save(project);
     }
 
+    @Override
+    public Optional<Project> findProject(Long id) {
+        return projectRepository.findById(id);
+    }
+
     private Boolean checkMinimumPay(Integer minimumNew, Integer maximumNew, Integer maximumProject) {
         return minimumNew >= 0
                 && (maximumNew != null && maximumNew >= minimumNew) || (maximumNew == null && maximumProject >= minimumNew);
