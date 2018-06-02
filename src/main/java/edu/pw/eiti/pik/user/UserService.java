@@ -21,4 +21,5 @@ interface UserService {
     Optional<User> findUser(Long userId);
     User updateUser(User user);
     List<Authority> getAuthorities();
+    void deleteUser(Long id);
 }
