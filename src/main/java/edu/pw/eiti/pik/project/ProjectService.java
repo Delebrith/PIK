@@ -6,6 +6,7 @@ import edu.pw.eiti.pik.base.event.CancelProjectEvent;
 import edu.pw.eiti.pik.base.event.CheckParticipantsAfterDeletedEvent;
 import edu.pw.eiti.pik.participation.ParticipationStatus;
 
+import edu.pw.eiti.pik.base.event.CheckProjectStatusEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,8 @@ public interface ProjectService {
 	Page<Project> findProjectsWhereStatusInStatuses(List<ProjectStatus> statuses,
 			int minEcts, int minPay, boolean onlyGraduateWork,
 			Pageable pageable);
+	@EventListener
+    void checkProjectStatus(CheckProjectStatusEvent event);
     void changeSettings(Long projectId, String name, String description, Integer numOfParticipants, Integer minimumPay,
                         Integer maximumPay, Integer ects, Boolean isGraduateWork);
 }

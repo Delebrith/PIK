@@ -60,6 +60,7 @@ class ParticipationServiceImpl implements ParticipationService {
             if (!authorities.contains(Authorities.STUDENT.toString()) && username != null)
                 inviteUser(authUsername, username, projectId);
         }
+        publisher.publishEvent(new CheckProjectStatusEvent(projectId));
     }
 
     @Override

@@ -88,6 +88,7 @@ public class ProjectServiceImpl implements ProjectService {
             else if (project.get().getNumberOfParticipants() > project.get().getParticipations().stream().filter(p -> p.getStatus().equals(ParticipationStatus.PARTICIPANT)).count())
                 project.get().setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
             projectRepository.save(project.get());
+            projectESRepository.save(project.get());
         }
     }
 
@@ -112,7 +113,30 @@ public class ProjectServiceImpl implements ProjectService {
         else {
             project.get().setStatus(ProjectStatus.CANCELED);
             projectRepository.save(project.get());
+            projectESRepository.save(project.get());
         }
+    }
+
+    @Override
+    @EventListener
+    public void checkProjectStatus(CheckProjectStatusEvent event) {
+        Project project = projectRepository.findById(event.getProjectId()).orElseThrow(ProjectNotFoundException::new);
+        if ((project.getStatus().equals(ProjectStatus.WAITING_FOR_STUDENTS) || project.getStatus().equals(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS))
+            && project.getNumberOfParticipants() <= project.getParticipations().stream().filter(p -> p.getStatus().equals(ParticipationStatus.PARTICIPANT)).count()) {
+            if (project.getParticipations().stream().noneMatch(p -> p.getStatus().equals(ParticipationStatus.MANAGER)))
+                project.setStatus(ProjectStatus.SUSPENDED_MISSING_TEACHER);
+            else
+                project.setStatus(ProjectStatus.STARTED);
+        }
+        else if (project.getStatus().equals(ProjectStatus.SUSPENDED_MISSING_TEACHER)
+                && project.getParticipations().stream().anyMatch(p -> p.getStatus().equals(ParticipationStatus.MANAGER))) {
+            if (project.getNumberOfParticipants() > project.getParticipations().stream().filter(p -> p.getStatus().equals(ParticipationStatus.PARTICIPANT)).count())
+                project.setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
+            else
+                project.setStatus(ProjectStatus.STARTED);
+        }
+        projectRepository.save(project);
+        projectESRepository.save(project);
     }
 
     @Override
