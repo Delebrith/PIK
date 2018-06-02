@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
     List<Participation> findByProject(Project project);
-    Participation findByUser_EmailAndProject_Id(String username, Long projectId);
+    List<Participation> findByUser_EmailAndProject_Id(String username, Long projectId);
 }

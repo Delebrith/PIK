@@ -14,6 +14,7 @@ public interface ProjectMapper {
     @Mapping(target = "id", source = "id", ignore = true)
     Project fromDto(ProjectDto dto);
 
+    @Mapping(target = "id", expression="java(entity.getId().toString())")
     ProjectDto toDto(Project entity);
 }
 

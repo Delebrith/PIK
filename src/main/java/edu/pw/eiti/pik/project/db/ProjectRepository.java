@@ -16,9 +16,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findByStatus(ProjectStatus status, Pageable pageable);
 
     @Query("select p from Project p where p = " +
-            "some(select part.project from Participation part where part.user =" +
-            "some(select u from user_ u where u.email = :email) )")
-    Page<Project> findByUser(@Param("email") String email, Pageable pageable);
+            "some(select part.project from Participation part where part.user = " +
+            "some(select u from user_ u where u.email = :email) ) and " +
+            "p.status in :statuses")
+    Page<Project> findByUser(@Param("email") String email, @Param(value="statuses") List<ProjectStatus> statuses, Pageable pageable);
 
     @Query("Select p from Project p where"
     		+ " p.status in :statuses and"

@@ -1,8 +1,9 @@
 package edu.pw.eiti.pik.participation;
 
-import edu.pw.eiti.pik.base.event.InviteTeacherEvent;
-import edu.pw.eiti.pik.base.event.ProjectCreationEvent;
 import edu.pw.eiti.pik.base.event.UserAndProjectToParticipationEvent;
+
+import java.util.List;
+
 import org.springframework.context.event.EventListener;
 
 public interface ParticipationService {
@@ -21,4 +22,6 @@ public interface ParticipationService {
 
     @EventListener
     void addNewParticipation(UserAndProjectToParticipationEvent event);
+
+	List<Participation> findByUser_EmailAndProject_Id(String username, Long projectId);
 }

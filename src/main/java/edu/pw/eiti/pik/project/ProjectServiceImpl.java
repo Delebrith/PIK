@@ -233,12 +233,10 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
     @Override
-    public Page<Project> findMyProjects(Integer pageNumber, Integer pageSize) {
+    public Page<Project> findMyProjects(Integer pageNumber, Integer pageSize, List<ProjectStatus> statuses) {
         final String email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Principal::getName)
                 .orElseThrow(IllegalStateException::new);
-        return projectRepository.findByUser(email, PageRequest.of(pageNumber, pageSize));
+        return projectRepository.findByUser(email, statuses, PageRequest.of(pageNumber, pageSize));
     }
-
-
 }
