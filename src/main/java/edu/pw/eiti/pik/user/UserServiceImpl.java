@@ -154,6 +154,13 @@ class UserServiceImpl implements UserService, UserDetailsService {
         return authorityRepository.findAll();
     }
 
+    @Override
+    public void deleteUser(Long id) {
+        User deleted = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        userRepository.delete(deleted);
+        userESRepository.delete(deleted);
+    }
+
     private String generatePassword() {
         return RandomStringUtils.randomAlphanumeric(10);
     }
