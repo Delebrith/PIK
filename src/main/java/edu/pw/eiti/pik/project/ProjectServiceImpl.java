@@ -231,7 +231,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Participation> participations = project.getParticipations().stream()
-                .filter(x -> x.getStatus().name().equals(username)).collect(Collectors.toList());
+                .filter(x -> x.getUser().getEmail().equals(username)).collect(Collectors.toList());
 
         switch (projectStatus) {
             case SUSPENDED_REPORTED:
