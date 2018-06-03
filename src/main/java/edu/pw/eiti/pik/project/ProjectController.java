@@ -117,7 +117,7 @@ public class ProjectController
 			statuses.addAll(DEFAULT_PROJECT_STATUSES);
 		}
     	
-        return projectService.findMyProjects(pageSize, pageNumber, statuses)
+        return projectService.findMyProjects(pageNumber, pageSize, statuses)
                 .stream().map(projectMapper::toDto).collect(Collectors.toList());
     }
 
