@@ -96,12 +96,10 @@ public class ProjectServiceImpl implements ProjectService {
     @EventListener
     public void addProjectToParticipation(AddProjectToParticipationEvent event) {
         Participation participation = event.getParticipation();
-        Optional<Project> project = projectRepository.findById(event.getProjectId());
-        if (project.isPresent()) {
-            participation.setProject(project.get());
-            project.get().getParticipations().add(participation);
-            publisher.publishEvent(new AuthenticatedParticipationCreationEvent(participation));
-        }
+        Project project = projectRepository.findById(event.getProjectId()).orElseThrow(ProjectNotFoundException::new);
+        participation.setProject(project);
+        project.getParticipations().add(participation);
+        publisher.publishEvent(new AuthenticatedParticipationCreationEvent(participation));
     }
 
     @Override
@@ -134,6 +132,8 @@ public class ProjectServiceImpl implements ProjectService {
                 project.setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
             else
                 project.setStatus(ProjectStatus.STARTED);
+        } else {
+            return;
         }
         projectRepository.save(project);
         projectESRepository.save(project);
@@ -144,7 +144,7 @@ public class ProjectServiceImpl implements ProjectService {
                                Integer minimumPay, Integer maximumPay, Integer ects, Boolean isGraduateWork) {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Participation> participations = project.getParticipations().stream().filter(x -> x.getStatus().name().equals(username)).collect(Collectors.toList());
+        List<Participation> participations = project.getParticipations().stream().filter(x -> x.getUser().getEmail().equals(username)).collect(Collectors.toList());
         if (name != null) {
             if (!name.isEmpty())
                 project.setName(name);

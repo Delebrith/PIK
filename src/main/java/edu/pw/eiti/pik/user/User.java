@@ -1,5 +1,6 @@
 package edu.pw.eiti.pik.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.pw.eiti.pik.participation.Participation;
 import lombok.*;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @Entity(name = "user_")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Document(indexName="users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
 
     @Id

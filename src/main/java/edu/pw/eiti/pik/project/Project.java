@@ -1,5 +1,6 @@
 package edu.pw.eiti.pik.project;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.pw.eiti.pik.participation.Participation;
 import lombok.*;
 
@@ -22,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Document(indexName="projects")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Project {
     @Id
     @org.springframework.data.annotation.Id

@@ -1,5 +1,6 @@
 package edu.pw.eiti.pik.participation;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.pw.eiti.pik.project.Project;
 import edu.pw.eiti.pik.user.User;
 import lombok.*;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Participation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

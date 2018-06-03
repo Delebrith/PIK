@@ -422,6 +422,7 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 						"/participation/project/" + $scope.managedProject.id + "/user/" + $scope.context.user.email
 						).then(function(response) {
 							$scope.managedProject.participations = response.data
+                            $scope.modifiedIsGraduateWord = $scope.managedProject.isGraduateWork
 						},function(response) {
 							$scope.managedProject.participations = []
 						})
@@ -447,5 +448,70 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 		
 		return statuses
 	}
-	 
-})
+
+	$scope.changeProject = function() {
+        var changeProjectUrl = "/project/change/" + $scope.managedProject.id + "?";
+        if ($scope.modifiedName)
+            changeProjectUrl += "name=" + $scope.modifiedName + "&";
+            $scope.modifiedName = undefined;
+        if ($scope.modifiedDescription)
+            changeProjectUrl += "description=" + $scope.modifiedDescription + "&";
+            $scope.modifiedDescription = undefined;
+        if ($scope.modifiedNumOfParticipants)
+            changeProjectUrl += "numOfParticipants=" + $scope.modifiedNumOfParticipants + "&";
+            $scope.modifiedNumOfParticipants = undefined;
+        if ($scope.modifiedMinimumPay)
+            changeProjectUrl += "minimumPay=" + $scope.modifiedMinimumPay + "&";
+            $scope.modifiedMinimumPay = undefined;
+        if ($scope.modifiedMaximumPay)
+            changeProjectUrl += "maximumPay=" + $scope.modifiedMaximumPay + "&";
+            $scope.modifiedMaximumPay = undefined;
+        if ($scope.modifiedEcts)
+            changeProjectUrl += "ects=" + $scope.modifiedEcts + "&";
+            $scope.modifiedEcts = undefined;
+        if ($scope.modifiedIsGraduateWork)
+            changeProjectUrl += "isGraduateWork=" + $scope.modifiedIsGraduateWork + "&";
+            $scope.modifiedIsGraduateWork = undefined;
+        var response = $http.post(changeProjectUrl)
+        response.then(
+            function (response) {
+                alert("Zmodyfikowano projekt")
+                prepareProjectToManage()
+            }, function () {
+                alert("Modyfikacja projektu nie powiodła się")
+            }
+        );
+    }
+
+    $scope.changeStatus = function(id, status) {
+        var projectChangeUrl = "/project/" + id + "/changeStatus" + "?status=" + status;
+        var response = $http.post(projectChangeUrl)
+        response.then(
+            function (response) {
+                alert("Zmodyfikowano status")
+                prepareProjectToManage()
+            }, function (response) {
+                alert("Modyfikacja statusu nie powiodła się")
+            }
+        );
+	}
+
+	$scope.changeParticipation = function (status, projectId, username) {
+        var participationChangeUrl = "/participation/change"
+        var requestBody = {
+            status: status,
+            projectId: projectId,
+            username: username
+        }
+        var response = $http.post(participationChangeUrl, requestBody)
+        response.then(
+            function (response) {
+                alert("Zmieniono status uczestnictwa")
+                prepareProjectToManage()
+            }, function (response) {
+                alert("Zmiana statusu uczestnictwa nie powiodła się")
+            }
+        );
+    }
+
+});
