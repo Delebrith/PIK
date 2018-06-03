@@ -136,7 +136,7 @@ class ParticipationServiceImpl implements ParticipationService {
             throw new WrongParticipationStatusException();
         else {
             List<Participation> acceptedParticipation = participationRepository.findByUser_EmailAndProject_Id(acceptedUsername, projectId);
-            if (acceptedParticipation == null)
+            if (acceptedParticipation == null || acceptedParticipation.isEmpty())
                 throw new ParticipationNotFoundException();
             for (Participation p : acceptedParticipation) {
 	            if (!isTeacher)
@@ -145,6 +145,8 @@ class ParticipationServiceImpl implements ParticipationService {
 	                p.setStatus(ParticipationStatus.MANAGER);
             }
             participationRepository.saveAll(acceptedParticipation);
+            publisher.publishEvent(new AddProjectToESEvent(acceptedParticipation.get(0).getProject()));
+
         }
     }
 
@@ -167,5 +169,11 @@ class ParticipationServiceImpl implements ParticipationService {
     @Override
     public List<Participation> findByProject(Long projectId) {
         return participationRepository.findByProjectId(projectId);
+    }
+
+    @EventListener
+    public void handleEvent(SaveParticipationEvent event){
+        Participation savedParticipation = participationRepository.save(event.getParticipation());
+        publisher.publishEvent(new AddProjectToESEvent(savedParticipation.getProject()));
     }
 }

@@ -1,8 +1,7 @@
 package edu.pw.eiti.pik.user;
 
-import edu.pw.eiti.pik.base.event.FindUserEvent;
-import edu.pw.eiti.pik.base.event.UserAndProjectToParticipationEvent;
-import edu.pw.eiti.pik.base.event.SignUpEvent;
+import edu.pw.eiti.pik.base.event.*;
+import edu.pw.eiti.pik.participation.ParticipationStatus;
 import edu.pw.eiti.pik.participation.ParticipationStatus;
 import edu.pw.eiti.pik.user.db.AuthorityRepository;
 import edu.pw.eiti.pik.user.db.UserRepository;
@@ -94,15 +93,22 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @EventListener
     public void addUserToProject(FindUserEvent event) {
         User user;
-        if (event.getUsername() == null)
+        if (event.getUsername() == null) {
             user = getAuthenticatedUser();
+            if (!getAuthenticatedUser().getAuthorities().stream()
+                    .filter(a -> a.getName().equals(Authorities.TEACHER))
+                    .collect(Collectors.toList()).isEmpty()){
+                publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, event.getStatus()));
+                publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, ParticipationStatus.MANAGER));
+            }
+        }
         else {
             user = findByEmail(event.getUsername()).orElseThrow(UserNotFoundException::new);
             if (!user.getAuthorities().stream().map(Authority::getName)
                     .collect(Collectors.toList()).contains(Authorities.TEACHER))
                 throw new InvalidAuthorityException();
+            publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, event.getStatus()));
         }
-        publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, event.getStatus()));
 
     }
 
@@ -168,6 +174,13 @@ class UserServiceImpl implements UserService, UserDetailsService {
         User user = getAuthenticatedUser();
         publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user,
                 ParticipationStatus.WAITING_FOR_ACCEPTANCE));
+    }
+
+    @EventListener
+    public void handleEvent(AuthenticatedParticipationCreationEvent event){
+        User user = getAuthenticatedUser();
+        event.getParticipation().setUser(user);
+        publisher.publishEvent(new SaveParticipationEvent(event.getParticipation()));
     }
 
     private String generatePassword() {
