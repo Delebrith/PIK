@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/user")
@@ -29,6 +30,10 @@ class UserController {
         this.userService = userNotFound;
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.registerCustomEditor(Authorities.class, new AuthoritiesConverter());
+    }
 
     @ApiOperation(value = "Log in as existing user", notes = "Logs in existing user")
     @ApiResponses({
@@ -75,25 +80,21 @@ class UserController {
     }
 
 
-    @ApiOperation(value = "Get users by name who have given role (up to number)")
+    @ApiOperation(value = "Get users by name who have given roles (up to number)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Always")
     })
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(path = "/user/filterAndFind/{pageSize}/{pageNumber}")
-    List<UserDto> getUsersByRolesAndName(
+    List<UserDto> filterAndFindByNameAndRoles(
             @RequestParam(required = false) String name,
             @PathVariable Integer pageNumber,
             @PathVariable Integer pageSize,
-            @RequestParam(required = false) Boolean student,
-            @RequestParam(required = false) Boolean teacher,
-            @RequestParam(required = false) Boolean thirdParty,
-            @RequestParam(required = false) Boolean authority,
-            @RequestParam(required = false) Boolean employer,
-            @RequestParam(required = false) Boolean admin
+            @RequestParam(required = false) List<Authorities> authorities
             ) {
-        List<Authorities> authorities = getAuhorityList(student, teacher, thirdParty,
-                authority, employer, admin);
+        if (authorities == null) authorities = userService.getAuthorities().stream()
+                .map(Authority::getName).collect(Collectors.toList());
+        if (name != null)
+        	name = name.toLowerCase();
         Page<User> queryResult;
         if (name != null && !name.isEmpty()) {
             queryResult = userService.findByNameAndAuthorityList(
@@ -151,8 +152,8 @@ class UserController {
             @ApiResponse(code = 403, message = "If user did not log in previously", response = ErrorDto.class),
             @ApiResponse(code = 404, message = "If user was not found", response = ErrorDto.class)
     })
-    @GetMapping(path = "/user/{id}/find")
-    UserDto findUser(@PathVariable long userId) {
+    @GetMapping(path = "/user/{userId}/find")
+    UserDto findUser(@PathVariable Long userId) {
         return userMapper.toDto(userService.findUser(userId).orElseThrow(this::userNotFound));
     }
 
@@ -168,17 +169,6 @@ class UserController {
                 .map(userMapper::toDto).collect(Collectors.toList());
     }
 
-    private List<Authorities> getAuhorityList(Boolean student, Boolean teacher, Boolean thirdParty,
-                                              Boolean authority, Boolean employer, Boolean admin) {
-        List<Authorities> authorities = new ArrayList<>();
-        if (null != student && student) authorities.add(Authorities.STUDENT);
-        if (null != teacher && teacher) authorities.add(Authorities.TEACHER);
-        if (null != thirdParty && thirdParty) authorities.add(Authorities.THIRD_PARTY);
-        if (null != authority && authority) authorities.add(Authorities.AUTHORITY);
-        if (null != employer && employer) authorities.add(Authorities.EMPLOYER);
-        if (null != admin && admin) authorities.add(Authorities.ADMIN);
-        return authorities;
-    }
 
     private UserNotFoundException userNotFound() {
         return new UserNotFoundException();

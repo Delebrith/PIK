@@ -28,7 +28,7 @@
             <div class="row">
 
                 <div class="col-md-5 mx-auto">
-                    <div ng-if="isUserStudent() || isUserTeacher()" ng-controller="projectController">
+                    <div ng-if="isUserStudent() || isUserEmployer()" ng-controller="projectController">
                         <div class="card rounded-0 card-success" style="margin-top: 40px">
                             <div class="card-header">
                                 <h3 class="mb-0">Szukaj projektów</h3>
@@ -78,9 +78,12 @@
     	<ng-include ng-if="isLogged() && isPage(pages.projectSearchPanel)" src="'projectSearchPanel.html'"></ng-include>
     	<ng-include ng-if="isLogged() && isPage(pages.myProjects)" src="'myProjects.html'"></ng-include>
     	<ng-include ng-if="isLogged() && isPage(pages.projectManagementPanel)" src="'projectManagementPanel.html'"></ng-include>
-    
+        <ng-include ng-if="isLogged() && isPage(pages.userList)" src="'userList.html'"></ng-include>
+        <ng-include ng-if="isLogged() && isPage(pages.userForm)" src="'userForm.html'"></ng-include>
+        <ng-include ng-if="isLogged() && isPage(pages.userManagementPanel)" src="'userManagementPanel.html'"></ng-include>
+
         <ng-include ng-if="!isLogged()" src="'loginPanel.html'"></ng-include>
-        
+
     </div>
 
     <script>
@@ -89,6 +92,7 @@
     <script src="js/appController.js"></script>
     <script src="js/userController.js"></script>
     <script src="js/projectController.js"></script>
+    <script src="js/adminController.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

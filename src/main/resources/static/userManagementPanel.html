@@ -1,7 +1,7 @@
-<div id="projectManagementPanel" class="md-col-11">
+<div id="projectManagementPanel" class="md-col-11" ng-controller="adminController">
     <br>
     <h2>
-        Użytkownik #
+        Użytkownik {{ managedUser.id }}
         <!--user id-->
     </h2>
     <hr>
@@ -21,8 +21,7 @@
                     Nazwa użytkownika
                 </td>
                 <td>
-                    nazwa
-                    <!--username-->
+					{{ managedUser.name }}
                 </td>
                 <td>
                     <!--if pending-->
@@ -37,8 +36,7 @@
                     Email
                 </td>
                 <td>
-                    email@email.com
-                    <!--email-->
+                    {{ managedUser.email }}
                 </td>
                 <td>
                     <!--if pending-->
@@ -53,8 +51,7 @@
                     Numer telefonu
                 </td>
                 <td>
-                    123456789
-                    <!--phoneNo-->
+					{{ managedUser.phoneNo }}
                 </td>
                 <td>
                     <!--if pending-->
@@ -78,12 +75,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" class="form-control form-control-md rounded-0">
+                        <input type="text" class="form-control form-control-md rounded-0" ng-model="modifiedName">
                         <div class="invalid-feedback">Wprowadź nazwę!</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
-                        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                        <button type="button" class="btn btn-primary" ng-click="modifyUserName()" data-dismiss="modal">Zapisz zmiany</button>
                     </div>
                 </div>
             </div>
@@ -101,12 +98,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="number" class="form-control form-control-md rounded-0">
+                        <input type="email" class="form-control form-control-md rounded-0" ng-model="modifiedEmail">
                         <div class="invalid-feedback">Wprowadź email!</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
-                        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                        <button type="button" class="btn btn-primary" ng-click="modifyUserEmail()" data-dismiss="modal">Zapisz zmiany</button>
                     </div>
                 </div>
             </div>
@@ -124,15 +121,13 @@
                         </button>
                     </div>
                     <div class="modal-body">
-
-                        <label>Minimalna proponowana kwota</label>
-                        <input type="text" class="form-control form-control-md rounded-0">
+                        <input type="text" class="form-control form-control-md rounded-0" ng-model="modifiedPhoneNo">
                         <div class="invalid-feedback">Wprowadź numer!</div>
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
-                        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+                        <button type="button" class="btn btn-primary" ng-click="modifyUserPhoneNo()" data-dismiss="modal">Zapisz zmiany</button>
                     </div>
                 </div>
             </div>

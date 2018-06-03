@@ -1,4 +1,4 @@
-<div id="userFormPanel" ng-controller="userController">
+<div id="userFormPanel" ng-controller="adminController">
     <div class="row">
         <div class="col-md-10 mx-auto">
 
@@ -15,14 +15,14 @@
                         <div class="form-group col-md-10 mx-auto">
                             <label>Nazwa</label>
                             <input type="text" class="form-control form-control-md rounded-0"
-                             placeholder="Nazwa użytkownika">
+                             placeholder="Nazwa użytkownika" ng-model="created.name">
                             <div class="invalid-feedback">Wprowadź nazwę!</div>
                         </div>
 
                         <div class="form-group col-md-10 mx-auto">
                             <label>Email</label>
                             <input type="email" class="form-control form-control-md rounded-0"
-                                   placeholder="Adres email">
+                                   placeholder="Adres email" ng-model="created.email">
                             <div class="invalid-feedback">Wprowadź email!</div>
                         </div>
 
@@ -30,7 +30,7 @@
                         <div class="form-group col-md-10 mx-auto">
                             <label>Numer telefonu</label>
                             <input type="text" class="form-control form-control-md rounded-0"
-                                      placeholder="Numer telefonu" maxlength="12"></input>
+                                      placeholder="Numer telefonu" maxlength="12" ng-model="created.phoneNo"></input>
                         </div>
                         <br>
 
@@ -40,28 +40,26 @@
                             <br>
                             <div class="row mx-auto">
                                 <label class="mx-auto">
-                                    <input type="checkbox" autocomplete="off"> Student
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.STUDENT"> Student
                                 </label>
                                 <label class="mx-auto" >
-                                    <input type="checkbox" autocomplete="off"> Zleceniodawca
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.TEACHER"> Wykładowca
                                 </label>
                                 <label class="mx-auto" >
-                                    <input type="checkbox" autocomplete="off"> Wykładowca
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.AUTHORITY"> Moderator
                                 </label>
                                 <label class="mx-auto" >
-                                    <input type="checkbox" autocomplete="off"> Moderator
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.THIRD_PARTY"> Podmiot zewnętrzny
                                 </label>
                                 <label class="mx-auto" >
-                                    <input type="checkbox" autocomplete="off"> Podmiot zewnętrzny
-                                </label>
-                                <label class="mx-auto" >
-                                    <input type="checkbox" autocomplete="off"> Administrator
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.ADMIN"> Administrator
                                 </label>
                             </div>
                         </div>
 
                         <br>
-                        <button class="btn btn-outline-primary my-2 my-sm-0 float-right" id="btnSubmitUser">
+                        <button class="btn btn-outline-primary my-2 my-sm-0 float-right" id="btnSubmitUser" ng-click="submitUser()" 
+                        	ng-disabled="created == undefined || createdRoles == undefined">
                             Zatwierdź
                         </button>
                     </form>

@@ -122,7 +122,7 @@ class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Page<User> findByAuthorityList(List<Authorities> authorities, Pageable pageable) {
         List<Authority> authorityList = authorityRepository.findAllByNameIn(authorities);
-        List<User> users = userRepository.findAllByAuthoritiesIn(authorityList);
+        List<User> users = userRepository.findAllDistinctByAuthoritiesIn(authorityList);
         return new PageImpl<>(users, pageable, users.size());
     }
 
@@ -134,8 +134,10 @@ class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(password);
         publisher.publishEvent(new UserCreatedEvent(user.copy()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userESRepository.save(user);
-        return userRepository.save(user);
+        User added = userRepository.save(user);
+        userESRepository.save(added);
+        return added;
+
     }
 
     @Override
