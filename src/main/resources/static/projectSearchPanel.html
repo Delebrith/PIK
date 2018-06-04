@@ -1,0 +1,70 @@
+
+<div id="myProjects" ng-controller="projectController" class="col-md-10 mx-auto">
+
+    <div class="row">
+
+        <div class="col-md-5">
+            <div class="card rounded-0 card-success" style="margin-top: 40px">
+                <div class="card-header">
+                    <h3 class="mb-0">Szukaj projektów</h3>
+                </div>
+                <div class="card-body">
+                    <form class="row col-md-12 form-inline my-lg-0">
+                        <input class="form-control col-md-9 mr-sm-2" type="search" ng-model="projectSearchQuery" placeholder="Znajdź projekt" aria-label="Search">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="searchProjects()" type="submit">Szukaj</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <h2>Dostępne projekty</h2>
+    <hr>
+
+    <div class="col justify-content-around" id="status_filters">
+        <div id="status_labels" class="col-md-10 row justify-content-around">
+            <label>
+                <input type="checkbox" ng-model="projectSearchCreated" checked autocomplete="off"> Oczekujący na opiekuna
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchWaiting" checked autocomplete="off"> Oczekujący na uczestników
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchAllStarted" checked autocomplete="off"> Rozpoczęty
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchFinished" checked autocomplete="off"> Zakończony
+            </label>
+            <label>
+                <input type="checkbox" ng-model="projectSearchCanceled" autocomplete="off" > Anulowany
+            </label>
+            <label>
+                <input type="checkbox" ng-model="projectSearchReported" autocomplete="off" > Zgłoszony
+            </label>
+        </div>
+
+        <div id="properties_labels" class="col-md-10 row justify-content-around">
+            
+            <label>
+            	Minimalna liczba ECTS:
+                <input type="number" class="form-control form-control-md rounded-0" ng-model="projectSearchECTS" value="0" min="0">
+            </label>
+            <label >
+                Minimalna płaca:
+                <input type="number" class="form-control form-control-md rounded-0" ng-model="projectSearchMinPay" value="0" min="0">
+            </label>
+            <label >
+                <input type="checkbox" ng-model="projectSearchGradWorkOnly" checked autocomplete="off"> Tylko prace dyplomowe
+            </label>
+            <button class="btn" type="button" 
+            	ng-disabled="!(projectSearchCreated || projectSearchWaiting || projectSearchAllStarted
+            		|| projectSearchFinished || projectSearchCanceled || projectSearchReported)" ng-click="filterProjects()">
+            	Filtruj
+            </button>
+        </div>
+    </div>
+    <hr>
+    
+    <ng-include src="'projectList.html'"></ng-include>
+</div>

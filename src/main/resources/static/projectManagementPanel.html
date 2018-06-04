@@ -1,0 +1,314 @@
+<div id="projectManagementPanel" class="md-col-12" ng-controller="projectController">
+    <br>
+    <h2>
+		{{ managedProject.name }}
+    </h2>
+    <hr>
+    <div id="statusChange" class="row md-col-12">
+        <div class="md-col-8 mx-auto">
+        <h5>
+            Status projektu:
+            {{ statusToString(managedProject.status) }}
+        </h5>
+        </div>
+        <div class="row mx-auto float-right"
+        	ng-if="hasParticipationStatus(managedProject.participations, 'MANAGER') 
+        		|| hasParticipationStatus(managedProject.participations, 'OWNER') ">
+            <!--if started-->
+            <button type="button" class="btn btn-outline-success my-2 my-sm-2 float-right"
+            	ng-if="managedProject.status == 'STARTED'" ng-click="changeStatus(managedProject.id,'FINISHED')">
+                Zakończ
+            </button>
+            <button type="button" class="btn btn-outline-danger my-2 my-sm-2 float-right"
+            	ng-if="managedProject.status != 'CANCELED'" ng-click="changeStatus(managedProject.id, 'CANCELED')">
+                Anuluj
+            </button>
+            <!--if suspended => make created -->
+            <button type="button" class="btn btn-outline-primary my-2 my-sm-2 float-right"
+            	ng-if="managedProject.status == 'SUSPENDED_MISSING_PARTICIPANTS'
+            		|| managedProject.status == 'SUSPENDED_MISSING_TEACHER'"
+                    ng-click="changeStatus(managedProject.id, managed.status == 'SUSPENDED_MISSING_ARTICIPANTS' ? 'WAITING_FOR_STUDENTS' : 'CREATED')">
+                Wznów
+            </button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <h4 class="ml-3">Dane projektu</h4>
+        <button type="button" class="btn btn-info-outline"
+                data-toggle="collapse" data-target="#editProject" style="margin-left: 20px">
+            <i class="fas fa-caret-down"></i>
+        </button>
+    </div>
+    <br>
+    <div id="editProject" class="collapse show">
+        <div class="row ">
+            <div class="col-md-7 mx-auto">
+                <div id="editDescription" class="card rounded-0">
+                    <div class="card-header">
+                        <h5 class="mb-0">Opis projektu</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ managedProject.description }}
+                        <button type="button" class="btn btn-outline-primary my-2 my-sm-0 float-right" data-toggle="modal" data-target="#descriptionPanel"         	
+                        	ng-if="hasParticipationStatus(managedProject.participations, 'MANAGER') 
+        						|| hasParticipationStatus(managedProject.participations, 'OWNER') ">
+                            Modyfikuj
+                        </button>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="descriptionPanel" tabindex="-1" role="dialog"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edytuj opis</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <textarea type="text" class="form-control form-control-md rounded-0" rows="4"
+                                              placeholder="Wprowadż opis projektu (do 1000 znaków)."
+                                              maxlength="1000" ng-model="modifiedDescription"></textarea>
+                                    <div class="invalid-feedback">Wprowadź opis!</div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                    <button type="button" class="btn btn-primary" ng-click="changeProject()">Zapisz zmiany</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        <div class="col-md-4 mx-auto">
+            <div id="options" class="card rounded-0">
+
+                <div class="card-header">
+                    <h5 class="mb-0">Parametry</h5>
+                </div>
+
+                <div class="card-body">
+                <table class="table" style="text-align: center">
+                    <tr>
+                        <td>
+                            Liczba uczestników:
+							{{ managedProject.numberOfParticipants }}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary float-right" data-toggle="modal" data-target="#participantsPanel"         	
+                        	ng-if="hasParticipationStatus(managedProject.participations, 'MANAGER') 
+        						|| hasParticipationStatus(managedProject.participations, 'OWNER') ">
+                                Modyfikuj
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!--visible for teachers-->
+                            Punkty ECTS:
+							{{ managedProject.ects }}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary   float-right " data-toggle="modal" data-target="#ectsPanel"         	
+                        	ng-if="hasParticipationStatus(managedProject.participations, 'MANAGER')">
+                                Modyfikuj
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Wynagrodzenie:
+							{{ getProjectPayString(managedProject) }}
+							PLN
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary   float-right" data-toggle="modal" data-target="#payPanel"         	
+                        	ng-if="hasParticipationStatus(managedProject.participations, 'OWNER') && isUser3rdParty()">
+                                Modyfikuj
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!--visible for teachers-->
+                                Praca dyplomowa:
+								{{ managedProject.isGraduateWork ? "TAK" : "NIE" }}
+                        </td>
+                        <td>
+                            <div class="row">
+                                <input type="checkbox" ng-model="modifiedIsGraduateWork">
+                                <button type="button" class="btn btn-outline-primary   float-right"
+                                    ng-if="hasParticipationStatus(managedProject.participations, 'MANAGER') && isUserTeacher()"
+                                        ng-click="changeProject()">
+                                    Zmień status
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="participantsPanel" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edytuj liczbę uczestników</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="number" class="form-control form-control-md rounded-0"
+                                       value="1" min="1" ng-model="modifiedNumOfParticipants">
+                                <div class="invalid-feedback">Wprowadź liczbę uczestników!</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <button type="button" class="btn btn-primary" ng-click="changeProject()">Zapisz zmiany</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="ectsPanel" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edytuj liczbę ECTS</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="number" class="form-control form-control-md rounded-0" value="0" min="0"
+                                ng-model="modifiedEcts">
+                                <div class="invalid-feedback">Wprowadź ilość ECTS!</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <button type="button" class="btn btn-primary" ng-click="changeProject()">Zapisz zmiany</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="payPanel" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edytuj wynagrodzenie</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <label>Minimalna proponowana kwota</label>
+                                <input type="number" class="form-control form-control-md rounded-0"
+                                       ng-model="modifiedMinimumPay" value="0"  min="0">
+                                <label>PLN</label>
+                                <div class="invalid-feedback">Wprowadź kwotę!</div>
+
+                                <label>Maksymalna proponowana kwota</label>
+                                <input type="number" class="form-control form-control-md rounded-0"
+                                       ng-model="modifiedMaximumPay" value="0"  min="0">
+                                <label>PLN</label>
+                                <div class="invalid-feedback">Wprowadź kwotę!</div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <button type="button" class="btn btn-primary" ng-click="changeProject()">Zapisz zmiany</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <hr>
+    <div class="row">
+        <h4 class="ml-3">Uczestnicy</h4>
+        <button type="button" class="btn btn-info-outline"
+                data-toggle="collapse" data-target="#participants" style="margin-left: 20px">
+            <i class="fas fa-caret-down"></i>
+        </button>
+    </div>
+    <br>
+    <div id="participants" class="col-md-12 collapse hide">
+        <!--All participant except currently logged in user-->
+        <table class="table" style="text-align: center">
+            <thead>
+            <th>
+                Uczestnik
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Akcje
+            </th>
+            </thead>
+            <!--for each participant-->
+            <tr ng-repeat="user in participatingUsers">
+                <td>
+                    {{ user.user.name }}
+                </td>
+                <td>
+                    {{ participationStatusesToString(user.participationStatuses) }}
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-success my-2 my-sm-0" ng-if="
+	                    	hasParticipationStatus(user.participationStatuses, 'PENDING_INVITATION') &&
+	                    	user.user.email == context.user.email 
+                    	||
+	                    	hasParticipationStatus(user.participationStatuses, 'WAITING_FOR_ACCEPTANCE') 
+	                    	&& (hasParticipationStatus(managedProject.participations, 'MANAGER') ||
+	                    		hasParticipationStatus(managedProject.participations, 'OWNER'))"
+                    ng-click="changeParticipation('PARTICIPANT', managedProject.id, user.user.email)">
+                        Zaakceptuj
+                    </button>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-warning my-2 my-sm-0" ng-if="
+	                    	hasParticipationStatus(user.participationStatuses, 'PENDING_INVITATION') &&
+	                    	user.user.email == context.user.email 
+                    	||
+	                    	hasParticipationStatus(user.participationStatuses, 'WAITING_FOR_ACCEPTANCE')
+	                    	&& (hasParticipationStatus(managedProject.participations, 'MANAGER') ||
+	                    		hasParticipationStatus(managedProject.participations, 'OWNER'))"
+                            ng-click="changeParticipation('RESIGNED', managedProject.id, user.user.email)">
+                        Odrzuć
+                    </button>
+                    <!--if any kind of participant or manager-->
+                    <button type="button" class="btn btn-outline-danger my-2 my-sm-0" ng-if="
+                    		!hasParticipationStatus(user.participationStatuses, 'OWNER') &&
+                    		(hasParticipationStatus(managedProject.participations, 'MANAGER') ||
+	                    	hasParticipationStatus(managedProject.participations, 'OWNER')) &&
+	                    	managedProject.status != 'CANCELED' && managedProject.status != 'FINISHED'" 
+                            ng-click="changeParticipation('RESIGNED', managedProject.id, user.user.email)">
+                        Wyklucz
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <hr>
+</div>
+
+

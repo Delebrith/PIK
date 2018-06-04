@@ -1,0 +1,140 @@
+<div id="projectManagementPanel" class="md-col-11" ng-controller="adminController">
+    <br>
+    <h2>
+        Użytkownik {{ managedUser.id }}
+        <!--user id-->
+    </h2>
+    <hr>
+    <br>
+
+    <div class="row">
+        <h4 class="ml-3">Dane użytkownika</h4>
+    </div>
+    <br>
+    <br>
+
+
+    <div id="userData" class="col-md-10 mx-auto">
+        <table class="table" style="text-align: center">
+            <tr>
+                <td>
+                    Nazwa użytkownika
+                </td>
+                <td>
+					{{ managedUser.name }}
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0"
+                            data-toggle="modal" data-target="#usernamePanel">
+                        Modyfikuj
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Email
+                </td>
+                <td>
+                    {{ managedUser.email }}
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0"
+                            data-toggle="modal" data-target="#emailPanel">
+                        Modyfikuj
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Numer telefonu
+                </td>
+                <td>
+					{{ managedUser.phoneNo }}
+                </td>
+                <td>
+                    <!--if pending-->
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0"
+                            data-toggle="modal" data-target="#phoneNumberPanel">
+                        Modyfikuj
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="usernamePanel" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edytuj nazwę</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control form-control-md rounded-0" ng-model="modifiedName">
+                        <div class="invalid-feedback">Wprowadź nazwę!</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="button" class="btn btn-primary" ng-click="modifyUserName()" data-dismiss="modal">Zapisz zmiany</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="emailPanel" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edytuj email</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="email" class="form-control form-control-md rounded-0" ng-model="modifiedEmail">
+                        <div class="invalid-feedback">Wprowadź email!</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="button" class="btn btn-primary" ng-click="modifyUserEmail()" data-dismiss="modal">Zapisz zmiany</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="phoneNumberPanel" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edytuj numer telefonu</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control form-control-md rounded-0" ng-model="modifiedPhoneNo">
+                        <div class="invalid-feedback">Wprowadź numer!</div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="button" class="btn btn-primary" ng-click="modifyUserPhoneNo()" data-dismiss="modal">Zapisz zmiany</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+

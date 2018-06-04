@@ -1,0 +1,73 @@
+<div id="userFormPanel" ng-controller="adminController">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+
+            <!-- form card login -->
+            <div class="card rounded-0 card" style="margin-top: 40px">
+                <div class="card-header">
+                    <h3 class="mb-0">Wprowadź dane użytkownika</h3>
+                </div>
+                <div class="card-body">
+                    <form class="form" role="form" autocomplete="off" id="formUser" method="POST">
+
+
+
+                        <div class="form-group col-md-10 mx-auto">
+                            <label>Nazwa</label>
+                            <input type="text" class="form-control form-control-md rounded-0"
+                             placeholder="Nazwa użytkownika" ng-model="created.name">
+                            <div class="invalid-feedback">Wprowadź nazwę!</div>
+                        </div>
+
+                        <div class="form-group col-md-10 mx-auto">
+                            <label>Email</label>
+                            <input type="email" class="form-control form-control-md rounded-0"
+                                   placeholder="Adres email" ng-model="created.email">
+                            <div class="invalid-feedback">Wprowadź email!</div>
+                        </div>
+
+
+                        <div class="form-group col-md-10 mx-auto">
+                            <label>Numer telefonu</label>
+                            <input type="text" class="form-control form-control-md rounded-0"
+                                      placeholder="Numer telefonu" maxlength="12" ng-model="created.phoneNo"></input>
+                        </div>
+                        <br>
+
+                        <!-- visible for 3rd party - list of teachers should be provided by user controller (see task PIK-49) -->
+                        <div class="form-group justify-content-around">
+                            <h5>Uprawnienia</h5>
+                            <br>
+                            <div class="row mx-auto">
+                                <label class="mx-auto">
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.STUDENT"> Student
+                                </label>
+                                <label class="mx-auto" >
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.TEACHER"> Wykładowca
+                                </label>
+                                <label class="mx-auto" >
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.AUTHORITY"> Moderator
+                                </label>
+                                <label class="mx-auto" >
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.THIRD_PARTY"> Podmiot zewnętrzny
+                                </label>
+                                <label class="mx-auto" >
+                                    <input type="checkbox" autocomplete="off" ng-model="createdRoles.ADMIN"> Administrator
+                                </label>
+                            </div>
+                        </div>
+
+                        <br>
+                        <button class="btn btn-outline-primary my-2 my-sm-0 float-right" id="btnSubmitUser" ng-click="submitUser()" 
+                        	ng-disabled="created == undefined || createdRoles == undefined">
+                            Zatwierdź
+                        </button>
+                    </form>
+                </div>
+                <!--/card-block-->
+            </div>
+            <!-- /form card login -->
+
+        </div>
+    </div>
+</div>

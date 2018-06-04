@@ -1,0 +1,77 @@
+
+<div id="myProjects" ng-controller="adminController" class="col-md-10 mx-auto">
+
+    <div class="row">
+
+        <div class="col-md-5">
+            <div class="card rounded-0 card-success" style="margin-top: 40px">
+                <div class="card-header">
+                    <h3 class="mb-0">Szukaj użytkowników</h3>
+                </div>
+                <div class="card-body">
+                    <form class="row col-md-12 form-inline my-lg-0">
+                        <form class="row col-md-12 form-inline my-lg-0">
+                            <input class="form-control col-md-9 mr-sm-2" type="search" ng-model="userSearchQuery"
+                                   placeholder="Znajdź użytkownika" aria-label="Search">
+                            <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="searchUsers()"
+                                    type="submit">Szukaj</button>
+                        </form>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <h4>Użytkownicy</h4>
+    <hr>
+
+    <div class="row justify-content-around" id="status_filters">
+        <div class="col-md-2"> <h5> Filtruj uprawnienia: </h5> </div>
+        <div id="status_labels" class="col-md-10 row justify-content-around">
+            <label ng-repeat="auth in authorities">
+                <input type="checkbox" checked autocomplete="off" ng-value="{{auth.name}}"
+                       ng-model="checkedAuthorities[auth.name]">
+                {{auth.displayName}}
+            </label>
+            <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="filterUsers()"
+                    type="submit">Filtruj</button>
+        </div>
+    </div>
+    <hr>
+
+    <div id="projects" class="card">
+        <table class="table" style="text-align: center">
+            <thead>
+            <th class="col-md-4">Nazwa</th>
+            <th style="text-align: center">Uprawnienia</th>
+            <!--if admin-->
+            <th ng-if="isUserAdministrator()" class="col-md-5">Akcje</th>
+            </thead>
+            <tr ng-repeat="user in users">
+                <td>
+                    {{user.name}}
+                </td>
+                <td class="row">
+                    <span ng-repeat="authority in user.authorities">
+                        <span ng-if="authority != user.authorities[0]">, </span> {{authority.displayName}}
+                    </span>
+                </td>
+                <td ng-if="isUserAdministrator()">
+                    <div class="col-md-12 justify-content-center row">
+                        <button type="button" class="btn btn-outline-primary" style="margin-left: 10px"
+                        	ng-click="manageUser(user)">
+                            Modyfikuj
+                            <!--go to user management screen-->
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" style="margin-left: 10px"
+                        	ng-click="deleteUser(user)">
+                            Usuń
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>

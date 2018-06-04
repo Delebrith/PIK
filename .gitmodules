@@ -1,0 +1,3 @@
+[submodule "src/main/resources/static/autocomplete"]
+	path = src/main/resources/static/autocomplete
+	url = https://github.com/JustGoscha/allmighty-autocomplete

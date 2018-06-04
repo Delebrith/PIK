@@ -1,0 +1,51 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="liquidbase" id="002">
+        <createTable tableName="project">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="nvarchar(200)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="nvarchar(1023)">
+                <constraints nullable="false" />
+            </column>
+            <column name="is_graduate_work" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="ects" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="minimum_pay" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="maximum_pay" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="number_of_participants" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+        <addAutoIncrement columnDataType="BIGINT"
+                          columnName="id"
+                          incrementBy="1"
+                          startWith="1"
+                          tableName="project"/>
+		
+        <loadData encoding="UTF-8"
+                  file="db/data/project.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="project">
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
