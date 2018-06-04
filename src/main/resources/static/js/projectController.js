@@ -1,4 +1,3 @@
-var t
 app.controller('projectController', function($scope, $http, $cookies, $window, $location) {
 	$scope.teachers = []
 	$scope.projects = []
@@ -146,7 +145,13 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 		addToDto(projectDto, "minimumPay")
 		addToDto(projectDto, "maximumPay")
 		
-		var response = $http.post("/project/add", projectDto);
+		var url = "/project/add"
+		if ($scope.project.teacher != undefined)
+			url += "?teacherMail=" + $scope.project.teacher
+			
+		var response = $http.post(url, projectDto);
+		
+		
 	    response.then(
 	    	function(response) {
 				$window.location.reload()
@@ -322,16 +327,14 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 						for (i = 0; i < $scope.projects.length; i++)
 							projectsById["_" + $scope.projects[i].id] = $scope.projects[i]
 						
-						t = projectsById
-						if ($scope.isPage($scope.pages.myProjects))
-							for (i = 0; i < $scope.projects.length; i++)
-							{
-								$http.get("/participation/project/" + $scope.projects[i].id + "/user/" + $scope.context.user.email)
-									.then(function(response) {
-										if (response.data.length > 0)
-											projectsById["_" + response.data[0].project.id].participationStatus = response.data
-									})
-							}
+						for (i = 0; i < $scope.projects.length; i++)
+						{
+							$http.get("/participation/project/" + $scope.projects[i].id + "/user/" + $scope.context.user.email)
+								.then(function(response) {
+									if (response.data.length > 0)
+										projectsById["_" + response.data[0].project.id].participationStatus = response.data
+								})
+						}
 			    	},
 			    	function(response){
 			    		alert("Wystąpił błąd podczas pobierania projektów.")
