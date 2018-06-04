@@ -38,6 +38,6 @@ app.controller('userController', function($scope, $http, $cookies, $window) {
 	
 	$scope.logout = function() {
 		$cookies.remove('token');
-		$window.location.reload();
+		$window.location.href = "/#";
 	}
 });
