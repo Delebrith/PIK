@@ -1,8 +1,10 @@
+var t
+
 app.controller('projectController', function($scope, $http, $cookies, $window, $location) {
 	$scope.teachers = []
 	$scope.projects = []
 	$scope.participatingUsers = []
-	
+	t = $scope
 	/////////////////////////general utils/////////////////////////
 	
 	$scope.statusToString = function(status) {
@@ -405,7 +407,7 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 			if (map[participations[i].user.email] == undefined)
 				map[participations[i].user.email] = { user: participations[i].user, participationStatuses: [ {status: participations[i].status} ] }
 			else
-				map[participations[i].user.email].participationStatuses.push([{ status: participations[i].status} ])
+				map[participations[i].user.email].participationStatuses.push({ status: participations[i].status})
 		}
 		
 		var ret = []
