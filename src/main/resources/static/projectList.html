@@ -38,7 +38,13 @@
                            ng-click="changeParticipation('WAITING_FOR_ACCEPTANCE', project.id, context.user.email)">
                        Zgłoś się
                    </button>
-                   <button type="button" class="btn btn-outline-primary"
+                   <button type="button" class="btn btn-outline-primary my-2 my-sm-0" 
+                   	ng-if="project.participationStatus.length > 0"
+                   		ng-click="navigate('/?project=' + project.id + '#project-management')">
+                       Zarządzaj
+                   </button>
+                   <button type="button" class="btn btn-outline-primary" 
+                   	ng-if="!project.participationStatus.length || project.participationStatus.length == 0"
                            data-toggle="modal" data-target="#projectInfo" ng-click="
 							setSelectedProject(project)">
                        Informacje
@@ -52,12 +58,16 @@
           
                <div class="col-md-12 row justify-content-around row justify-content-around" 
                    ng-if="isPage(pages.myProjects)">
-                   <!-- visible if owner of manager -->
                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0" 
-                   	ng-if="hasParticipationStatus(project.participationStatus, 'OWNER') ||
-                   		hasParticipationStatus(project.participationStatus, 'MANAGER')"
+                   	ng-if="project.participationStatus.length > 0"
                    		ng-click="navigate('/?project=' + project.id + '#project-management')">
                        Zarządzaj
+                   </button>
+                   <button type="button" class="btn btn-outline-primary" 
+                   	ng-if="!project.participationStatus.length || project.participationStatus.length == 0"
+                           data-toggle="modal" data-target="#projectInfo" ng-click="
+							setSelectedProject(project)">
+                       Informacje
                    </button>
                    <!-- visible if participant of manager -->
                    <button type="button" class="btn btn-outline-danger my-2 my-sm-0" 

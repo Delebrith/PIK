@@ -298,7 +298,8 @@
                     <button type="button" class="btn btn-outline-danger my-2 my-sm-0" ng-if="
                     		!hasParticipationStatus(user.participationStatuses, 'OWNER') &&
                     		(hasParticipationStatus(managedProject.participations, 'MANAGER') ||
-	                    	hasParticipationStatus(managedProject.participations, 'OWNER'))"
+	                    	hasParticipationStatus(managedProject.participations, 'OWNER')) &&
+	                    	managedProject.status != 'CANCELED' && managedProject.status != 'FINISHED'" 
                             ng-click="changeParticipation('RESIGNED', managedProject.id, user.user.email)">
                         Wyklucz
                     </button>
