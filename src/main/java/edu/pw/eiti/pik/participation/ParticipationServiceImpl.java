@@ -35,10 +35,10 @@ class ParticipationServiceImpl implements ParticipationService {
         List<String> authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String authUsername = auth.getName();
         if (status.equals(ParticipationStatus.RESIGNED)) {
-            if (!authorities.contains(Authorities.TEACHER.toString()))
-                deleteParticipation(authUsername, projectId, false);
+            if (username != null)
+                deleteParticipation(username, projectId);
             else
-                deleteParticipation(authUsername, projectId, true);
+                deleteParticipation(authUsername, projectId);
         }
         else if (status.equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)) {
             if (authorities.contains(Authorities.TEACHER.toString()) || authorities.contains(Authorities.STUDENT.toString()))
@@ -64,7 +64,7 @@ class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public void deleteParticipation(String username, Long projectId, Boolean isTeacher) {
+    public void deleteParticipation(String username, Long projectId) {
         List<Participation> participation = participationRepository
                                         .findByUser_EmailAndProject_Id(username, projectId);
         if (participation.isEmpty())
@@ -73,11 +73,11 @@ class ParticipationServiceImpl implements ParticipationService {
 	        if (p.getStatus().equals(ParticipationStatus.PARTICIPANT) || p.getStatus().equals(ParticipationStatus.WAITING_FOR_ACCEPTANCE)
 	            || p.getStatus().equals(ParticipationStatus.PENDING_INVITATION) || p.getStatus().equals(ParticipationStatus.MANAGER)) {
 	            participationRepository.delete(p);
-	            publisher.publishEvent(new CheckParticipantsAfterDeletedEvent(projectId, isTeacher));
+	            publisher.publishEvent(new CheckParticipantsAfterDeletedEvent(projectId));
 	        }
-	        else if (p.getStatus().equals(ParticipationStatus.OWNER)) {
-	            publisher.publishEvent(new CancelProjectEvent(projectId));
-	        }
+//	        else if (p.getStatus().equals(ParticipationStatus.OWNER)) {
+//	            publisher.publishEvent(new CancelProjectEvent(projectId));
+//	        }
         }
     }
 
@@ -157,6 +157,8 @@ class ParticipationServiceImpl implements ParticipationService {
         participation.setStatus(event.getStatus());
         participation.setUser(event.getUser());
         participation.setProject(event.getProject());
+        event.getUser().getParticipations().add(participation);
+        event.getProject().getParticipations().add(participation);
         Participation savedParticipation = participationRepository.save(participation);
         publisher.publishEvent(new AddProjectToESEvent(savedParticipation.getProject()));
     }

@@ -66,13 +66,15 @@ public class ProjectServiceImpl implements ProjectService {
         project.setParticipations(new ArrayList<>());
         publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.OWNER, null));
         if (teacherMail != null)
-            publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.MANAGER, teacherMail));
+            publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.PENDING_INVITATION, teacherMail));
+
     }
 
     @Override
     @EventListener
     public void addProjectToES(AddProjectToESEvent event) {
         projectESRepository.save(event.getProject());
+        checkProjectStatus(new CheckProjectStatusEvent(event.getProject().getId()));
     }
 
     @Override
@@ -83,10 +85,12 @@ public class ProjectServiceImpl implements ProjectService {
         if (!project.isPresent())
             throw new ProjectNotFoundException();
         else {
-            if (event.getIsTeacher())
-                project.get().setStatus(ProjectStatus.SUSPENDED_MISSING_TEACHER);
-            else if (project.get().getNumberOfParticipants() > project.get().getParticipations().stream().filter(p -> p.getStatus().equals(ParticipationStatus.PARTICIPANT)).count())
-                project.get().setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
+            if (!checkProjectBeforeStart(project.get().getStatus())) {
+                if (project.get().getParticipations().stream().noneMatch(p -> p.getStatus().equals(ParticipationStatus.MANAGER)))
+                    project.get().setStatus(ProjectStatus.SUSPENDED_MISSING_TEACHER);
+                else if (project.get().getNumberOfParticipants() > project.get().getParticipations().stream().filter(p -> p.getStatus().equals(ParticipationStatus.PARTICIPANT)).count())
+                    project.get().setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
+            }
             projectRepository.save(project.get());
             projectESRepository.save(project.get());
         }
@@ -119,7 +123,9 @@ public class ProjectServiceImpl implements ProjectService {
     @EventListener
     public void checkProjectStatus(CheckProjectStatusEvent event) {
         Project project = projectRepository.findById(event.getProjectId()).orElseThrow(ProjectNotFoundException::new);
-        if ((project.getStatus().equals(ProjectStatus.WAITING_FOR_STUDENTS) || project.getStatus().equals(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS))
+        if (project.getStatus() == ProjectStatus.CREATED && project.getParticipations().stream().anyMatch(p -> p.getStatus() == ParticipationStatus.MANAGER))
+            project.setStatus(ProjectStatus.WAITING_FOR_STUDENTS);
+        else if ((project.getStatus().equals(ProjectStatus.WAITING_FOR_STUDENTS) || project.getStatus().equals(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS))
             && project.getNumberOfParticipants() <= project.getParticipations().stream().filter(p -> p.getStatus().equals(ParticipationStatus.PARTICIPANT)).count()) {
             if (project.getParticipations().stream().noneMatch(p -> p.getStatus().equals(ParticipationStatus.MANAGER)))
                 project.setStatus(ProjectStatus.SUSPENDED_MISSING_TEACHER);
