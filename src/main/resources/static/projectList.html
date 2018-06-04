@@ -7,7 +7,7 @@
     <table class="table" style="text-align: center">
        <thead>
        <th class="col-md-4">Nazwa</th>
-       <th ng-if="isPage(pages.myProjects)">Status uczestnictwa</th>
+       <th ng-if="isPage(pages.myProjects) || true">Status uczestnictwa</th>
        <th>Status projektu</th>
        <th class="col-md-6">Akcje</th>
        </thead>
@@ -16,7 +16,7 @@
            <td>
                {{ project.name }}
            </td>
-           <td ng-if="isPage(pages.myProjects)">
+           <td ng-if="isPage(pages.myProjects) || true">
                {{ participationStatusesToString(project.participationStatus) }}
            </td>
            <td>
@@ -28,7 +28,13 @@
                    <!-- visible if not involved in the project -->
                    <!-- visible for teachers if waiting for teacher -->
                    <!-- visible for students if waiting for student-->
-                   <button type="button" class="btn btn-outline-success" ng-if="isUserTeacher() || isUserStudent()"
+                   <button type="button" class="btn btn-outline-success"
+                   	       ng-if="isUserTeacher() && project.status == 'CREATED' &&
+                   	           !hasParticipationStatus(project.participationStatus, 'MANAGER') &&
+                   	           !hasParticipationStatus(project.participationStatus, 'PENDING_INVITATION') 
+                   	       || isUserStudent() && project.status == 'WAITING_FOR_STUDENTS' &&
+                   	           !hasParticipationStatus(project.participationStatus, 'PARTICIPANT') &&
+                   	           !hasParticipationStatus(project.participationStatus, 'PENDING_INVITATION')"
                            ng-click="changeParticipation('WAITING_FOR_ACCEPTANCE', project.id, context.user.email)">
                        Zgłoś się
                    </button>
@@ -38,8 +44,9 @@
                        Informacje
                    </button>
                    <button type="button" class="btn btn-outline-danger"
+                   	       ng-if="false" 
                            ng-click="changeStatus('SUSPENDED_REPORTED', managedProject.id)">
-                       Projekt nieodpowiedni
+                       Projekt nieodpowiedni <!-- is not yet supported -->
                    </button>
                </div>
           
@@ -54,8 +61,9 @@
                    </button>
                    <!-- visible if participant of manager -->
                    <button type="button" class="btn btn-outline-danger my-2 my-sm-0" 
-                   	ng-if="hasParticipationStatus(project.participationStatus, 'PARTICIPANT') ||
-                   		hasParticipationStatus(project.participationStatus, 'MANAGER')"
+                   	ng-if="(hasParticipationStatus(project.participationStatus, 'PARTICIPANT') ||
+                   		hasParticipationStatus(project.participationStatus, 'MANAGER')) && 
+                   		!hasParticipationStatus(project.participationStatus, 'OWNER')"
                            ng-click="changeParticipation('RESIGNED', project.id, context.user.email)">
                        Opuść projekt
                    </button>
