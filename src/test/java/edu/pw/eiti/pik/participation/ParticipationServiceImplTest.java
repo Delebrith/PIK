@@ -144,7 +144,7 @@ public class ParticipationServiceImplTest {
         dto.setProjectId(project.getId());
         participationService.changeStatus(dto.getStatus(), dto.getProjectId(), dto.getUsername());
         verify(participationRepository, times(1)).delete(participantParticipation.get(0));
-        verify(publisher, times(1)).publishEvent(new CheckParticipantsAfterDeletedEvent(project.getId(), false));
+        verify(publisher, times(1)).publishEvent(new CheckParticipantsAfterDeletedEvent(project.getId()));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class ParticipationServiceImplTest {
         dto.setProjectId(project.getId());
         participationService.changeStatus(dto.getStatus(), dto.getProjectId(), dto.getUsername());
         verify(participationRepository, times(1)).delete(managerParticipation);
-        verify(publisher, times(1)).publishEvent(new CheckParticipantsAfterDeletedEvent(project.getId(), true));
+        verify(publisher, times(1)).publishEvent(new CheckParticipantsAfterDeletedEvent(project.getId()));
     }
 
     @Test

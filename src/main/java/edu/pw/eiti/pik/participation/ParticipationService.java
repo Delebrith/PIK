@@ -11,7 +11,7 @@ public interface ParticipationService {
 
     void changeStatus(ParticipationStatus status, Long projectId, String username);
 
-    void deleteParticipation(String username, Long projectId, Boolean isTeacher);
+    void deleteParticipation(String username, Long projectId);
 
     void addParticipation(String username, Long projectId);
 

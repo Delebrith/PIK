@@ -95,12 +95,10 @@ class UserServiceImpl implements UserService, UserDetailsService {
         User user;
         if (event.getUsername() == null) {
             user = getAuthenticatedUser();
-            if (!getAuthenticatedUser().getAuthorities().stream()
-                    .filter(a -> a.getName().equals(Authorities.TEACHER))
-                    .collect(Collectors.toList()).isEmpty()){
-                publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, event.getStatus()));
+            publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, event.getStatus()));
+            if (!getAuthenticatedUser().getAuthorities().stream().filter(a -> a.getName()
+                    .equals(Authorities.TEACHER)).collect(Collectors.toList()).isEmpty())
                 publisher.publishEvent(new UserAndProjectToParticipationEvent(event.getProject(), user, ParticipationStatus.MANAGER));
-            }
         }
         else {
             user = findByEmail(event.getUsername()).orElseThrow(UserNotFoundException::new);
