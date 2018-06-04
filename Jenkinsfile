@@ -11,7 +11,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh './gradlew check'
+                sh './gradlew check --info'
             }
             post {
                 always {
