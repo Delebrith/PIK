@@ -149,8 +149,8 @@ app.controller('projectController', function($scope, $http, $cookies, $window, $
 		
 		var url = "/project/add"
 		if ($scope.project.teacher != undefined)
-			url += "?teacherMail=" + $scope.project.teacher
-			
+			url += "?teacherMail=" + encodeURIComponent($scope.project.teachersMail)
+
 		var response = $http.post(url, projectDto);
 		
 		
