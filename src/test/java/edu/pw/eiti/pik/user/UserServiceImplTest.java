@@ -1,5 +1,6 @@
 package edu.pw.eiti.pik.user;
 
+import edu.pw.eiti.pik.user.es.UserESRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,8 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -29,6 +32,9 @@ public class UserServiceImplTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private UserESRepository userESRepository;
 
     @Autowired
     private UserServiceImpl userService;
@@ -93,5 +99,21 @@ public class UserServiceImplTest {
     public void loadUserByUsernameNonExistingUser() {
         when(userRepository.findByEmail(mockUser.getUsername())).thenReturn(null);
         userService.loadUserByUsername(mockUser.getUsername());
+    }
+
+    @Test
+    public void deleteExistingUser() {
+        Long id = 2137L;
+        when(userRepository.findById(id)).thenReturn(Optional.of(mockUser));
+        userService.deleteUser(id);
+        verify(userRepository, times(1)).delete(mockUser);
+        verify(userESRepository, times(1)).delete(mockUser);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void deleteNonExistingUser() {
+        Long id = 2137L;
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+        userService.deleteUser(id);
     }
 }
