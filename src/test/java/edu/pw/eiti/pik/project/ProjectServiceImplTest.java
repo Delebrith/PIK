@@ -1,6 +1,7 @@
 package edu.pw.eiti.pik.project;
 
 import edu.pw.eiti.pik.base.event.CancelProjectEvent;
+import edu.pw.eiti.pik.base.event.SignUpEvent;
 import edu.pw.eiti.pik.participation.Participation;
 import edu.pw.eiti.pik.participation.ParticipationStatus;
 import edu.pw.eiti.pik.project.db.ProjectRepository;
@@ -304,6 +305,130 @@ public class ProjectServiceImplTest {
         changedProject.setNumberOfParticipants(10);
         verify(projectRepository, times(1)).save(changedProject);
         verify(projectESRepository, times(1)).save(changedProject);
+    }
+
+    @Test
+    public void suspendedReportProject() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.SUSPENDED_REPORTED);
+        Project changedProject = startedProject;
+        changedProject.setStatus(ProjectStatus.SUSPENDED_REPORTED);
+        verify(projectRepository, times(1)).save(changedProject);
+        verify(projectESRepository, times(1)).save(changedProject);
+    }
+
+    @Test
+    public void waitForStudentsProject() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        startedProject.setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.WAITING_FOR_STUDENTS);
+        Project changedProject = startedProject;
+        changedProject.setStatus(ProjectStatus.WAITING_FOR_STUDENTS);
+        verify(projectRepository, times(1)).save(changedProject);
+        verify(projectESRepository, times(1)).save(changedProject);
+    }
+
+    @Test
+    public void createdProject() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        startedProject.setStatus(ProjectStatus.SUSPENDED_MISSING_TEACHER);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.CREATED);
+        Project changedProject = startedProject;
+        changedProject.setStatus(ProjectStatus.CREATED);
+        verify(projectRepository, times(1)).save(changedProject);
+        verify(projectESRepository, times(1)).save(changedProject);
+    }
+
+    @Test
+    public void startedProject() {
+        setParticipation(ParticipationStatus.OWNER, user, waitingProject);
+        projectService.changeStatus(waitingProject.getId(), ProjectStatus.STARTED);
+        Project changedProject = waitingProject;
+        changedProject.setStatus(ProjectStatus.STARTED);
+        verify(projectRepository, times(1)).save(changedProject);
+        verify(projectESRepository, times(1)).save(changedProject);
+    }
+
+    @Test
+    public void canceledProject() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.CANCELED);
+        Project changedProject = startedProject;
+        changedProject.setStatus(ProjectStatus.CANCELED);
+        verify(projectRepository, times(1)).save(changedProject);
+        verify(projectESRepository, times(1)).save(changedProject);
+    }
+
+    @Test
+    public void finishedProject() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.FINISHED);
+        Project changedProject = startedProject;
+        changedProject.setStatus(ProjectStatus.FINISHED);
+        verify(projectRepository, times(1)).save(changedProject);
+        verify(projectESRepository, times(1)).save(changedProject);
+    }
+
+    @Test(expected = InvalidProjectDataException.class)
+    public void invalidProjectStatus() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.OVERDUE);
+    }
+
+    @Test(expected = InvalidProjectDataException.class)
+    public void waitingForStudentsFromWrongStatus() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.WAITING_FOR_STUDENTS);
+    }
+
+    @Test(expected = InvalidProjectDataException.class)
+    public void createdFromWrongStatus() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.CREATED);
+    }
+
+    @Test(expected = InvalidProjectDataException.class)
+    public void startedFromWrongStatus() {
+        setParticipation(ParticipationStatus.OWNER, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.STARTED);
+    }
+
+    @Test(expected = InvalidProjectDataException.class)
+    public void finishedFromWrongStatus() {
+        setParticipation(ParticipationStatus.OWNER, user, waitingProject);
+        projectService.changeStatus(waitingProject.getId(), ProjectStatus.FINISHED);
+    }
+
+    @Test(expected = InsufficientAuthorizationException.class)
+    public void createdWithoutAuthStatus() {
+        setParticipation(ParticipationStatus.PARTICIPANT, user, startedProject);
+        startedProject.setStatus(ProjectStatus.SUSPENDED_MISSING_TEACHER);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.CREATED);
+    }
+
+    @Test(expected = InsufficientAuthorizationException.class)
+    public void waitingForStudentsWithoutAuthStatus() {
+        setParticipation(ParticipationStatus.PARTICIPANT, user, startedProject);
+        startedProject.setStatus(ProjectStatus.SUSPENDED_MISSING_PARTICIPANTS);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.WAITING_FOR_STUDENTS);
+    }
+
+    @Test(expected = InsufficientAuthorizationException.class)
+    public void startedWithoutAuthStatus() {
+        setParticipation(ParticipationStatus.PARTICIPANT, user, waitingProject);
+        projectService.changeStatus(waitingProject.getId(), ProjectStatus.STARTED);
+    }
+
+    @Test(expected = InsufficientAuthorizationException.class)
+    public void canceledWithoutAuthStatus() {
+        setParticipation(ParticipationStatus.PARTICIPANT, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.CANCELED);
+    }
+
+    @Test(expected = InsufficientAuthorizationException.class)
+    public void finishedWithoutAuthStatus() {
+        setParticipation(ParticipationStatus.PARTICIPANT, user, startedProject);
+        projectService.changeStatus(startedProject.getId(), ProjectStatus.FINISHED);
     }
 
 }
