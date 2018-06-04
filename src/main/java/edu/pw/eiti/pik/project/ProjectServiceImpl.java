@@ -63,8 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void createProject(Project project, String teacherMail) {
         if (project.getId() != null || project.getStatus() != ProjectStatus.CREATED)
             throw new InvalidProjectDataException();
-        if (project.getParticipations() == null)
-            project.setParticipations(new ArrayList<>());
+        project.setParticipations(new ArrayList<>());
         publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.OWNER, null));
         if (teacherMail != null)
             publisher.publishEvent(new FindUserEvent(project, ParticipationStatus.MANAGER, teacherMail));
